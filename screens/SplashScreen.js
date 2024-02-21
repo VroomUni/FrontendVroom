@@ -19,24 +19,24 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f3e5ed',
+    backgroundColor: '#E3E6F3',
   },
   header: {
     fontSize: 48,
     fontWeight: 'bold',
-    color: '#2A6997',
+    color: '#00669B',
     marginBottom: 20,
   },
   subheader: {
     fontSize: 24,
-    color: '#000000',
+    color: '#2881BA',
     marginBottom: 40,
   },
   button: {
     marginTop: 50,
     paddingHorizontal: 30,
     paddingVertical: 20,
-    backgroundColor: '#38FFC7',
+    backgroundColor: '#00F0DC',
     borderRadius: 10,
   },
   buttonText: {
