@@ -1,11 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import OnBoarding from './screens/OnBoarding';
+import SplashScreen from './screens/SplashScreen';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Vroom App!</Text>
-      <StatusBar style="auto" />
+    {/* <OnBoarding/> */}
+    <SplashScreen/>
     </View>
   );
 }
@@ -13,8 +15,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // // backgroundColor: '#fff',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
 });
