@@ -15,15 +15,15 @@ export default function App() {
   return (
    
   
-    // <NavigationContainer>
-    //   <Stack.Navigator initialRouteName="LoadingScreen" headerMode="none">
-    //     <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-    //     <Stack.Screen name="SplashScreen" component={SplashScreen} />
-    //     <Stack.Screen name='OnBoarding'   component={OnBoarding}/>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="LoadingScreen" headerMode="none">
+        <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name='OnBoarding'   component={OnBoarding}/>
       
-    //   </Stack.Navigator>
-    // </NavigationContainer>
-    <Home/>
+      </Stack.Navigator>
+    </NavigationContainer>
+    
 
   );
 }
