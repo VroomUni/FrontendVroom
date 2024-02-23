@@ -5,7 +5,7 @@ import LottieView from 'lottie-react-native';
 function LoadingScreen({ navigation }) {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.navigate('tab');
+      navigation.navigate('SplashScreen');
     }, 8000);
 
     return () => clearTimeout(timer);
