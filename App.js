@@ -19,7 +19,7 @@ export default function App() {
         <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name='OnBoarding'   component={OnBoarding}/>
-        <Stack.Screen name="tab" component={TabNav}/>
+      
       </Stack.Navigator>
     </NavigationContainer>
 
