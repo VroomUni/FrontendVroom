@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoadingScreen from './screens/LoadingScreen';
 import OnBoarding from './screens/OnBoarding';
+import TabNav from './navigation/TabNav';
 
 
 
@@ -18,6 +19,7 @@ export default function App() {
         <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name='OnBoarding'   component={OnBoarding}/>
+        <Stack.Screen name="tab" component={TabNav}/>
       </Stack.Navigator>
     </NavigationContainer>
 
