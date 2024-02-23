@@ -1,13 +1,16 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const SplashScreen = () => {
+const SplashScreen = ({navigation}) => {
+  const handleGetStarted = () => {
+    navigation.navigate('OnBoarding'); // Navigate to the OnboardingScreen
+  };
   return (
     <View style={styles.container}>
 
       <Text style={styles.header}>vroom</Text>
       <Text style={styles.subheader}>Your ride, Your choice</Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
         <Text style={styles.buttonText}>Let's Get Started</Text>
       </TouchableOpacity>
     </View>
