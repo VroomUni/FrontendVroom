@@ -49,9 +49,9 @@ const Preferences = ({ navigation }) => {
         icon="chevron-right" 
         style ={{alignItems: "center",}}
         onPress={() => console.log("SKIP")}
+        contentStyle={{ flexDirection: "row-reverse" }}
       >
         Skip
-       
       </Button>
 
       {/* <IconButton
@@ -315,7 +315,7 @@ const Preferences = ({ navigation }) => {
       {/* <Button
         title="Skip"
         mode="contained-tonal"
-        
+        icon="chevron-right"
         buttonColor="#00f0dc"
         textColor="white"
         onPress={() => console.log("SKIP")}
