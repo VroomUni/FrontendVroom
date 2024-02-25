@@ -1,5 +1,5 @@
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import MapView, {
   Marker,
@@ -14,9 +14,8 @@ import { BufferOp } from "jsts/org/locationtech/jts/operation/buffer";
 import { isPointInPolygon } from "geolib";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import DriverRideFromTo from "../components/DriverRideFromTo";
-import * as Location from "expo-location";
-
-const DriverRideSetup = () => {
+import DriverRideLocationInput from "./DriverRideLocationInput";
+const DriverProvideRide = ({ navigation, route }) => {
   const [PolylineCods, setPolylineCods] = useState(null);
   const [PolygonCods, setPolygonCods] = useState();
   const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
@@ -59,8 +58,8 @@ const DriverRideSetup = () => {
         console.error("Error ", error);
       });
   }, []);
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+  // const [location, setLocation] = useState(null);
+  // const [errorMsg, setErrorMsg] = useState(null);
 
   // useEffect(() => {
   //   (async () => {
@@ -88,6 +87,10 @@ const DriverRideSetup = () => {
 
   // console.log(text);
 
+  const [isToSmu, setIsToSmu] = useState(true);
+  const [onLocationInputPage, setOnLocationInput] = useState(false);
+  const [destinationOrOrigin, setDestinationOrOrigin] = useState(null);
+
   const initialRegion = {
     latitude: 35.8999, // Latitude of Tunisia
     longitude: 9.5375, // Longitude of Tunisia
@@ -96,18 +99,30 @@ const DriverRideSetup = () => {
     longitudeDelta: 2, // Zoom level. Adjust as needed
   };
 
-  const [isLocationInputVisible, setLocationInputVisible] = useState(false);
   return (
-    <>
-      <View style={{ flex: 1 }}>
-        <DriverRideFromTo setLocationInputVisible={setLocationInputVisible} />
-        <MapView
-          style={styles.map}
-          provider={PROVIDER_GOOGLE}
-          initialRegion={initialRegion}
-          showsUserLocation={true}
-          >
-          {/* {location && (
+    <View style={{ flex: 1, paddingTop: 50 }}>
+      {onLocationInputPage ? (
+        //Destination/origin places autocomplete page
+        <DriverRideLocationInput
+          isToSmu={isToSmu}
+          setOnLocationInput={setOnLocationInput}
+          setDestinationOrOrigin={setDestinationOrOrigin}
+        />
+      ) : (
+        //Map + from to inputs 
+        <>
+          <DriverRideFromTo
+            isToSmu={isToSmu}
+            setIsToSmu={setIsToSmu}
+            setOnLocationInput={setOnLocationInput}
+            destinationOrOrigin={destinationOrOrigin}
+          />
+          <MapView
+            style={styles.map}
+            provider={PROVIDER_GOOGLE}
+            initialRegion={initialRegion}
+            showsUserLocation={true}>
+            {/* {location && (
             <Marker
               coordinate={{
                 longitude: location.coords.longitude,
@@ -115,30 +130,31 @@ const DriverRideSetup = () => {
               }}
             />
           )} */}
-          {PolylineCods && (
-            <Polyline
-              coordinates={PolylineCods?.map(coord => ({
-                latitude: coord[0],
-                longitude: coord[1],
-              }))}
-              strokeWidth={3}
-              strokeColor='blue'
-            />
-          )}
-          {PolygonCods && (
-            <Polygon
-              coordinates={PolygonCods}
-              strokeWidth={4}
-              fillColor='green'
-            />
-          )}
-        </MapView>
-      </View>
-    </>
+            {PolylineCods && (
+              <Polyline
+                coordinates={PolylineCods?.map(coord => ({
+                  latitude: coord[0],
+                  longitude: coord[1],
+                }))}
+                strokeWidth={3}
+                strokeColor='blue'
+              />
+            )}
+            {PolygonCods && (
+              <Polygon
+                coordinates={PolygonCods}
+                strokeWidth={4}
+                fillColor='green'
+              />
+            )}
+          </MapView>
+        </>
+      )}
+    </View>
   );
 };
 
-export default DriverRideSetup;
+export default DriverProvideRide;
 
 const styles = StyleSheet.create({
   map: {

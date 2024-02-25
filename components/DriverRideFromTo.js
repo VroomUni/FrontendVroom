@@ -1,9 +1,13 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { StyleSheet, Text, View, Image, Animated, Easing } from "react-native";
-import { Surface,  Button, IconButton } from "react-native-paper";
+import { Surface, Button, IconButton } from "react-native-paper";
 
-const DriverRideFromTo = ({ setLocationInputVisible }) => {
-  const [isToSmu, setIsToSmu] = useState(true);
+const DriverRideFromTo = ({
+  isToSmu,
+  setIsToSmu,
+  setOnLocationInput,
+  destinationOrOrigin,
+}) => {
   const swapAnimation = useRef(new Animated.Value(0)).current;
 
   const translateY1 = swapAnimation.interpolate({
@@ -16,21 +20,28 @@ const DriverRideFromTo = ({ setLocationInputVisible }) => {
     outputRange: [0, -50], // Adjust the value based on the width of your buttons
   });
 
-  const rotateIcon = () => {
+  useEffect(() => {
+    // Reset animation value when the component mounts to fix a bug
+    swapAnimation.setValue(isToSmu ? 0 : 1);
+  }, []);
+
+  useEffect(() => {
+    // Apply animation only when isToSmu changes
     Animated.timing(swapAnimation, {
-      toValue: isToSmu ? 1 : 0,
+      toValue: isToSmu ? 0 : 1,
       duration: 300,
       useNativeDriver: false,
       easing: Easing.linear,
-    }).start(() => {
-      setIsToSmu(!isToSmu);
-    });
+    }).start();
+  }, [isToSmu]);
+
+  const swapBtns = () => {
+    setIsToSmu(!isToSmu);
   };
   const rotate = swapAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "180deg"],
   });
-
   return (
     <Surface mode='flat' style={styles.itineraryComponentContainer}>
       <View>
@@ -46,8 +57,12 @@ const DriverRideFromTo = ({ setLocationInputVisible }) => {
             style={styles.buttons}
             mode='outlined'
             labelStyle={{ alignSelf: "center" }}
-            onPress={() => setLocationInputVisible(true)}>
-            {isToSmu ? "Enter start location" : "Enter destination"}
+            onPress={() => setOnLocationInput(true)}>
+            {destinationOrOrigin
+              ? destinationOrOrigin.name
+              : isToSmu
+              ? "Enter start location"
+              : "Enter destination"}
           </Button>
         </Animated.View>
 
@@ -68,7 +83,7 @@ const DriverRideFromTo = ({ setLocationInputVisible }) => {
           icon='swap-vertical'
           iconColor='white'
           size={35}
-          onPress={rotateIcon}
+          onPress={swapBtns}
         />
       </Animated.View>
     </Surface>

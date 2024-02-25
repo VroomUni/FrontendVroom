@@ -1,28 +1,43 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { PaperProvider } from "react-native-paper";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import DriverRideLocationInput from "./screens/DriverRideLocationInput";
-import DriverRideSetup from "./screens/DriverRideSetup";
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native';
+import SplashScreen from './screens/SplashScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import LoadingScreen from './screens/LoadingScreen';
+import OnBoarding from './screens/OnBoarding';
+import TabNav from './navigation/TabNav';
+import Home from './screens/Home';
+import DriverRideLocationInput from './screens/DriverRideLocationInput';
+
+
 
 export default function App() {
+  const Stack = createStackNavigator();
   return (
-    <PaperProvider>
-      <SafeAreaProvider>
-    <View style={styles.container}>
-      <DriverRideLocationInput /> 
-   </View>
-    </SafeAreaProvider>
-    </PaperProvider>
+   
+    <NavigationContainer>
+      <Stack.Navigator 
+      // initialRouteName="LoadingScreen"
+       headerMode="none"
+       >
+        {/* <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name='OnBoarding'   component={OnBoarding}/> */}
+        <Stack.Screen name="TabNav" component={TabNav} />
+        <Stack.Screen name="DriverRideLocationInput" component={DriverRideLocationInput} />
+
+
+
+      </Stack.Navigator>
+
+    </NavigationContainer>
+    
+
   );
 }
 //fix map curent location 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop:60,
-    backgroundColor: "#F4F4FB",
-
-   
   },
 });

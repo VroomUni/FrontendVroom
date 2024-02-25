@@ -3,7 +3,11 @@ import React, { useState, useEffect } from "react";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Button, TextInput } from "react-native-paper";
 
-const DriverRideLocationInput = () => {
+const DriverRideLocationInput = ({
+  isToSmu,
+  setOnLocationInput,
+  setDestinationOrOrigin,
+}) => {
   const autoComplete = {
     textInput: {
       height: 50,
@@ -16,7 +20,7 @@ const DriverRideLocationInput = () => {
     },
     container: {
       paddingTop: 20,
-      flex:0
+      flex: 0,
     },
 
     listView: {
@@ -26,18 +30,17 @@ const DriverRideLocationInput = () => {
 
   return (
     <>
-      <View
-       style={{ flex: 1 }}
-      >
+      <View style={{ flex: 1 }}>
         <GooglePlacesAutocomplete
-          nearbyPlacesAPI='GooglePlacesSearch'
-          placeholder='From To'
+          nearbyPlacesAPI='GoogleReverseGeocoding'
+          placeholder={isToSmu ? "Enter start location" : "Enter destination"}
           listViewDisplayed='auto'
           debounce={400}
           minLength={2}
           enablePoweredByContainer={false}
           autoFocus={true}
           styles={autoComplete}
+          fetchDetails={true}
           isRowScrollable={false}
           textInputProps={{
             InputComp: TextInput,
@@ -46,19 +49,16 @@ const DriverRideLocationInput = () => {
             key: "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M",
             language: "en",
           }}
-          //   onPress={(data, details = null) => {
-          //     dispatchOrigin({
-          //       type: "ADD_ORIGIN",
-          //       payload: {
-          //         latitude: details.geometry.location.lat,
-          //         longitude: details.geometry.location.lng,
-          //         address: details.formatted_address,
-          //         name: details.name,
-          //       },
-          //     });
-
-          //     setDestination(true);
-          //   }}
+          onPress={(data, details) => {
+            setDestinationOrOrigin({
+              coords: {
+                latitude: details.geometry.location.lat,
+                longitude: details.geometry.location.lng,
+              },
+              name: details.name,
+            });
+            setOnLocationInput(false);
+          }}
           predefinedPlaces={[
             {
               description: "Home",
@@ -66,24 +66,39 @@ const DriverRideLocationInput = () => {
             },
           ]}
         />
-           <Button
-        mode='outlined'
-        buttonColor='#39AFEA'
-        textColor='white'
-        icon={"map-marker-radius"}
-        style={{
-          width: 300,
-          borderRadius: 10,
-          margin: "auto",
-          alignSelf: "center",
-          marginTop:20
-          
-        }}>
-        {" "}
-        Use current location
-      </Button>
+        <Button
+          mode='outlined'
+          buttonColor='#39AFEA'
+          textColor='white'
+          icon={"map-marker-radius"}
+          style={{
+            width: 300,
+            borderRadius: 10,
+            margin: "auto",
+            alignSelf: "center",
+            marginTop: 20,
+          }}
+          onPress={() => setOnLocationInput(false)}>
+          {" "}
+          Use current location
+        </Button>
+        <Button
+          mode='outlined'
+          buttonColor='#39AFEA'
+          textColor='white'
+          icon={"pin"}
+          style={{
+            width: 300,
+            borderRadius: 10,
+            margin: "auto",
+            alignSelf: "center",
+            marginTop: 15,
+          }}
+          onPress={() => setOnLocationInput(false)}>
+          {" "}
+          Choose on map{" "}
+        </Button>
       </View>
-   
     </>
   );
 };
