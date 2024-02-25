@@ -1,20 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { PaperProvider } from "react-native-paper";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import DriverRideLocationInput from "./screens/DriverRideLocationInput";
+import DriverRideSetup from "./screens/DriverRideSetup";
 
 export default function App() {
   return (
+    <PaperProvider>
+      <SafeAreaProvider>
     <View style={styles.container}>
-      <Text>Vroom App!</Text>
-      <StatusBar style="auto" />
-    </View>
+      <DriverRideLocationInput /> 
+   </View>
+    </SafeAreaProvider>
+    </PaperProvider>
   );
 }
-
+//fix map curent location 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop:60,
+    backgroundColor: "#F4F4FB",
+
+   
   },
 });
