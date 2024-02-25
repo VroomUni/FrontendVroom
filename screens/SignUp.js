@@ -29,6 +29,7 @@ const Signup = ({ navigation }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
   const [checked, setChecked] = React.useState("");
+  const [message, setMessage] = useState("");
 
   const validateEmail = email => {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(smu\.tn|msb\.tn|medtech\.tn|cli\.tn)$/;
@@ -45,6 +46,44 @@ const Signup = ({ navigation }) => {
         return re.test(phone);
       };
     
+      const handleSubmit = () => {
+        if (
+          email === "" ||
+          phone === "" ||
+          firstname === "" ||
+          lastname === "" ||
+          age === "" ||
+          rePassword === "" ||
+          password === "" ||
+          checked === ""
+        ) {
+          setMessage("Fill in all fields");
+        } else if (!validateEmail(email)) {
+          setMessage("Only valid email addresses are accepted");
+        } else if (!validatePhone(phone)) {
+          setMessage("Invalid phone number");
+        } else if (password.length <= 10) {
+          setMessage("Password should have more than 10 characters");
+        } else if (!validatePassword(password)) {
+          setMessage("Password should include at least one capital letter and one number");
+        } else if (password !== rePassword) {
+          setMessage("Passwords do not match!");
+        } else if (!isChecked) {
+          setMessage("Please agree to the terms and conditions");
+        } else {
+          setMessage("");
+          setPassword("");
+          setPhone("");
+          setFirstname("");
+          setLastname("");
+          setEmail("");
+          setAge("");
+          setRePassword("");
+          setChecked("");
+          setIsChecked(false);
+          navigation.navigate("Home");
+        }
+      };
   
 
 
@@ -52,6 +91,7 @@ const Signup = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#188bff" }}>
       <ScrollView keyboardDismissMode="on-drag">
         <View style={{ flex: 1, marginHorizontal: 22 }}>
+        
           <View style={{ marginVertical: 22 }}>
             <Text
               style={{
@@ -438,10 +478,11 @@ const Signup = ({ navigation }) => {
               I aggree to the terms and conditions
             </Text>
           </View>
-
+          {message !== "" && <Text style={{ color: "red", marginBottom: 12 }}>{message}</Text>}
           <Button
             title="Sign Up"
             filled
+            onPress={handleSubmit}
             style={{
               marginTop: 18,
               marginBottom: 4,
