@@ -26,7 +26,7 @@ const Preferences = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white ,  }}>
 
-      <View style={{ marginVertical: 22, alignItems:"center",flexDirection: "row",  }}>
+      <View style={{ marginVertical: 22, alignItems:"center", flexDirection: "row",  }}>
         
         <Text
           style={{
@@ -42,22 +42,18 @@ const Preferences = ({ navigation }) => {
         </Text>
 
         <Button
-        style={{}}
         title="Skip"
         mode="contained-tonal"
         buttonColor="#00f0dc"
         textColor="white"
+        icon="chevron-right" 
+        style ={{alignItems: "center",}}
         onPress={() => console.log("SKIP")}
       >
         Skip
-        <IconButton
-        icon="skip-next"
-        size={24} 
-        color="white"
-        alignItems="center"
-        />
+       
       </Button>
-      
+
       {/* <IconButton
         icon="skip-next" 
         color="white"
