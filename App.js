@@ -1,11 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
+import Login from './screens/Login';
+import Signup from './screens/SignUp';
+import Preferences from './screens/Preferences';
+
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Vroom App!</Text>
-      <StatusBar style="auto" />
+    <View style = {styles.container}>
+      {/* <Login/> */}
+      {/* <Signup/> */}
+      <Preferences/>
     </View>
   );
 }
