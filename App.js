@@ -9,8 +9,8 @@ export default function App() {
   return (
     <View style = {styles.container}>
       {/* <Login/> */}
-      {/* <Signup/> */}
-      <Preferences/>
+      <Signup/>
+      {/* <Preferences/> */}
     </View>
   );
 }

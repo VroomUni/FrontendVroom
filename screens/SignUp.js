@@ -21,10 +21,14 @@ const Signup = ({ navigation }) => {
 
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [age, setAge] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
+  const [isPasswordShown, setIsPasswordShown] = useState(true);
+  const [isChecked, setIsChecked] = useState(false);
+  const [checked, setChecked] = React.useState("");
 
   const validateEmail = email => {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(smu\.tn|msb\.tn|medtech\.tn|cli\.tn)$/;
@@ -41,9 +45,7 @@ const Signup = ({ navigation }) => {
         return re.test(phone);
       };
     
-  const [isPasswordShown, setIsPasswordShown] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
-  const [checked, setChecked] = React.useState("");
+  
 
 
   return (
@@ -104,6 +106,8 @@ const Signup = ({ navigation }) => {
                 style={{
                   width: "100%",
                 }}
+                value={email}
+                onChangeText={setEmail}
               />
             </View>
           </View>
@@ -140,6 +144,8 @@ const Signup = ({ navigation }) => {
                 style={{
                   width: "100%",
                 }}
+                value={firstname}
+                onChangeText={setFirstname}
               />
             </View>
           </View>
@@ -176,6 +182,8 @@ const Signup = ({ navigation }) => {
                 style={{
                   width: "100%",
                 }}
+                value={lastname}
+                onChangeText={setLastname}
               />
             </View>
           </View>
@@ -212,6 +220,8 @@ const Signup = ({ navigation }) => {
                 style={{
                   width: "100%",
                 }}
+                value={age}
+                onChangeText={setAge}
               />
             </View>
           </View>
@@ -248,6 +258,8 @@ const Signup = ({ navigation }) => {
                 style={{
                   width: "100%",
                 }}
+                value={password}
+                onChangeText={setPassword}
               />
 
               <TouchableOpacity
@@ -298,6 +310,8 @@ const Signup = ({ navigation }) => {
                 style={{
                   width: "100%",
                 }}
+                value={rePassword}
+                onChangeText={setRePassword}
               />
 
               <TouchableOpacity
@@ -352,6 +366,7 @@ const Signup = ({ navigation }) => {
                   borderLeftColor: COLORS.grey,
                   height: "100%",
                 }}
+                
               />
 
               <TextInput
@@ -361,6 +376,8 @@ const Signup = ({ navigation }) => {
                 style={{
                   width: "80%",
                 }}
+                value={phone}
+                onChangeText={setPhone}
               />
             </View>
           </View>
