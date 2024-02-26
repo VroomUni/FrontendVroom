@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import ProvideRides from "../screens/ProvideRides";
 import DriverRides from "../screens/DriverRides";
 import HistoryDriver from "../screens/HistoryDriver";
 import Profile from "../screens/Profile";
 import SearchRides from "../screens/SearchRides";
 import PassengerRides from "../screens/PassengerRides";
 import { Alert, Platform, TouchableOpacity, View } from "react-native";
+import DriverProvideRide from "../screens/DriverProvideRide";
 
 const Tab = createBottomTabNavigator();
 
@@ -47,30 +47,31 @@ function TabNav() {
           backgroundColor: "#168FE0",
         },
         headerShown: false,
-      })}
-    >
+      })}>
       {userType === "driver" ? (
         <>
-          <Tab.Screen name="Provide Rides" component={ProvideRides} />
-          <Tab.Screen name="My Rides" component={DriverRides} />
+          <Tab.Screen name='Provide Rides' component={DriverProvideRide} />
+          <Tab.Screen name='My Rides' component={DriverRides} />
         </>
       ) : (
         <>
-          <Tab.Screen name="Search Rides" component={SearchRides} />
-          <Tab.Screen name="My Rides" component={PassengerRides} />
+          <Tab.Screen name='Search Rides' component={SearchRides} />
+          <Tab.Screen name='My Rides' component={PassengerRides} />
         </>
       )}
       <Tab.Screen
-        name="test"
-        component={userType === "driver" ? ProvideRides : SearchRides}
+        name='test'
+        component={userType === "driver" ? DriverProvideRide : SearchRides}
         options={{
-          tabBarButton: (props) => (
+          tabBarButton: props => (
             <TouchableOpacity
               {...props}
               onPress={() => {
                 Alert.alert(
                   `switch from ${userType}`,
-                  `Are you sure you want to switch from ${userType} to ${userType === 'driver' ? 'passenger' : 'driver'}?`,
+                  `Are you sure you want to switch from ${userType} to ${
+                    userType === "driver" ? "passenger" : "driver"
+                  }?`,
                   [
                     {
                       text: "Cancel",
@@ -85,8 +86,7 @@ function TabNav() {
                     },
                   ]
                 );
-              }}
-            >
+              }}>
               <View
                 style={{
                   top: Platform.OS == "ios" ? -15 : -20,
@@ -96,16 +96,15 @@ function TabNav() {
                   alignItems: "center",
                   justifyContent: "center",
                   backgroundColor: "#162447",
-                }}
-              >
-                <FontAwesome name="exchange" size={24} color="#fff" />
+                }}>
+                <FontAwesome name='exchange' size={24} color='#fff' />
               </View>
             </TouchableOpacity>
           ),
         }}
       />
-      <Tab.Screen name="History" component={HistoryDriver} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name='History' component={HistoryDriver} />
+      <Tab.Screen name='Profile' component={Profile} />
     </Tab.Navigator>
   );
 }
