@@ -24,7 +24,7 @@ const Preferences = ({ navigation }) => {
   const [isGirlsSelected, setGirlsSelected] = useState(false);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white ,  }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white , marginHorizontal:10  }}>
 
       <View style={{ marginVertical: 22, alignItems:"center", flexDirection: "row",  }}>
         
@@ -48,7 +48,7 @@ const Preferences = ({ navigation }) => {
         textColor="white"
         icon="chevron-right" 
         style ={{alignItems: "center",}}
-        onPress={() => console.log("SKIP")}
+        onPress={() => navigation.navigate("SearchRides")}
         contentStyle={{ flexDirection: "row-reverse" }}
       >
         Skip
@@ -293,7 +293,7 @@ const Preferences = ({ navigation }) => {
               mode="contained-tonal"
               buttonColor="#188bff"
               textColor="white"
-              onPress={() => console.log("CAR")}
+              onPress={() => navigation.navigate("Car")}
               
             >
               Yes
@@ -304,7 +304,7 @@ const Preferences = ({ navigation }) => {
               mode="contained-tonal"
               buttonColor="#188bff"
               textColor="white"
-              onPress={() => console.log("NO CAR")}
+              onPress={() => navigation.navigate("SearchRides")}
             >
               No
             </Button>

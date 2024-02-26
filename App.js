@@ -8,7 +8,11 @@ import OnBoarding from './screens/OnBoarding';
 import TabNav from './navigation/TabNav';
 import Home from './screens/Home';
 import DriverRideLocationInput from './screens/DriverRideLocationInput';
-
+import Signup from './screens/SignUp';
+import Login from './screens/Login';
+import Preferences from './screens/Preferences';
+import Car from './screens/Car';
+import SearchRides from './screens/SearchRides';
 
 
 export default function App() {
@@ -21,8 +25,15 @@ export default function App() {
        headerMode="none"
        >
         {/* <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-        <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        <Stack.Screen name='OnBoarding'   component={OnBoarding}/> */}
+        <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
+        
+        {/* <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="Login" component={Login} /> */}
+        <Stack.Screen name="Preferences" component={Preferences} />
+        <Stack.Screen name='OnBoarding'   component={OnBoarding}/>
+        <Stack.Screen name='Home'   component={Home}/>
+        <Stack.Screen name='SearchRides'   component={SearchRides}/>
+        <Stack.Screen name='Car'   component={Car}/>
         <Stack.Screen name="TabNav" component={TabNav} />
         <Stack.Screen name="DriverRideLocationInput" component={DriverRideLocationInput} />
 
