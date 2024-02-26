@@ -42,6 +42,8 @@ const DriverRideFromTo = ({
     inputRange: [0, 1],
     outputRange: ["0deg", "180deg"],
   });
+
+  console.log(destinationOrOrigin);
   return (
     <Surface mode='flat' style={styles.itineraryComponentContainer}>
       <View>

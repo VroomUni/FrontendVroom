@@ -1,5 +1,5 @@
-import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import { TouchableOpacity, StyleSheet, Image, View } from "react-native";
+import React, { useRef, useEffect, useState } from "react";
 import axios from "axios";
 import MapView, {
   Marker,
@@ -15,89 +15,82 @@ import { isPointInPolygon } from "geolib";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import DriverRideFromTo from "../components/DriverRideFromTo";
 import DriverRideLocationInput from "./DriverRideLocationInput";
+import { university } from "react-native-vector-icons";
 const DriverProvideRide = ({ navigation, route }) => {
   const [PolylineCods, setPolylineCods] = useState(null);
   const [PolygonCods, setPolygonCods] = useState();
   const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
-  const origin = "ben arous tunisia";
-  const destination = "sfax tunisia";
 
-  const apiUrl = `https://maps.googleapis.com/maps/api/directinnons/json?origin=${origin}&destination=${destination}&key=${apiKey}`;
+  const SMUCOORDS = {
+    latitude: 36.84598089012623,
+    longitude: 10.268806957645351,
+  };
+  const [destinationOrOrigin, setDestinationOrOrigin] = useState(null);
+
+  const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${apiKey}`;
+
   useEffect(() => {
-    axios
-      .get(apiUrl)
-      .then(response => {
-        const overviewPath = response.data.routes[0].overview_polyline.points;
+    destinationOrOrigin &&
+      axios
+        .get(apiUrl)
+        .then(response => {
+          const overviewPath = response.data.routes[0].overview_polyline.points;
 
-        const decodedCoordinates = decode(overviewPath);
-        const geoJsonFeature = {
-          type: "LineString",
-          coordinates: decodedCoordinates.map(coord => [coord[0], coord[1]]),
-        };
+          const decodedPolylineCods = decode(overviewPath);
+          const geoJsonFeature = {
+            type: "LineString",
+            coordinates: decodedPolylineCods.map(coord => [coord[0], coord[1]]),
+          };
 
-        const geoReader = new GeoJSONReader();
-        const geoWriter = new GeoJSONWriter();
-        const geometry = geoReader.read(geoJsonFeature);
+          const geoReader = new GeoJSONReader();
+          const geoWriter = new GeoJSONWriter();
+          const geometry = geoReader.read(geoJsonFeature);
 
-        // Use BufferOp to buffer the geometry
-        const bufferOp = new BufferOp(geometry);
-        const distance = 10 / 500.12;
-        const bufferedGeometry = bufferOp.getResultGeometry(distance);
-        const resultPolyCords = geoWriter.write(bufferedGeometry);
+          // Use BufferOp to buffer the geometry
+          const bufferOp = new BufferOp(geometry);
+          const distance = 10 / 500.12;
+          const bufferedGeometry = bufferOp.getResultGeometry(distance);
+          const resultPolygonCods = geoWriter.write(bufferedGeometry);
 
-        setPolygonCods(
-          resultPolyCords.coordinates[0].map(elt => ({
-            latitude: elt[0],
-            longitude: elt[1],
-          }))
-        );
-        setPolylineCods(decodedCoordinates);
-      })
-      .catch(error => {
-        // Handle errors
-        console.error("Error ", error);
-      });
-  }, []);
-  // const [location, setLocation] = useState(null);
-  // const [errorMsg, setErrorMsg] = useState(null);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       let { status } = await Location.requestForegroundPermissionsAsync();
-  //       if (status !== "granted") {
-  //         setErrorMsg("Permission to access location was denied");
-  //         return;
-  //       }
-
-  //       let location = await Location.getCurrentPositionAsync({accuracy:Location.Accuracy.High});
-  //       setLocation(location);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   })();
-  // }, []);
-
-  // let text = "Waiting..";
-  // if (errorMsg) {
-  //   text = errorMsg;
-  // } else if (location) {
-  //   text = JSON.stringify(location);
-  // }
-
-  // console.log(text);
+          setPolygonCods(
+            resultPolygonCods.coordinates[0].map(elt => ({
+              latitude: elt[0],
+              longitude: elt[1],
+            }))
+          );
+          setPolylineCods(decodedPolylineCods);
+        })
+        .catch(error => {
+          // Handle errors
+          console.error("Error ", error);
+        });
+  }, [destinationOrOrigin]);
 
   const [isToSmu, setIsToSmu] = useState(true);
   const [onLocationInputPage, setOnLocationInput] = useState(false);
-  const [destinationOrOrigin, setDestinationOrOrigin] = useState(null);
 
   const initialRegion = {
-    latitude: 35.8999, // Latitude of Tunisia
-    longitude: 9.5375, // Longitude of Tunisia
+    latitude: 36.7277622657912, // Latitude of Tunisia
+    longitude: 10.203072895008471, // Longitude of Tunisia
 
-    latitudeDelta: 2, // Zoom level. Adjust as needed
-    longitudeDelta: 2, // Zoom level. Adjust as needed
+    latitudeDelta: 1, // Zoom level
+    longitudeDelta: 1, // Zoom level
   };
+  const mapViewRef = useRef(null);
+  useEffect(() => {
+    // Use this useEffect to update the map region when PolylineCods changes
+    if (mapViewRef.current && PolylineCods) {
+      mapViewRef.current.fitToCoordinates(PolygonCods, {
+        edgePadding: {
+          top: 10,
+          bottom: 10,
+          right: 10,
+          left: 10,
+        },
+        animated: true,
+      });
+    }
+  }, [PolylineCods]);
 
   return (
     <View style={{ flex: 1, paddingTop: 50 }}>
@@ -109,7 +102,7 @@ const DriverProvideRide = ({ navigation, route }) => {
           setDestinationOrOrigin={setDestinationOrOrigin}
         />
       ) : (
-        //Map + from to inputs 
+        //Map + from to inputs
         <>
           <DriverRideFromTo
             isToSmu={isToSmu}
@@ -118,33 +111,42 @@ const DriverProvideRide = ({ navigation, route }) => {
             destinationOrOrigin={destinationOrOrigin}
           />
           <MapView
+            ref={mapViewRef}
             style={styles.map}
             provider={PROVIDER_GOOGLE}
-            initialRegion={initialRegion}
-            showsUserLocation={true}>
-            {/* {location && (
+            showsBuildings={false}
+            initialRegion={initialRegion}>
+            {destinationOrOrigin && (
+              <Marker
+                coordinate={{
+                  longitude: destinationOrOrigin.coords.longitude,
+                  latitude: destinationOrOrigin.coords.latitude,
+                }}
+              />
+            )}
             <Marker
               coordinate={{
-                longitude: location.coords.longitude,
-                latitude: location.coords.latitude,
+                longitude: SMUCOORDS.longitude,
+                latitude: SMUCOORDS.latitude,
               }}
+              pinColor='blue'
+              title='SMU'
             />
-          )} */}
             {PolylineCods && (
               <Polyline
-                coordinates={PolylineCods?.map(coord => ({
+                coordinates={PolylineCods.map(coord => ({
                   latitude: coord[0],
                   longitude: coord[1],
                 }))}
-                strokeWidth={3}
+                strokeWidth={2}
                 strokeColor='blue'
               />
             )}
             {PolygonCods && (
               <Polygon
                 coordinates={PolygonCods}
-                strokeWidth={4}
-                fillColor='green'
+                strokeWidth={3}
+                fillColor='rgba(67, 247, 154,0.3)'
               />
             )}
           </MapView>

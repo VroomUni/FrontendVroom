@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Button, TextInput } from "react-native-paper";
-
+import * as Location from "expo-location";
 const DriverRideLocationInput = ({
   isToSmu,
   setOnLocationInput,
@@ -14,7 +14,7 @@ const DriverRideLocationInput = ({
       borderRadius: 10,
       paddingVertical: 5,
       paddingHorizontal: 10,
-      fontSize: 18,
+      fontSize: 15,
       flex: 1,
       marginHorizontal: 15,
     },
@@ -71,15 +71,31 @@ const DriverRideLocationInput = ({
           buttonColor='#39AFEA'
           textColor='white'
           icon={"map-marker-radius"}
-          style={{
-            width: 300,
-            borderRadius: 10,
-            margin: "auto",
-            alignSelf: "center",
-            marginTop: 20,
-          }}
-          onPress={() => setOnLocationInput(false)}>
-          {" "}
+          style={styles.buttons}
+          onPress={async () => {
+            try {
+              let { status } =
+                await Location.requestForegroundPermissionsAsync();
+              if (status !== "granted") {
+                throw new Error();
+              }
+
+              let location = await Location.getCurrentPositionAsync({
+              });
+console.log('locaiton' + location);
+              setDestinationOrOrigin({
+                coords: {
+                  latitude: location.coords.latitude,
+                  longitude: location.coords.longitude,
+                },
+                name: "Current location",
+              });
+              setOnLocationInput(false);
+            } catch (error) {
+              console.log(error);
+              Alert.alert("Please enable location permission");
+            }
+          }}>
           Use current location
         </Button>
         <Button
@@ -87,16 +103,18 @@ const DriverRideLocationInput = ({
           buttonColor='#39AFEA'
           textColor='white'
           icon={"pin"}
-          style={{
-            width: 300,
-            borderRadius: 10,
-            margin: "auto",
-            alignSelf: "center",
-            marginTop: 15,
-          }}
-          onPress={() => setOnLocationInput(false)}>
-          {" "}
-          Choose on map{" "}
+          style={styles.buttons}
+          onPress={() => {
+            setDestinationOrOrigin({
+              coords: {
+                latitude: 1,
+                longitude: 1,
+              },
+              name: details.name,
+            });
+            setOnLocationInput(false);
+          }}>
+          Choose on map
         </Button>
       </View>
     </>
@@ -105,4 +123,12 @@ const DriverRideLocationInput = ({
 
 export default DriverRideLocationInput;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  buttons: {
+    width: 300,
+    borderRadius: 10,
+    margin: "auto",
+    alignSelf: "center",
+    marginTop: 15,
+  },
+});
