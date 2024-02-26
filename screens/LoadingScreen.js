@@ -13,9 +13,9 @@ function LoadingScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>vroom</Text>
+      <Text style={styles.header}>Vroom</Text>
       <View style={styles.animationContainer}>
-        <LottieView style={styles.animation} source={require('../assets/CarAnimation.json')} autoPlay loop />
+       <LottieView style={styles.animation} source={require('../assets/CarAnimation.json')} autoPlay loop />
       </View>
     </SafeAreaView>
   );
