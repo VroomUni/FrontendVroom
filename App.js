@@ -20,11 +20,11 @@ export default function App() {
       // initialRouteName="LoadingScreen"
        headerMode="none"
        >
-        {/* <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        <Stack.Screen name='OnBoarding'   component={OnBoarding}/> */}
-        <Stack.Screen name="TabNav" component={TabNav} />
-        <Stack.Screen name="DriverRideLocationInput" component={DriverRideLocationInput} />
+        <Stack.Screen name='OnBoarding'   component={OnBoarding}/>
+        {/* <Stack.Screen name="TabNav" component={TabNav} />
+        <Stack.Screen name="DriverRideLocationInput" component={DriverRideLocationInput} /> */}
 
 
 
