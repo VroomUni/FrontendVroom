@@ -33,18 +33,7 @@ function OnBoarding() {
           width: Dimensions.get('window').width * 1,
           resizeMode: 'contain'
         }}/>
-        <View style={{padding:15}}>
-          <Text style={{
-            fontSize: 18,
-            fontWeight:'700'}}>
-            { item.title }
-          </Text>
-          <Text style={{
-            marginTop:20,
-            fontSize:16}}>
-            { item.description }
-          </Text>
-        </View>
+        
       </View>
     );
   }
@@ -52,7 +41,8 @@ function OnBoarding() {
   return (
     <SafeAreaView style={{
       flex:1,
-      justifyContent:'space-between'
+      justifyContent:'space-between',
+      backgroundColor:'white'
     }}>
       <View style={{
         alignItems:'flex-end',
