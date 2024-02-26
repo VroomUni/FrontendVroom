@@ -98,8 +98,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     backgroundColor: "#5e69ee",
-    borderWidth: 1,
-    borderColor: "black",
+    
   },
   itineraryImg: { height: 65, width: 50, resizeMode: "contain" },
 

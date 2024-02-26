@@ -9,7 +9,6 @@ import SearchRides from "../screens/SearchRides";
 import PassengerRides from "../screens/PassengerRides";
 import { Alert, Platform, TouchableOpacity, View } from "react-native";
 import DriverProvideRide from "../screens/DriverProvideRide";
-import { DriverContext } from "../contexts/DriverContext";
 
 const Tab = createBottomTabNavigator();
 
