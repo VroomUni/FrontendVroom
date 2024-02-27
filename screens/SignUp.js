@@ -31,9 +31,17 @@ const Signup = ({ navigation }) => {
   const [checked, setChecked] = React.useState("");
   const [message, setMessage] = useState("");
 
+  const [errorMessage, setErrorMessage] = useState('');
+
   const validateEmail = email => {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(smu\.tn|msb\.tn|medtech\.tn|cli\.tn)$/;
+    var re = /^[a-zA-Z0-9._-]+@(medtech\.tn|msb\.tn|smu.tn)$/
     return re.test(email);
+    };
+
+    const handleEmailChange = (text) => {
+      setEmail(text);
+      const isValid = validateEmail(text);
+      setErrorMessage(isValid ? '' : 'Invalid email address. Please check for typos.'); // Update error message based on validity
     };
 
   const validatePassword = password => {
@@ -81,14 +89,14 @@ const Signup = ({ navigation }) => {
           setRePassword("");
           setChecked("");
           setIsChecked(false);
-          navigation.navigate("Home");
+          navigation.navigate("Login");
         }
       };
   
 
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#188bff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#6CB4EE" }}>
       <ScrollView keyboardDismissMode="on-drag">
         <View style={{ flex: 1, marginHorizontal: 22 }}>
         
@@ -147,8 +155,10 @@ const Signup = ({ navigation }) => {
                   width: "100%",
                 }}
                 value={email}
-                onChangeText={setEmail}
+                // onChangeText={setEmail}
+                onChangeText={handleEmailChange}
               />
+              {errorMessage && <Text style={errorMessage}>{errorMessage}</Text>}
             </View>
           </View>
 
