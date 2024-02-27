@@ -27,21 +27,19 @@ export default function App() {
 
     <NavigationContainer>
       <Stack.Navigator 
-      // initialRouteName="LoadingScreen"
+      initialRouteName="LoadingScreen"
        headerMode="none"
        >
-        {/* <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-        <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
-
+        <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
         
-
-        {/* <Stack.Screen name="Signup" component={Signup} /> */}
+        <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Preferences" component={Preferences} />
-        <Stack.Screen name='OnBoarding'   component={OnBoarding}/>
-        <Stack.Screen name='Home'   component={Home}/>
-        <Stack.Screen name='SearchRides'   component={SearchRides}/>
-        <Stack.Screen name='Car'   component={Car}/>
+        <Stack.Screen name="OnBoarding" component={OnBoarding}/>
+        <Stack.Screen name="Home"  component={Home}/>
+        <Stack.Screen name="SearchRides"  component={SearchRides}/>
+        <Stack.Screen name="Car"  component={Car}/>
         <Stack.Screen name="TabNav" component={TabNav} />
         <Stack.Screen name="DriverRideLocationInput" component={DriverRideLocationInput} />
 
