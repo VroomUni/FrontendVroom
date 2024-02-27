@@ -10,19 +10,26 @@
   },
   "dependencies": {
     "@googlemaps/polyline-codec": "^1.0.28",
+
     "@react-navigation/bottom-tabs": "^6.5.12",
     "@react-navigation/native": "^6.1.10",
     "@react-navigation/stack": "^6.3.21",
     "axios": "^1.6.7",
+    "deprecated-react-native-prop-types": "^5.0.0",
     "expo": "~50.0.6",
     "expo-checkbox": "^2.7.0",
     "expo-file-system": "~16.0.7",
     "expo-image-picker": "~14.7.1",
     "expo-location": "~16.5.4",
+
+    "expo-file-system": "~16.0.6",
+    "expo-image-picker": "~14.7.1",
+    "expo-location": "~16.5.3",
     "expo-status-bar": "~1.11.1",
     "geolib": "^3.3.4",
     "jsts": "^2.11.0",
-    "lottie-react-native": "^6.5.1",
+    "lottie-react-native": "^6.6.0",
+
     "react": "18.2.0",
     "react-native": "0.73.4",
     "react-native-dotenv": "^3.4.10",
