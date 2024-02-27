@@ -5,8 +5,10 @@ import { Surface, Button, IconButton } from "react-native-paper";
 const DriverRideFromTo = ({
   isToSmu,
   setIsToSmu,
-  setOnLocationInput,
+  setOnLocationInputPage,
   destinationOrOrigin,
+  setPolygonCods,
+  setPolylineCods,
 }) => {
   const swapAnimation = useRef(new Animated.Value(0)).current;
 
@@ -42,6 +44,8 @@ const DriverRideFromTo = ({
     inputRange: [0, 1],
     outputRange: ["0deg", "180deg"],
   });
+
+  console.log(destinationOrOrigin);
   return (
     <Surface mode='flat' style={styles.itineraryComponentContainer}>
       <View>
@@ -57,7 +61,11 @@ const DriverRideFromTo = ({
             style={styles.buttons}
             mode='outlined'
             labelStyle={{ alignSelf: "center" }}
-            onPress={() => setOnLocationInput(true)}>
+            onPress={() => {
+              setOnLocationInputPage(true);
+              setPolygonCods(null);
+              setPolylineCods(null);
+            }}>
             {destinationOrOrigin
               ? destinationOrOrigin.name
               : isToSmu
@@ -98,12 +106,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     backgroundColor: "#5e69ee",
-    
   },
   itineraryImg: { height: 65, width: 50, resizeMode: "contain" },
 
   innerFromToBtnsContainer: {
-    width: 250,
+    width: "60%",
   },
   buttons: {
     borderRadius: 10,
