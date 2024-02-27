@@ -13,12 +13,18 @@ import Login from './screens/Login';
 import Preferences from './screens/Preferences';
 import Car from './screens/Car';
 import SearchRides from './screens/SearchRides';
-
+import ImageUpload from './components/ImageUpload';
 
 export default function App() {
+
   const Stack = createStackNavigator();
+
   return (
-   
+    
+    // <View>
+    //   <ImageUpload/>
+    // </View>
+
     <NavigationContainer>
       <Stack.Navigator 
       // initialRouteName="LoadingScreen"
@@ -26,9 +32,11 @@ export default function App() {
        >
         {/* <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
         <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
+
         
-        {/* <Stack.Screen name="Signup" component={Signup} />
-        <Stack.Screen name="Login" component={Login} /> */}
+
+        <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Preferences" component={Preferences} />
         <Stack.Screen name='OnBoarding'   component={OnBoarding}/>
         <Stack.Screen name='Home'   component={Home}/>
