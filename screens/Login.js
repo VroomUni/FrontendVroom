@@ -17,6 +17,8 @@ import Button from "../components/Button";
 const Login = ({ navigation }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,6 +30,8 @@ const Login = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Enter your email address"
+            value={email}
+            onChangeText={setEmail}
             placeholderTextColor={COLORS.darkGray}
             keyboardType="email-address"
           />
@@ -37,6 +41,8 @@ const Login = ({ navigation }) => {
           <View style={styles.passwordContainer}>
             <TextInput
               placeholder="Enter your password"
+              value={password}
+              onChangeText={setPassword}
               placeholderTextColor={COLORS.darkGray}
               secureTextEntry={isPasswordShown}
             />
@@ -46,6 +52,7 @@ const Login = ({ navigation }) => {
             >
               {isPasswordShown == true ? (
                 <Ionicons name="eye-off" size={24} color={COLORS.black} />
+                
               ) : (
                 <Ionicons name="eye" size={24} color={COLORS.black} />
               )}
