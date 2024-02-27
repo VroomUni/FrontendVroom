@@ -21,9 +21,7 @@ export default function App() {
 
   return (
     
-    // <View>
-    //   <ImageUpload/>
-    // </View>
+    
 
     <NavigationContainer>
       <Stack.Navigator 
