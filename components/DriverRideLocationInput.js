@@ -5,8 +5,9 @@ import { Button, TextInput } from "react-native-paper";
 import * as Location from "expo-location";
 const DriverRideLocationInput = ({
   isToSmu,
-  setOnLocationInput,
+  setOnLocationInputPage,
   setDestinationOrOrigin,
+  setCustomLocationMarker,
 }) => {
   const autoComplete = {
     textInput: {
@@ -48,6 +49,7 @@ const DriverRideLocationInput = ({
           query={{
             key: "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M",
             language: "en",
+            components: "country:tn",
           }}
           onPress={(data, details) => {
             setDestinationOrOrigin({
@@ -57,7 +59,7 @@ const DriverRideLocationInput = ({
               },
               name: details.name,
             });
-            setOnLocationInput(false);
+            setOnLocationInputPage(false);
           }}
           predefinedPlaces={[
             {
@@ -80,9 +82,7 @@ const DriverRideLocationInput = ({
                 throw new Error();
               }
 
-              let location = await Location.getCurrentPositionAsync({
-              });
-console.log('locaiton' + location);
+              let location = await Location.getCurrentPositionAsync({});
               setDestinationOrOrigin({
                 coords: {
                   latitude: location.coords.latitude,
@@ -90,7 +90,7 @@ console.log('locaiton' + location);
                 },
                 name: "Current location",
               });
-              setOnLocationInput(false);
+              setOnLocationInputPage(false);
             } catch (error) {
               console.log(error);
               Alert.alert("Please enable location permission");
@@ -98,6 +98,7 @@ console.log('locaiton' + location);
           }}>
           Use current location
         </Button>
+
         <Button
           mode='outlined'
           buttonColor='#39AFEA'
@@ -105,14 +106,9 @@ console.log('locaiton' + location);
           icon={"pin"}
           style={styles.buttons}
           onPress={() => {
-            setDestinationOrOrigin({
-              coords: {
-                latitude: 1,
-                longitude: 1,
-              },
-              name: details.name,
-            });
-            setOnLocationInput(false);
+            setOnLocationInputPage(false);
+            setDestinationOrOrigin(null);
+            setCustomLocationMarker(true);
           }}>
           Choose on map
         </Button>

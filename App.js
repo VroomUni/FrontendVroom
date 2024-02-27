@@ -7,7 +7,6 @@ import LoadingScreen from './screens/LoadingScreen';
 import OnBoarding from './screens/OnBoarding';
 import TabNav from './navigation/TabNav';
 import Home from './screens/Home';
-import DriverRideLocationInput from './screens/DriverRideLocationInput';
 
 
 

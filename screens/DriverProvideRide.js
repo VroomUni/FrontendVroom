@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, Image, View } from "react-native";
+import { StyleSheet, Image, View, Alert } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
 import axios from "axios";
 import MapView, {
@@ -12,21 +12,22 @@ import GeoJSONReader from "jsts/org/locationtech/jts/io/GeoJSONReader";
 import GeoJSONWriter from "jsts/org/locationtech/jts/io/GeoJSONWriter";
 import { BufferOp } from "jsts/org/locationtech/jts/operation/buffer";
 import { isPointInPolygon } from "geolib";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import DriverRideFromTo from "../components/DriverRideFromTo";
-import DriverRideLocationInput from "./DriverRideLocationInput";
-import { university } from "react-native-vector-icons";
+import DriverRideLocationInput from "../components/DriverRideLocationInput";
+import { Button } from "react-native-paper";
 const DriverProvideRide = ({ navigation, route }) => {
   const [PolylineCods, setPolylineCods] = useState(null);
-  const [PolygonCods, setPolygonCods] = useState();
-  const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
+  const [PolygonCods, setPolygonCods] = useState(null);
 
+  const [destinationOrOrigin, setDestinationOrOrigin] = useState(null);
+  const [isToSmu, setIsToSmu] = useState(true);
+  const [onLocationInputPage, setOnLocationInputPage] = useState(false);
+  const [isCustomLocationMarker, setCustomLocationMarker] = useState(false);
+  const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
   const SMUCOORDS = {
     latitude: 36.84598089012623,
     longitude: 10.268806957645351,
   };
-  const [destinationOrOrigin, setDestinationOrOrigin] = useState(null);
-
   const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${apiKey}`;
 
   useEffect(() => {
@@ -35,7 +36,6 @@ const DriverProvideRide = ({ navigation, route }) => {
         .get(apiUrl)
         .then(response => {
           const overviewPath = response.data.routes[0].overview_polyline.points;
-
           const decodedPolylineCods = decode(overviewPath);
           const geoJsonFeature = {
             type: "LineString",
@@ -63,11 +63,9 @@ const DriverProvideRide = ({ navigation, route }) => {
         .catch(error => {
           // Handle errors
           console.error("Error ", error);
+          Alert.alert("we encountered a problem");
         });
   }, [destinationOrOrigin]);
-
-  const [isToSmu, setIsToSmu] = useState(true);
-  const [onLocationInputPage, setOnLocationInput] = useState(false);
 
   const initialRegion = {
     latitude: 36.7277622657912, // Latitude of Tunisia
@@ -77,12 +75,13 @@ const DriverProvideRide = ({ navigation, route }) => {
     longitudeDelta: 1, // Zoom level
   };
   const mapViewRef = useRef(null);
+  const currentRegion = useRef(initialRegion);
   useEffect(() => {
     // Use this useEffect to update the map region when PolylineCods changes
-    if (mapViewRef.current && PolylineCods) {
+    if (mapViewRef.current && PolygonCods) {
       mapViewRef.current.fitToCoordinates(PolygonCods, {
         edgePadding: {
-          top: 10,
+          top: 20,
           bottom: 10,
           right: 10,
           left: 10,
@@ -90,7 +89,7 @@ const DriverProvideRide = ({ navigation, route }) => {
         animated: true,
       });
     }
-  }, [PolylineCods]);
+  }, [PolygonCods, destinationOrOrigin, PolylineCods]);
 
   return (
     <View style={{ flex: 1, paddingTop: 50 }}>
@@ -98,8 +97,9 @@ const DriverProvideRide = ({ navigation, route }) => {
         //Destination/origin places autocomplete page
         <DriverRideLocationInput
           isToSmu={isToSmu}
-          setOnLocationInput={setOnLocationInput}
+          setOnLocationInputPage={setOnLocationInputPage}
           setDestinationOrOrigin={setDestinationOrOrigin}
+          setCustomLocationMarker={setCustomLocationMarker}
         />
       ) : (
         //Map + from to inputs
@@ -107,15 +107,18 @@ const DriverProvideRide = ({ navigation, route }) => {
           <DriverRideFromTo
             isToSmu={isToSmu}
             setIsToSmu={setIsToSmu}
-            setOnLocationInput={setOnLocationInput}
+            setOnLocationInputPage={setOnLocationInputPage}
             destinationOrOrigin={destinationOrOrigin}
+            setPolylineCods={setPolylineCods}
+            setPolygonCods={setPolygonCods}
           />
           <MapView
             ref={mapViewRef}
             style={styles.map}
             provider={PROVIDER_GOOGLE}
             showsBuildings={false}
-            initialRegion={initialRegion}>
+            initialRegion={initialRegion}
+            onRegionChangeComplete={region => (currentRegion.current = region)}>
             {destinationOrOrigin && (
               <Marker
                 coordinate={{
@@ -150,6 +153,43 @@ const DriverProvideRide = ({ navigation, route }) => {
               />
             )}
           </MapView>
+          {isCustomLocationMarker && (
+            <>
+              <View style={styles.markerFixed}>
+                <Image
+                  style={styles.marker}
+                  source={require("../assets/marker.png")}
+                />
+              </View>
+              <Button
+                mode='contained-tonal'
+                buttonColor='#5e69ee'
+                icon={"pin"}
+                style={{
+                  position: "absolute",
+                  top: 230,
+                  right: 10,
+                  width: 180,
+                  height: 50,
+                  borderRadius: 10,
+                  justifyContent: "center",
+                }}
+                onPress={() => {
+                  if (isCustomLocationMarker) {
+                    setDestinationOrOrigin({
+                      name: "Custom Location",
+                      coords: {
+                        latitude: currentRegion.current.latitude,
+                        longitude: currentRegion.current.longitude,
+                      },
+                    });
+                  }
+                  setCustomLocationMarker(false);
+                }}>
+                Place here
+              </Button>
+            </>
+          )}
         </>
       )}
     </View>
@@ -162,5 +202,16 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: "80%",
+  },
+  markerFixed: {
+    position: "absolute",
+    top: "63%", // Center vertically
+    left: "50%", // Center horizontally
+    marginLeft: -24, // Adjust based on half of the marker width
+    marginTop: -24, // Adjust based on half of the marker height
+  },
+  marker: {
+    height: 48,
+    width: 48,
   },
 });
