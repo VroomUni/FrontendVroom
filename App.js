@@ -35,7 +35,6 @@ export default function App() {
         <Stack.Screen name="SearchRides"  component={SearchRides}/>
         <Stack.Screen name="Car"  component={Car}/>
         <Stack.Screen name="TabNav" component={TabNav} />
-        <Stack.Screen name="DriverRideLocationInput" component={DriverRideLocationInput} />
 
 
 
