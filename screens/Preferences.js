@@ -24,9 +24,9 @@ const Preferences = ({ navigation }) => {
   const [isGirlsSelected, setGirlsSelected] = useState(false);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white , marginHorizontal:10  }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white , paddingLeft:10, paddingRight:10 }}>
 
-      <View style={{ marginVertical: 22, alignItems:"center", flexDirection: "row",  }}>
+      <View style={{ marginVertical: 22, alignItems:"center", flexDirection: "row" }}>
         
         <Text
           style={{
@@ -47,7 +47,7 @@ const Preferences = ({ navigation }) => {
         buttonColor="#00f0dc"
         textColor="white"
         icon="chevron-right" 
-        style ={{alignItems: "center",}}
+        
         onPress={() => navigation.navigate("SearchRides")}
         contentStyle={{ flexDirection: "row-reverse" }}
       >

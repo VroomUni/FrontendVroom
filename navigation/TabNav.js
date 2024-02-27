@@ -12,8 +12,9 @@ import DriverProvideRide from "../screens/DriverProvideRide";
 
 const Tab = createBottomTabNavigator();
 
-function TabNav() {
-  const [userType, setUserType] = useState("passenger");
+function TabNav({route}) {
+  const [userType, setUserType] = useState(route.params.user);
+  console.log(userType)
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
