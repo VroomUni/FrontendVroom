@@ -24,7 +24,6 @@ export default function App() {
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name='OnBoarding'   component={OnBoarding}/> */}
         <Stack.Screen name="TabNav" component={TabNav} />
-        <Stack.Screen name="DriverRideLocationInput" component={DriverRideLocationInput} />
 
 
 
