@@ -132,6 +132,7 @@ const Login = ({ navigation }) => {
                         marginBottom: 4,
                         marginHorizontal:-20
                     }}
+                    onPress={() => navigation.navigate("Home")}
                 />
 
                 
