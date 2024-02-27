@@ -50,7 +50,7 @@ function OnBoarding({navigation}) {
       <View style={{
         alignItems:'flex-end',
         padding:15}}>
-        <Button title="Skip"/>
+        <Button title="Skip" onPress={() => navigation.navigate('Login')} />
       </View>
       <Carousel
         ref={_carousel}
