@@ -118,12 +118,12 @@ const Signup = ({ navigation }) => {
       setRePassword("");
       setChecked("");
       setIsChecked(false);
-      navigation.navigate("Login");
+      navigation.navigate("Preferences");
     }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#6CB4EE" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView keyboardDismissMode="on-drag">
         <View style={{ flex: 1, marginHorizontal: 22 }}>
           <View style={{ marginVertical: 22 }}>
@@ -132,20 +132,20 @@ const Signup = ({ navigation }) => {
                 fontSize: 22,
                 fontWeight: "bold",
                 marginVertical: 12,
-                color: COLORS.black,
+                color: COLORS.blue,
               }}
             >
               Create Account
             </Text>
 
-            <Text
+            {/* <Text
               style={{
                 fontSize: 16,
-                color: COLORS.black,
+                color: COLORS.blue,
               }}
             >
               VROOM
-            </Text>
+            </Text> */}
           </View>
 
           <View style={{ marginBottom: 12 }}>
@@ -154,7 +154,8 @@ const Signup = ({ navigation }) => {
                 fontSize: 16,
                 fontWeight: 400,
                 marginVertical: 8,
-                color: "white",
+                color: COLORS.blue,
+                fontWeight :'bold'
               }}
             >
               Email address{" "}
@@ -196,7 +197,8 @@ const Signup = ({ navigation }) => {
                 fontSize: 16,
                 fontWeight: 400,
                 marginVertical: 8,
-                color: "white",
+                color: COLORS.blue,
+                fontWeight :'bold'
               }}
             >
               First Name
@@ -234,7 +236,8 @@ const Signup = ({ navigation }) => {
                 fontSize: 16,
                 fontWeight: 400,
                 marginVertical: 8,
-                color: "white",
+                color: COLORS.blue,
+                fontWeight :'bold'
               }}
             >
               Last Name
@@ -272,7 +275,8 @@ const Signup = ({ navigation }) => {
                 fontSize: 16,
                 fontWeight: 400,
                 marginVertical: 8,
-                color: "white",
+                color: COLORS.blue,
+                fontWeight :'bold'
               }}
             >
               Age
@@ -310,7 +314,8 @@ const Signup = ({ navigation }) => {
                 fontSize: 16,
                 fontWeight: 400,
                 marginVertical: 8,
-                color: "white",
+                color: COLORS.blue,
+                fontWeight :'bold',
               }}
             >
               Password {""}
@@ -366,7 +371,8 @@ const Signup = ({ navigation }) => {
                 fontSize: 16,
                 fontWeight: 400,
                 marginVertical: 8,
-                color: "white",
+                color: COLORS.blue,
+                fontWeight :'bold',
               }}
             >
               Confirm Password {''}
@@ -422,7 +428,8 @@ const Signup = ({ navigation }) => {
                 fontSize: 16,
                 fontWeight: 400,
                 marginVertical: 8,
-                color: "white",
+                color: COLORS.blue,
+                fontWeight :'bold',
               }}
             >
               Phone Number {''}
@@ -477,7 +484,8 @@ const Signup = ({ navigation }) => {
                 fontSize: 16,
                 fontWeight: 400,
                 marginVertical: 8,
-                color: "white",
+                color: COLORS.blue,
+                fontWeight :'bold',
               }}
             >
               Gender
@@ -490,7 +498,7 @@ const Signup = ({ navigation }) => {
                   status={checked === "Male" ? "checked" : "unchecked"}
                   onPress={() => setChecked("Male")}
                 />
-                <Text style={{ marginRight: 8, color: "white" }}>Male</Text>
+                <Text style={{ marginRight: 8, color: COLORS.blue, }}>Male</Text>
               </View>
 
               <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -499,13 +507,11 @@ const Signup = ({ navigation }) => {
                   status={checked === "Female" ? "checked" : "unchecked"}
                   onPress={() => setChecked("Female")}
                 />
-                <Text style={{ marginRight: 8, color: "white" }}>Female</Text>
+                <Text style={{ marginRight: 8, color: COLORS.blue, }}>Female</Text>
               </View>
             </View>
           </View>
 
-          {/* https://www.youtube.com/watch?v=uX5E_QFJubU */}
-          
           <View >
             <ImageUpload/>
           </View>
@@ -523,7 +529,7 @@ const Signup = ({ navigation }) => {
               color={isChecked ? COLORS.primary : undefined}
             />
 
-            <Text style={{ color: "white" }}>
+            <Text style={{ color: COLORS.blue, fontWeight :'bold', }}>
               I aggree to the terms and conditions
             </Text>
           </View>
@@ -547,7 +553,7 @@ const Signup = ({ navigation }) => {
               marginVertical: 22,
             }}
           >
-            <Text style={{ fontSize: 16, color: COLORS.white }}>
+            <Text style={{ fontSize: 16, color: COLORS.blue, fontWeight :'bold', }}>
               Already have an account
             </Text>
             <Pressable onPress={() => navigation.navigate("Login")}>
