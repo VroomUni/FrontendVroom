@@ -5,8 +5,12 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Platform,
   Image,
   Pressable,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
@@ -15,74 +19,83 @@ import Checkbox from "expo-checkbox";
 import Button from "../components/Button";
 
 const Login = ({ navigation }) => {
-  const [isPasswordShown, setIsPasswordShown] = useState(false);
+  const [isPasswordShown, setIsPasswordShown] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.innerContainer}>
-        <Text style={styles.title}>VROOM</Text>
-        <Text style={styles.welcomeText}>Hi, Welcome Back! 👋</Text>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email Address</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your email address"
-            value={email}
-            onChangeText={setEmail}
-            placeholderTextColor={COLORS.darkGray}
-            keyboardType="email-address"
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Password</Text>
-          <View style={styles.passwordContainer}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.innerContainer}>
+          {/* <Image
+            style={{ width: 200, height: 50,  }}
+            source={require("../assets/Logo-2.jpg")}
+          /> */}
+            <Text style={styles.title}>VROOM</Text>
+          <Text style={styles.welcomeText}>Hi, Welcome Back! 👋</Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email Address</Text>
             <TextInput
-              placeholder="Enter your password"
-              value={password}
-              onChangeText={setPassword}
+              style={styles.input}
+              placeholder="Enter your email address"
               placeholderTextColor={COLORS.darkGray}
-              secureTextEntry={isPasswordShown}
+              keyboardType="email-address"
             />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Password</Text>
+            <View style={styles.passwordContainer}>
+              <TextInput
+                // style={styles.input}
+                placeholder="Enter your password"
+                placeholderTextColor={COLORS.darkGray}
+                secureTextEntry={isPasswordShown}
+              />
 
-            <TouchableOpacity
-              onPress={() => setIsPasswordShown(!isPasswordShown)}
-            >
-              {isPasswordShown == true ? (
-                <Ionicons name="eye-off" size={24} color={COLORS.black} />
-                
-              ) : (
-                <Ionicons name="eye" size={24} color={COLORS.black} />
-              )}
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setIsPasswordShown(!isPasswordShown)}
+                style={{
+                  position: "absolute",
+                  right: 12,
+                }}
+              >
+                {isPasswordShown == true ? (
+                  <Ionicons name="eye-off" size={24} color={COLORS.black} />
+                ) : (
+                  <Ionicons name="eye" size={24} color={COLORS.black} />
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.checkboxContainer}>
+            <Checkbox
+              value={isChecked}
+              onValueChange={setIsChecked}
+              color={isChecked ? COLORS.primary : undefined}
+            />
+            <Text style={styles.rememberMeText}>{"  "}Remember Me</Text>
+          </View>
+
+          <Button
+            title="Login"
+            filled
+            style={styles.loginButton}
+            onPress={() => navigation.navigate("Home")}
+          />
+          <View style={styles.registerContainer}>
+            <Pressable onPress={() => navigation.navigate("Signup")}>
+              <Text style={styles.registerText}>
+                Don't have an account?{" "}
+                <Text style={styles.boldText}>Register</Text>
+              </Text>
+            </Pressable>
           </View>
         </View>
-        <View style={styles.checkboxContainer}>
-          <Checkbox
-            value={isChecked}
-            onValueChange={setIsChecked}
-            color={isChecked ? COLORS.primary : undefined}
-          />
-          <Text style={styles.rememberMeText}>Remember Me</Text>
-        </View>
-        <Button
-          title="Login"
-          filled
-          style={styles.loginButton}
-          onPress={() => navigation.navigate("Home")}
-        />
-        <View style={styles.registerContainer}>
-          <Pressable onPress={() => navigation.navigate("Signup")}>
-            <Text style={styles.registerText}>
-              Don't have an account?{" "}
-              <Text style={styles.boldText}>Register</Text>
-            </Text>
-          </Pressable>
-        </View>
-      </View>
-    </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -94,14 +107,16 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     paddingHorizontal: 20,
-    width: "100%",
-    alignSelf: "center",
+    width: "100%", // Takes full width
+    alignSelf: "center", // Center the inner container
   },
   title: {
     fontSize: 30,
     color: "#30AADD",
+    fontWeight: 'bold',
     textAlign: "center",
     marginVertical: 20,
+    
   },
   welcomeText: {
     fontSize: 24,
