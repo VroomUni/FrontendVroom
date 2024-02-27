@@ -35,7 +35,7 @@ export default function App() {
 
         
 
-        <Stack.Screen name="Signup" component={Signup} />
+        {/* <Stack.Screen name="Signup" component={Signup} /> */}
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Preferences" component={Preferences} />
         <Stack.Screen name='OnBoarding'   component={OnBoarding}/>
