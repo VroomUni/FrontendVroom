@@ -27,6 +27,7 @@ const Reportfunction = () => {
       <View style={styles.container}>
         <Text style={styles.heading}>TELL US WHAT HAPPENED</Text>
         <ScrollView style={styles.scrollView}>
+        <View style={{ flex: 1, width: 340 }}>
           <TextInput
             style={styles.textInput}
             multiline
@@ -34,15 +35,17 @@ const Reportfunction = () => {
             value={reportContent}
             onChangeText={(text) => setReportContent(text)}
           />
+          </View>
         </ScrollView>
+
         <View style={styles.buttonContainer}>
-          <View style={styles.buttonBox}>
-            <Button style={styles.button} title="Submit" onPress={handleSubmit} color="white" />
-          </View>
-          <View style={styles.buttonBox}>
-            <Button style={styles.button} title="Cancel" onPress={handleCancel} color="white" />
-          </View>
-        </View>
+  <View style={styles.buttonBox}>
+    <Button style={styles.button} title="Submit" onPress={handleSubmit} color="white" />
+  </View>
+  <View style={styles.buttonBox}>
+    <Button style={styles.button} title="Cancel" onPress={handleCancel} color="white" />
+  </View>
+</View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -55,6 +58,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#3498db', // Blue color
     alignItems: 'center',
     justifyContent: 'center',
+     paddingTop:130,
   },
   heading: {
     fontSize: 24,
@@ -63,8 +67,8 @@ const styles = StyleSheet.create({
     color: 'white', // Text color
   },
   scrollView: {
-    flex: 1,
-    width: '100%',
+
+
   },
   textInput: {
     borderWidth: 3,
@@ -79,21 +83,25 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center', // Center the buttons horizontally
+    marginTop: 16, // Add marginTop to separate the buttons from the text input
     width: '100%',
+    paddingVertical:80,
   },
   button: {
     flex: 1,
     color: 'white', // Set text color to white
-    fontSize: 18
-    , // Set font size to 18 (adjust as needed)
+    fontSize: 18,
+    
+     // Set font size to 18 (adjust as needed)
   },
   buttonBox: {
     flex: 1,
     backgroundColor: '#0abab5', // Tiffany Blue background for button box
     padding: 8, // Adjust the padding to control the size
-    borderRadius: 8,
-    marginHorizontal: 4,
+    borderRadius: 80,
+    marginHorizontal: 10,
+    
   },
 });
 
@@ -197,3 +205,6 @@ export default Reportfunction;
 // });
 
 // export default Reportfunction;
+
+
+
