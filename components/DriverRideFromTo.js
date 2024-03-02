@@ -7,8 +7,6 @@ const DriverRideFromTo = ({
   setIsToSmu,
   setOnLocationInputPage,
   destinationOrOrigin,
-  setPolygonCods,
-  setPolylineCods,
 }) => {
   const swapAnimation = useRef(new Animated.Value(0)).current;
 
@@ -62,9 +60,8 @@ const DriverRideFromTo = ({
             mode='outlined'
             labelStyle={{ alignSelf: "center" }}
             onPress={() => {
-              setOnLocationInputPage(true);
-              setPolygonCods(null);
-              setPolylineCods(null);
+              setOnLocationInputPage();
+             
             }}>
             {destinationOrOrigin
               ? destinationOrOrigin.name
@@ -89,7 +86,7 @@ const DriverRideFromTo = ({
         style={[{ transform: [{ rotate }] }, styles.iconContainer]}>
         <IconButton
           icon='swap-vertical'
-          iconColor='white'
+          iconColor='black'
           size={35}
           onPress={swapBtns}
         />
@@ -104,8 +101,8 @@ const styles = StyleSheet.create({
   itineraryComponentContainer: {
     flexDirection: "row",
     alignItems: "center",
-    flex: 1,
-    backgroundColor: "#5e69ee",
+    flex: 2,
+    backgroundColor: "#96DDF4",
   },
   itineraryImg: { height: 65, width: 50, resizeMode: "contain" },
 

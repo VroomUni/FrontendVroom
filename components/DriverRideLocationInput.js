@@ -31,7 +31,7 @@ const DriverRideLocationInput = ({
 
   return (
     <>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1 , backgroundColor:"#F4F4FB"}}>
         <GooglePlacesAutocomplete
           nearbyPlacesAPI='GoogleReverseGeocoding'
           placeholder={isToSmu ? "Enter start location" : "Enter destination"}

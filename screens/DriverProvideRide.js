@@ -15,6 +15,7 @@ import { isPointInPolygon } from "geolib";
 import DriverRideFromTo from "../components/DriverRideFromTo";
 import DriverRideLocationInput from "../components/DriverRideLocationInput";
 import { Button } from "react-native-paper";
+import DriverRideExtraOptions from "../components/DriverRideExtraOptions";
 const DriverProvideRide = ({ navigation, route }) => {
   const [PolylineCods, setPolylineCods] = useState(null);
   const [PolygonCods, setPolygonCods] = useState(null);
@@ -23,13 +24,19 @@ const DriverProvideRide = ({ navigation, route }) => {
   const [isToSmu, setIsToSmu] = useState(true);
   const [onLocationInputPage, setOnLocationInputPage] = useState(false);
   const [isCustomLocationMarker, setCustomLocationMarker] = useState(false);
+  const [isOptionShown, setIsOptionShown] = useState(false);
   const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
   const SMUCOORDS = {
     latitude: 36.84598089012623,
     longitude: 10.268806957645351,
   };
   const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${apiKey}`;
-
+  const handleLocationInputPage = () => {
+    setOnLocationInputPage(true);
+    setIsOptionShown(false);
+    setPolygonCods(null);
+    setPolylineCods(null);
+  };
   useEffect(() => {
     destinationOrOrigin &&
       axios
@@ -89,6 +96,11 @@ const DriverProvideRide = ({ navigation, route }) => {
         animated: true,
       });
     }
+    if (destinationOrOrigin && !onLocationInputPage) {
+        setIsOptionShown(true);
+    } else {
+      setIsOptionShown(false);
+    }
   }, [PolygonCods, destinationOrOrigin, PolylineCods]);
 
   return (
@@ -107,34 +119,36 @@ const DriverProvideRide = ({ navigation, route }) => {
           <DriverRideFromTo
             isToSmu={isToSmu}
             setIsToSmu={setIsToSmu}
-            setOnLocationInputPage={setOnLocationInputPage}
+            setOnLocationInputPage={handleLocationInputPage}
             destinationOrOrigin={destinationOrOrigin}
-            setPolylineCods={setPolylineCods}
-            setPolygonCods={setPolygonCods}
           />
           <MapView
             ref={mapViewRef}
             style={styles.map}
             provider={PROVIDER_GOOGLE}
             showsBuildings={false}
-            initialRegion={initialRegion}
+            region={currentRegion.current}
             onRegionChangeComplete={region => (currentRegion.current = region)}>
+            {/* destination red marker */}
             {destinationOrOrigin && (
               <Marker
                 coordinate={{
                   longitude: destinationOrOrigin.coords.longitude,
                   latitude: destinationOrOrigin.coords.latitude,
                 }}
+                pinColor={isToSmu?'red':'blue'}
               />
             )}
             <Marker
+              // SMU blue marker
               coordinate={{
                 longitude: SMUCOORDS.longitude,
                 latitude: SMUCOORDS.latitude,
               }}
-              pinColor='blue'
+              pinColor={isToSmu?'blue':'red'}
               title='SMU'
             />
+            {/* route line in blue */}
             {PolylineCods && (
               <Polyline
                 coordinates={PolylineCods.map(coord => ({
@@ -145,6 +159,7 @@ const DriverProvideRide = ({ navigation, route }) => {
                 strokeColor='blue'
               />
             )}
+            {/* area around the route , green surface */}
             {PolygonCods && (
               <Polygon
                 coordinates={PolygonCods}
@@ -165,15 +180,7 @@ const DriverProvideRide = ({ navigation, route }) => {
                 mode='contained-tonal'
                 buttonColor='#5e69ee'
                 icon={"pin"}
-                style={{
-                  position: "absolute",
-                  top: 230,
-                  right: 10,
-                  width: 180,
-                  height: 50,
-                  borderRadius: 10,
-                  justifyContent: "center",
-                }}
+                style={styles.PlaceMarkerBtn}
                 onPress={() => {
                   if (isCustomLocationMarker) {
                     setDestinationOrOrigin({
@@ -192,6 +199,7 @@ const DriverProvideRide = ({ navigation, route }) => {
           )}
         </>
       )}
+      {isOptionShown && <DriverRideExtraOptions />}
     </View>
   );
 };
@@ -200,12 +208,13 @@ export default DriverProvideRide;
 
 const styles = StyleSheet.create({
   map: {
-    width: "100%",
-    height: "80%",
+    // width: "100%",
+    // height: "70%",
+    flex:6
   },
   markerFixed: {
     position: "absolute",
-    top: "63%", // Center vertically
+    top: "66%", // Center vertically
     left: "50%", // Center horizontally
     marginLeft: -24, // Adjust based on half of the marker width
     marginTop: -24, // Adjust based on half of the marker height
@@ -214,4 +223,13 @@ const styles = StyleSheet.create({
     height: 48,
     width: 48,
   },
+  PlaceMarkerBtn:{
+    position: "absolute",
+    top: 250,
+    right: 10,
+    width: 180,
+    height: 50,
+    borderRadius: 10,
+    justifyContent: "center",
+  }
 });
