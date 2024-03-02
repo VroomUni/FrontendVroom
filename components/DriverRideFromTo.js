@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   itineraryComponentContainer: {
     flexDirection: "row",
     alignItems: "center",
-    flex: 2,
+    flex: 1.7,
     backgroundColor: "#96DDF4",
   },
   itineraryImg: { height: 65, width: 50, resizeMode: "contain" },

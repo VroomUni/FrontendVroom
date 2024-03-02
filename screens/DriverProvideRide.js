@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   },
   markerFixed: {
     position: "absolute",
-    top: "66%", // Center vertically
+    top: "64.5%", // Center vertically
     left: "50%", // Center horizontally
     marginLeft: -24, // Adjust based on half of the marker width
     marginTop: -24, // Adjust based on half of the marker height

@@ -26,7 +26,6 @@
     "lottie-react-native": "^6.5.1",
     "react": "18.2.0",
     "react-native": "0.73.4",
-    "react-native-counter-input": "^2.0.2",
     "react-native-dotenv": "^3.4.10",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-google-places-autocomplete": "^2.5.6",
