@@ -1,13 +1,13 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
-function Home() {
+function Home({navigation}) {
     const handlePassengerClick = () => {
         // Handle the passenger click
       };
     
       const handleDriverClick = () => {
-        // Handle the driver click
+        navigation.navigate('TabNav', { user: 'driver' });
       };
   return (
     <View style={styles.container}>
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     driverContainer: {
-      backgroundColor: '#188BFF',
+      backgroundColor: '#30AADD',
       flex:1,   
       width: '100%',
       padding: 20,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     passengerText: {
     marginTop:80,
-      color: '#000080',
+      color: '#30AADD',
       fontSize: 24,
       fontWeight: 'bold',
     },
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#E3E6F3',
       padding: 20,
       borderRadius: 10,
-      borderColor:'#188BFF',
+      borderColor:'#30AADD',
       borderWidth: 2,
       
     },
