@@ -3,35 +3,16 @@ import React, { useState, useEffect } from "react";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Button, TextInput } from "react-native-paper";
 import * as Location from "expo-location";
+import { useDriverContext } from "../context/DriverContext";
 const DriverRideLocationInput = ({
-  isToSmu,
   setOnLocationInputPage,
-  setDestinationOrOrigin,
   setCustomLocationMarker,
 }) => {
-  const autoComplete = {
-    textInput: {
-      height: 50,
-      borderRadius: 10,
-      paddingVertical: 5,
-      paddingHorizontal: 10,
-      fontSize: 15,
-      flex: 1,
-      marginHorizontal: 15,
-    },
-    container: {
-      paddingTop: 20,
-      flex: 0,
-    },
-
-    listView: {
-      paddingHorizontal: 15,
-    },
-  };
+  const { isToSmu, setDestinationOrOrigin } = useDriverContext();
 
   return (
     <>
-      <View style={{ flex: 1 , backgroundColor:"#F4F4FB"}}>
+      <View style={{ flex: 1, backgroundColor: "#F4F4FB" }}>
         <GooglePlacesAutocomplete
           nearbyPlacesAPI='GoogleReverseGeocoding'
           placeholder={isToSmu ? "Enter start location" : "Enter destination"}
@@ -40,7 +21,7 @@ const DriverRideLocationInput = ({
           minLength={2}
           enablePoweredByContainer={false}
           autoFocus={true}
-          styles={autoComplete}
+          styles={autoCompleteStyle}
           fetchDetails={true}
           isRowScrollable={false}
           textInputProps={{
@@ -128,3 +109,22 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
 });
+const autoCompleteStyle = {
+  textInput: {
+    height: 50,
+    borderRadius: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    fontSize: 15,
+    flex: 1,
+    marginHorizontal: 15,
+  },
+  container: {
+    paddingTop: 20,
+    flex: 0,
+  },
+
+  listView: {
+    paddingHorizontal: 15,
+  },
+};

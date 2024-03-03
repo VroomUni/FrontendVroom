@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { StyleSheet, Text, View, Image, Animated, Easing } from "react-native";
 import { Surface, Button, IconButton } from "react-native-paper";
+import { useDriverContext } from "../context/DriverContext";
 
 const DriverRideFromTo = ({
   isToSmu,
@@ -8,6 +9,8 @@ const DriverRideFromTo = ({
   setOnLocationInputPage,
   destinationOrOrigin,
 }) => {
+
+  const {setPolygonCods,setPolylineCods} = useDriverContext();
   const swapAnimation = useRef(new Animated.Value(0)).current;
 
   const translateY1 = swapAnimation.interpolate({
@@ -43,13 +46,12 @@ const DriverRideFromTo = ({
     outputRange: ["0deg", "180deg"],
   });
 
-  console.log(destinationOrOrigin);
   return (
     <Surface mode='flat' style={styles.itineraryComponentContainer}>
       <View>
         <Image
           style={styles.itineraryImg}
-          source={require("../assets/itinerary.png")}
+          source={require("../../assets/itinerary.png")}
         />
       </View>
 
@@ -61,6 +63,9 @@ const DriverRideFromTo = ({
             labelStyle={{ alignSelf: "center" }}
             onPress={() => {
               setOnLocationInputPage();
+              setPolygonCods(null);
+              setPolylineCods(null);
+          
              
             }}>
             {destinationOrOrigin
