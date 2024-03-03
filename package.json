@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@googlemaps/polyline-codec": "^1.0.28",
-
+    "@react-native-community/datetimepicker": "^7.6.2",
     "@react-navigation/bottom-tabs": "^6.5.12",
     "@react-navigation/native": "^6.1.10",
     "@react-navigation/stack": "^6.3.21",
@@ -18,13 +18,11 @@
     "deprecated-react-native-prop-types": "^5.0.0",
     "expo": "~50.0.6",
     "expo-checkbox": "^2.7.0",
-    "expo-file-system": "~16.0.7",
-    "expo-image-picker": "~14.7.1",
-    "expo-location": "~16.5.4",
+    
 
     "expo-file-system": "~16.0.6",
     "expo-image-picker": "~14.7.1",
-    "expo-location": "~16.5.3",
+    "expo-location": "~16.5.4",
     "expo-status-bar": "~1.11.1",
     "geolib": "^3.3.4",
     "jsts": "^2.11.0",

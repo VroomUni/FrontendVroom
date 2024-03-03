@@ -1,15 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import { StyleSheet, Text, View, Image, Animated, Easing } from "react-native";
 import { Surface, Button, IconButton } from "react-native-paper";
+import { useDriverContext } from "../context/DriverContext";
 
 const DriverRideFromTo = ({
   isToSmu,
   setIsToSmu,
   setOnLocationInputPage,
   destinationOrOrigin,
-  setPolygonCods,
-  setPolylineCods,
 }) => {
+
+  const {setPolygonCods,setPolylineCods} = useDriverContext();
   const swapAnimation = useRef(new Animated.Value(0)).current;
 
   const translateY1 = swapAnimation.interpolate({
@@ -45,13 +46,12 @@ const DriverRideFromTo = ({
     outputRange: ["0deg", "180deg"],
   });
 
-  console.log(destinationOrOrigin);
   return (
     <Surface mode='flat' style={styles.itineraryComponentContainer}>
       <View>
         <Image
           style={styles.itineraryImg}
-          source={require("../assets/itinerary.png")}
+          source={require("../../assets/itinerary.png")}
         />
       </View>
 
@@ -62,9 +62,11 @@ const DriverRideFromTo = ({
             mode='outlined'
             labelStyle={{ alignSelf: "center" }}
             onPress={() => {
-              setOnLocationInputPage(true);
+              setOnLocationInputPage();
               setPolygonCods(null);
               setPolylineCods(null);
+          
+             
             }}>
             {destinationOrOrigin
               ? destinationOrOrigin.name
@@ -89,7 +91,7 @@ const DriverRideFromTo = ({
         style={[{ transform: [{ rotate }] }, styles.iconContainer]}>
         <IconButton
           icon='swap-vertical'
-          iconColor='white'
+          iconColor='black'
           size={35}
           onPress={swapBtns}
         />
@@ -104,8 +106,8 @@ const styles = StyleSheet.create({
   itineraryComponentContainer: {
     flexDirection: "row",
     alignItems: "center",
-    flex: 1,
-    backgroundColor: "#5e69ee",
+    flex: 1.7,
+    backgroundColor: "#96DDF4",
   },
   itineraryImg: { height: 65, width: 50, resizeMode: "contain" },
 
