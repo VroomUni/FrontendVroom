@@ -42,10 +42,19 @@ function TabNav({route}) {
             <MaterialCommunityIcons name={iconName} size={size} color={color} />
           );
         },
-        tabBarActiveTintColor: "red",
-        tabBarInactiveTintColor: "white",
+        tabBarActiveTintColor: "#00669B",
+        tabBarInactiveTintColor: "#CCCCCC",
         tabBarStyle: {
-          backgroundColor: "#168FE0",
+          backgroundColor: "white",
+          shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      // Add elevation for Android
+      elevation: 5,
         },
         headerShown: false,
       })}>
