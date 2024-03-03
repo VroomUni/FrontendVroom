@@ -6,21 +6,15 @@ import { Chip } from 'react-native-paper'
 import Map from './Map'
 import { Modal, Portal,  PaperProvider } from 'react-native-paper';
 
-export default function DriverCard() {
-
-  const driverName = "Ahmed Jouni";
-  const rating = 4;
-  const preferences = ["Non-Smoker", "Talkative", "Soft Music", "No Food"];
-  const time = "17:30";
-  const location = "MANNOUBA";
-  const [visible, setVisible] = React.useState(false);
+export default function DriverCard({driver}) {
+ const [visible, setVisible] = useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const containerStyle = {}
 
 
-  const renderStars = () => {
+  const renderStars = (rating) => {
     let stars = [];
     for (let i = 1; i <= 5; i++) {
       stars.push(
@@ -46,21 +40,21 @@ export default function DriverCard() {
           }}
         />
         <View style={styles.headerText}>
-          <Text style={styles.name}>{driverName}</Text>
-          <View style={styles.stars}>{renderStars()}</View>
+          <Text style={styles.name}>{driver.name}</Text>
+          <View style={styles.stars}>{renderStars(driver.rating)}</View>
         </View>
       </View>
       <View style={styles.preferences}>
-        {preferences.map((preference, index) => (
+        {driver.preferences.map((preference, index) => (
           
            <Chip style={styles.chip}> {preference}</Chip>
           
         ))}
       </View>
       <View style={styles.footer}>
-        <Text style={styles.time}>{time}</Text>
+        <Text style={styles.time}>{driver.time}</Text>
         <TouchableOpacity style={styles.locationContainer} onPress={showModal}>
-        <Text style={styles.location}>{location}</Text>
+        <Text style={styles.location}>{driver.location}</Text>
         <FontAwesome name="map-marker" size={24} color="red" />
         </TouchableOpacity>
       </View>
@@ -94,7 +88,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center', 
     borderRadius: 10,
     backgroundColor: "#E3E6F3",
-    
+  
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 5 },
@@ -145,7 +139,8 @@ const styles = StyleSheet.create({
 chip: {
     margin: 4,
     backgroundColor: "#9AD0D3", 
-    borderRadius:15
+    borderRadius:15,
+    elevation: 2
   },
   preferenceText: {
     color: '#333',
@@ -173,5 +168,6 @@ chip: {
     color: '#333',
     fontSize: 16,
     marginRight:5,
+    
   },
 });

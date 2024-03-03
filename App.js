@@ -13,8 +13,8 @@ import Preferences from './screens/Preferences';
 import Car from './screens/Car';
 import SearchRides from './screens/SearchRides';
 import ImageUpload from './components/ImageUpload';
-import DriverCard from './components/DriverCard';
-import SwipeScreen from './screens/SwipeScreen';
+
+
 
 
 export default function App() {
@@ -23,30 +23,29 @@ export default function App() {
 
   return (
     
-    <SwipeScreen/>
 
-    // <NavigationContainer>
-    //   <Stack.Navigator 
-    //   initialRouteName="LoadingScreen"
-    //    headerMode="none"
-    //    >
-    //     <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-    //     <Stack.Screen name="SplashScreen" component={SplashScreen} />
+
+    <NavigationContainer>
+      <Stack.Navigator 
+      initialRouteName="LoadingScreen"
+       headerMode="none"
+       >
+        <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
         
-    //     <Stack.Screen name="Signup" component={Signup} />
-    //     <Stack.Screen name="Login" component={Login} />
-    //     <Stack.Screen name="Preferences" component={Preferences} />
-    //     <Stack.Screen name="OnBoarding" component={OnBoarding}/>
-    //     <Stack.Screen name="Home"  component={Home}/>
-    //     {/* <Stack.Screen name="SearchRides"  component={SearchRides}/> */}
-    //     <Stack.Screen name="Car"  component={Car}/>
-    //     <Stack.Screen name="TabNav" component={TabNav} />
+        <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Preferences" component={Preferences} />
+        <Stack.Screen name="OnBoarding" component={OnBoarding}/>
+        <Stack.Screen name="Home"  component={Home}/>
+        <Stack.Screen name="Car"  component={Car}/>
+        <Stack.Screen name="TabNav" component={TabNav} />
 
 
 
-    //   </Stack.Navigator>
+    </Stack.Navigator>
 
-    // </NavigationContainer>
+     </NavigationContainer>
     
 
   );
