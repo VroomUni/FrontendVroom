@@ -12,11 +12,13 @@ import Login from './screens/Login';
 import Preferences from './screens/Preferences';
 import Car from './screens/Car';
 import SearchRides from './screens/SearchRides';
-
+import ImageUpload from './components/ImageUpload';
 
 
 export default function App() {
+
   const Stack = createStackNavigator();
+
   return (
     <NavigationContainer>
       <Stack.Navigator 
