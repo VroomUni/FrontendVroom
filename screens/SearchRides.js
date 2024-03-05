@@ -11,7 +11,7 @@ const driversData = [
       rating: 4,
       preferences: ["Non-Smoker", "Talkative", "Soft Music", "No Food"],
       time: "17:30",
-      location: "MANNOUBA",
+      location: "Mannouba",
       imageUri: 'https://bootdey.com/img/Content/avatar/avatar1.png'
     },
     {
@@ -20,7 +20,7 @@ const driversData = [
       rating: 5,
       preferences: ["Non-Smoker", "Quiet", "Classical Music", "Snacks Allowed"],
       time: "18:00",
-      location: "CARTHAGE",
+      location: "Carthage",
       imageUri: 'https://bootdey.com/img/Content/avatar/avatar2.png'
     },
     {
@@ -29,7 +29,7 @@ const driversData = [
       rating: 3,
       preferences: ["Smoker", "Chatty", "Pop Music", "No Food"],
       time: "19:45",
-      location: "SFAX",
+      location: "Sfax",
       imageUri: 'https://bootdey.com/img/Content/avatar/avatar3.png'
     },
   ];
