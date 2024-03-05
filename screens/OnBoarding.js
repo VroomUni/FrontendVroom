@@ -1,23 +1,16 @@
-import React, { useRef, useState } from "react";
-import {
-  SafeAreaView,
-  Text,
-  Dimensions,
-  View,
-  Image,
-  Button,
-  TouchableWithoutFeedback,
-} from "react-native";
-import Carousel, { Pagination } from "react-native-snap-carousel";
-import Icon from "react-native-vector-icons/Ionicons";
-import image1 from "../assets/image1.png";
-import image2 from "../assets/image2.png";
-import image3 from "../assets/image3.png";
-import image4 from "../assets/image4.png";
-import image5 from "../assets/image5.png";
-import image6 from "../assets/image6.png";
-import image7 from "../assets/image7.png";
-import image8 from "../assets/image8.png";
+import React, { useRef, useState } from 'react'
+import { SafeAreaView, Text, Dimensions, View, Image, Button, TouchableWithoutFeedback } from 'react-native'
+import Carousel, { Pagination } from 'react-native-snap-carousel'
+import Icon from 'react-native-vector-icons/Ionicons';
+import image1 from '../assets/image1.jpg'
+import image2 from '../assets/image2.jpg'
+import image3 from '../assets/image3.jpg'
+import image4 from '../assets/image4.jpg'
+import image5 from '../assets/image5.jpg'
+import image6 from '../assets/image6.jpg'
+import image7 from '../assets/image7.jpg'
+import image8 from '../assets/image8.jpg'
+
 
 function OnBoarding({navigation}) {
   const [activeDotIndex, setActiveDotIndex] = useState(0);
@@ -49,20 +42,15 @@ function OnBoarding({navigation}) {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        justifyContent: "space-between",
-        backgroundColor: "white",
-      }}
-    >
-      <View
-        style={{
-          alignItems: "flex-end",
-          padding: 15,
-        }}
-      >
-        <Button title="Skip" onPress={() => navigation.navigate('Login')}/>
+    <SafeAreaView style={{
+      flex:1,
+      justifyContent:'space-between',  
+      backgroundColor:'white'
+    }}>
+      <View style={{
+        alignItems:'flex-end',
+        padding:15}}>
+        <Button title="Skip" onPress={() => navigation.navigate('Login')} />
       </View>
       <Carousel
         ref={_carousel}

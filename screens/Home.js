@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
 function Home({navigation}) {
     const handlePassengerClick = () => {
-        // Handle the passenger click
+      navigation.navigate('TabNav', { user: 'passenger' });
       };
     
       const handleDriverClick = () => {
