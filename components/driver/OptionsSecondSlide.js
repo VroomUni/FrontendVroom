@@ -11,7 +11,7 @@ import {
 import { useDriverContext } from "../context/DriverContext";
 
 const OptionsSecondSlide = () => {
-  const { spotsCount, setSpotsCount } = useDriverContext();
+  const { spotsCount, setSpotsCount , recurrentDays , setRecurrentDays } = useDriverContext();
   const [isRecurernceModalVisible, setRecurrenceModalVisible] = useState(false);
   const handleSpotsCountChange = increment => {
     // Ensure spotsCount stays within the interval of 1 to 4
@@ -37,18 +37,8 @@ const OptionsSecondSlide = () => {
     </View>
   );
   const renderRecurrenceModal = () => {
-    const [days, setDays] = useState({
-      monday: false,
-      tuesday: false,
-      wednesday: false,
-      thursday: false,
-      friday: false,
-      saturday: false,
-      sunday: false,
-    });
-
     const toggleDay = day => {
-      setDays(prevDays => ({
+      setRecurrentDays(prevDays => ({
         ...prevDays,
         [day]: !prevDays[day],
       }));
@@ -71,11 +61,11 @@ const OptionsSecondSlide = () => {
           <View style={slide2Style.repeatModalContent}>
             <Text style={slide2Style.repeatModalTitle}>Repeat</Text>
             <View style={slide2Style.checkboxContainer}>
-              {Object.keys(days).map(day => (
+              {Object.keys(recurrentDays).map(day => (
                 <View key={day} style={slide2Style.checkboxItem}>
                   <Checkbox.Item
-                    value={days[day]}
-                    status={days[day] ? "checked" : "unchecked"}
+                    value={recurrentDays[day]}
+                    status={recurrentDays[day] ? "checked" : "unchecked"}
                     onPress={() => toggleDay(day)}
                   />
                   <Text>{day.charAt(0).toUpperCase() + day.slice(1)}</Text>

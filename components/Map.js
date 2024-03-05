@@ -52,12 +52,7 @@ const Map = ({ currentRegion }) => {
           const bufferedGeometry = bufferOp.getResultGeometry(distance);
           const resultPolygonCods = geoWriter.write(bufferedGeometry);
 
-          setPolygonCods(
-            resultPolygonCods.coordinates[0].map(elt => ({
-              latitude: elt[0],
-              longitude: elt[1],
-            }))
-          );
+          setPolygonCods(resultPolygonCods.coordinates[0]);
           setPolylineCods(decodedPolylineCods);
         })
         .catch(error => {
@@ -69,15 +64,21 @@ const Map = ({ currentRegion }) => {
   useEffect(() => {
     // Use this useEffect to update the map region when PolylineCods changes
     if (mapViewRef.current && polygonCods) {
-      mapViewRef.current.fitToCoordinates(polygonCods, {
-        edgePadding: {
-          top: 20,
-          bottom: 10,
-          right: 10,
-          left: 10,
-        },
-        animated: true,
-      });
+      mapViewRef.current.fitToCoordinates(
+        polygonCods.map(coord => ({
+          latitude: coord[0],
+          longitude: coord[1],
+        })),
+        {
+          edgePadding: {
+            top: 20,
+            bottom: 10,
+            right: 10,
+            left: 10,
+          },
+          animated: true,
+        }
+      );
     }
   }, [polygonCods, destinationOrOrigin, polylineCods]);
   return (
@@ -121,7 +122,10 @@ const Map = ({ currentRegion }) => {
       {/* area around the route , green surface */}
       {polygonCods && (
         <Polygon
-          coordinates={polygonCods}
+          coordinates={polygonCods.map(coord => ({
+            latitude: coord[0],
+            longitude: coord[1],
+          }))}
           strokeWidth={3}
           fillColor='rgba(67, 247, 154,0.3)'
         />
