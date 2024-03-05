@@ -13,7 +13,9 @@ import { BufferOp } from "jsts/org/locationtech/jts/operation/buffer";
 import { useDriverContext } from "./context/DriverContext";
 import axios from "axios";
 
+//current region is passed as prop , becuase the custom marker in parent component needs it
 const Map = ({ currentRegion }) => {
+  //using context/global store for driver state
   const {
     destinationOrOrigin,
     setPolygonCods,
@@ -22,6 +24,7 @@ const Map = ({ currentRegion }) => {
     polylineCods,
     isToSmu,
   } = useDriverContext();
+  //to be moved in env file
   const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
   const SMUCOORDS = {
     latitude: 36.84598089012623,
@@ -30,6 +33,7 @@ const Map = ({ currentRegion }) => {
   const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${apiKey}`;
   const mapViewRef = useRef(null);
 
+  //if  destinationOrOrigin !==null this is the logic to draw the route(polyline) & area(polygon)
   useEffect(() => {
     destinationOrOrigin &&
       axios
@@ -61,8 +65,9 @@ const Map = ({ currentRegion }) => {
           Alert.alert("we encountered a problem");
         });
   }, [destinationOrOrigin]);
+
+  // when area , route or destination/origin change , then recenter the camera view on the route
   useEffect(() => {
-    // Use this useEffect to update the map region when PolylineCods changes
     if (mapViewRef.current && polygonCods) {
       mapViewRef.current.fitToCoordinates(
         polygonCods.map(coord => ({
@@ -96,11 +101,12 @@ const Map = ({ currentRegion }) => {
             longitude: destinationOrOrigin.coords.longitude,
             latitude: destinationOrOrigin.coords.latitude,
           }}
+          // destination marker is blue : origin is red 
           pinColor={isToSmu ? "red" : "blue"}
         />
       )}
       <Marker
-        // SMU blue marker
+        // SMU Constant blue marker
         coordinate={{
           longitude: SMUCOORDS.longitude,
           latitude: SMUCOORDS.latitude,
@@ -108,7 +114,7 @@ const Map = ({ currentRegion }) => {
         pinColor={isToSmu ? "blue" : "red"}
         title='SMU'
       />
-      {/* route line in blue */}
+      {/* route (polyline) in blue */}
       {polylineCods && (
         <Polyline
           coordinates={polylineCods.map(coord => ({
@@ -142,7 +148,7 @@ const styles = StyleSheet.create({
     // height: "70%",
     flex: 6,
   },
-  markerFixed: {
+  customMarkerFixed: {
     position: "absolute",
     top: "64.5%", // Center vertically
     left: "50%", // Center horizontally
@@ -153,7 +159,7 @@ const styles = StyleSheet.create({
     height: 48,
     width: 48,
   },
-  PlaceMarkerBtn: {
+  placeCustomMarkerBtn: {
     position: "absolute",
     top: 250,
     right: 10,
