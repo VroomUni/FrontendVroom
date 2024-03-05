@@ -30,7 +30,7 @@ const Map = ({ currentRegion }) => {
   } = useDriverContext();
   //to be moved in env file
 
-  const apiKey = process.env.EXPO_PUBLIC_API_KEY;
+  const apiKey =process.env.EXPO_PUBLIC_API_KEY;
  
 
   const SMUCOORDS = {
