@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@googlemaps/polyline-codec": "^1.0.28",
-
+    "@react-native-community/datetimepicker": "^7.6.2",
     "@react-navigation/bottom-tabs": "^6.5.12",
     "@react-navigation/native": "^6.1.10",
     "@react-navigation/stack": "^6.3.21",

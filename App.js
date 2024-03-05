@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { StrictMode } from 'react'
 import { StyleSheet, Text, View } from 'react-native';
 import SplashScreen from './screens/SplashScreen';
 import { NavigationContainer } from '@react-navigation/native';
@@ -20,15 +20,11 @@ export default function App() {
   const Stack = createStackNavigator();
 
   return (
-    
-    // <View>
-    //   <ImageUpload/>
-    // </View>
-
     <NavigationContainer>
       <Stack.Navigator 
       initialRouteName="LoadingScreen"
-       headerMode="none"
+       screenOptions={{headerShown:false}}
+       
        >
         <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
@@ -47,8 +43,6 @@ export default function App() {
       </Stack.Navigator>
 
     </NavigationContainer>
-    
-
   );
 }
 //fix map curent location 

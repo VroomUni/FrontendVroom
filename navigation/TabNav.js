@@ -8,7 +8,7 @@ import Profile from "../screens/Profile";
 import SearchRides from "../screens/SearchRides";
 import PassengerRides from "../screens/PassengerRides";
 import { Alert, Platform, TouchableOpacity, View } from "react-native";
-import DriverProvideRide from "../screens/DriverProvideRide";
+import DiverProvideRide from "../screens/DriverProvideRide";
 
 const Tab = createBottomTabNavigator();
 
@@ -51,7 +51,7 @@ function TabNav({route}) {
       })}>
       {userType === "driver" ? (
         <>
-          <Tab.Screen name='Provide Rides' component={DriverProvideRide} />
+          <Tab.Screen name='Provide Rides' component={DiverProvideRide} />
           <Tab.Screen name='My Rides' component={DriverRides} />
         </>
       ) : (
@@ -62,7 +62,7 @@ function TabNav({route}) {
       )}
       <Tab.Screen
         name='test'
-        component={userType === "driver" ? DriverProvideRide : SearchRides}
+        component={userType === "driver" ? DiverProvideRide : SearchRides}
         options={{
           tabBarButton: props => (
             <TouchableOpacity
