@@ -12,7 +12,7 @@ import {
 } from "../components/context/DriverContext";
 import Map from "../components/Map";
 import axios from "axios";
-import rideApiService from "../services/RideService";
+import rideApiService from "../api/RideService";
 import { fromToObjBuilder } from "../utils/RideHelpers";
 const DriverProvideRideScreen = () => {
   const [onLocationInputPage, setOnLocationInputPage] = useState(false);

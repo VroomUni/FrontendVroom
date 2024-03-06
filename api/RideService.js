@@ -1,37 +1,39 @@
 import axios from "axios";
 import apiConfig from "./apiConfig";
 import { encode } from "@googlemaps/polyline-codec";
-import { dateObjBuilder, daysRecurrenceObjBuilder } from "../utils/RideHelpers";
+import {
+  dateObjBuilder,
+  daysRecurrenceObjBuilder,
+  timeObjBuilder,
+} from "../utils/RideHelpers";
 
 const rideApiService = {
-
   //fix today , customDate
-  postRide: async (ridePayload, uri) => {
+  postRide: async ridePayload => {
     //validate payload types to match with backend
     const validatedRidePayload = {
       ...ridePayload,
       encodedPath: encode(ridePayload.encodedPath),
       encodedArea: encode(ridePayload.encodedArea),
-      startTime: ridePayload.startTime.toLocaleTimeString(undefined, {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      startTime: timeObjBuilder(ridePayload.startTime),
       //handle date
       initialDate: dateObjBuilder(
         ridePayload.initialDate.selectedDateType,
-        ridePayload.initialDate.customDate
+        ridePayload.initialDate.customSelectedDate
       ),
       recurrence: daysRecurrenceObjBuilder(ridePayload.recurrence),
     };
 
-    const url = uri
-      ? `${apiConfig.baseURL}/ride/${uri}`
-      : `${apiConfig.baseURL}/user/ride/ `;
+    // const url = uri
+    //   ? `${apiConfig.baseURL}/ride/${uri}`
+    //   : `${apiConfig.baseURL}/user/ride/ `;
+
+    const url = `${apiConfig.baseURL}/ride`;
 
     try {
-      console.log(validatedRidePayload);
       const response = await axios.post(url, validatedRidePayload);
       if (response.status !== 200) {
+        console.log("error");
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       console.log("SUCCESS");

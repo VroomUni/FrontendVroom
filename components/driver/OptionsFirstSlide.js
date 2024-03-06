@@ -29,6 +29,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       if (isDatePickerVisible) {
         setDatePickerVisibility(false);
         setCustomSelectedDate(selectedDate);
+        !customSelectedTime && setTimePickerVisible(true);
       } else if (isTimePickerVisible) {
         setTimePickerVisible(false);
         setCustomSelectedTime(selectedDate);

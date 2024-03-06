@@ -7,18 +7,17 @@ const fromToObjBuilder = (isToSmu, destinationOrOrigin) => {
 };
 
 const dateObjBuilder = (selectedDateType, customDate) => {
+  // console.log("date type =" + selectedDateType);
+  // console.log("date value =" + customDate);
+
   if (selectedDateType === "today") {
-    new Date().toISOString().slice(0, 19).replace("T", " ");
+    return new Date().toISOString().slice(0, 10).replace("T", " ");
   } else if (selectedDateType === "tomorrow") {
     let tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    return {
-      initialDate: tomorrow.toISOString().slice(0, 19).replace("T", " "),
-    };
+    return tomorrow.toISOString().slice(0, 10).replace("T", " ");
   } else if (selectedDateType === "customDate") {
-    return {
-      initialDate: customDate.toISOString().slice(0, 19).replace("T", " "),
-    };
+    return customDate.toISOString().slice(0, 10).replace("T", " ");
   }
 };
 
@@ -36,4 +35,20 @@ const daysRecurrenceObjBuilder = days => {
   };
 };
 
-module.exports = { fromToObjBuilder, dateObjBuilder, daysRecurrenceObjBuilder };
+const timeObjBuilder = preFormattedTime => {
+  // Extract hours considering local time zone and adjust for GMT+1
+  const hours = preFormattedTime.getHours() + 1;
+
+  // Create a new Date object with adjusted hours in UTC
+  const updatedDate = new Date(preFormattedTime.setHours(hours));
+
+  // Convert to ISO 8601 string and extract the time portion (slice for desired format)
+  return updatedDate.toISOString().slice(11, 19);
+};
+
+module.exports = {
+  fromToObjBuilder,
+  dateObjBuilder,
+  daysRecurrenceObjBuilder,
+  timeObjBuilder,
+};
