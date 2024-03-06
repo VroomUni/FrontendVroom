@@ -108,7 +108,7 @@ export default function DriverCard({ driver }) {
               padding: 20,
             }}
           >
-            <Map />
+            <Map  currentRegion={currentRegion} routeData={driver.route}/>
           </View>
         </Modal>
       </Portal>
