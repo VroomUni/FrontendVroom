@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import { Image, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -11,7 +11,13 @@ export default function DriverCard({ driver }) {
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const containerStyle = {};
+
+  const currentRegion = useRef({
+    latitude: 36.7277622657912, // Latitude of Tunisia
+    longitude: 10.203072895008471, // Longitude of Tunisia
+    latitudeDelta: 1, // Zoom level
+    longitudeDelta: 1, // Zoom level
+  });
 
   const renderStars = (rating) => {
     let stars = [];
@@ -72,7 +78,7 @@ export default function DriverCard({ driver }) {
         <Modal
           visible={visible}
           onDismiss={hideModal}
-          contentContainerStyle={containerStyle}
+          // contentContainerStyle={containerStyle}
         >
           <View
             style={{
@@ -84,7 +90,7 @@ export default function DriverCard({ driver }) {
               padding: 20,
             }}
           >
-            <Map />
+            <Map  currentRegion={currentRegion} routeData={driver.route}/>
           </View>
         </Modal>
       </Portal>

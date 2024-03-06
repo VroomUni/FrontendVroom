@@ -30,10 +30,15 @@ const driversData = [
       preferences: ["Smoker", "Chatty", "Pop Music", "No Food"],
       time: "19:45",
       location: "Sfax",
-      imageUri: 'https://bootdey.com/img/Content/avatar/avatar3.png'
+      imageUri: 'https://bootdey.com/img/Content/avatar/avatar3.png',
+      route:{
+        encodedPath:"encodedPolylineStringForAhmed",
+      
+      }
     },
   ];
   
+
 function SearchRides() {
   const onSwipedLeft = (cardIndex) => {
     console.log('Swiped left, no request sent for: ', driversData[cardIndex]);

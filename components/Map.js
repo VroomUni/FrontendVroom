@@ -13,7 +13,7 @@ import { BufferOp } from "jsts/org/locationtech/jts/operation/buffer";
 import { useDriverContext } from "./context/DriverContext";
 import axios from "axios";
 
-//current region is passed as prop , becuase the custom marker in parent component needs it
+//current region is passed as prop , because the custom marker in parent component needs it
 const Map = ({ currentRegion }) => {
   //using context/global store for driver state
   const {
