@@ -13,6 +13,7 @@ import Preferences from './screens/Preferences';
 import Car from './screens/Car';
 import SearchRides from './screens/SearchRides';
 import ImageUpload from './components/ImageUpload';
+import DriverProvideRide from './screens/DriverProvideRide';
 
 
 
@@ -22,30 +23,29 @@ export default function App() {
   const Stack = createStackNavigator();
 
   return (
-    
-<SearchRides/>
 
-    // <NavigationContainer>
-    //   <Stack.Navigator 
-    //   initialRouteName="LoadingScreen"
-    //    headerMode="none"
-    //    >
-    //     <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-    //     <Stack.Screen name="SplashScreen" component={SplashScreen} />
+
+    <NavigationContainer>
+      <Stack.Navigator 
+      initialRouteName="LoadingScreen"
+       headerMode="none"
+       >
+        <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
         
-    //     <Stack.Screen name="Signup" component={Signup} />
-    //     <Stack.Screen name="Login" component={Login} />
-    //     <Stack.Screen name="Preferences" component={Preferences} />
-    //     <Stack.Screen name="OnBoarding" component={OnBoarding}/>
-    //     <Stack.Screen name="Home"  component={Home}/>
-    //     <Stack.Screen name="Car"  component={Car}/>
-    //     <Stack.Screen name="TabNav" component={TabNav} />
+        <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Preferences" component={Preferences} />
+        <Stack.Screen name="OnBoarding" component={OnBoarding}/>
+        <Stack.Screen name="Home"  component={Home}/>
+        <Stack.Screen name="Car"  component={Car}/>
+        <Stack.Screen name="TabNav" component={TabNav} />
 
 
 
-    // </Stack.Navigator>
+    </Stack.Navigator>
 
-    //  </NavigationContainer>
+     </NavigationContainer>
     
 
   );
