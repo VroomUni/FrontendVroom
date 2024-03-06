@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, SafeAreaView , StyleSheet } from "react-native";
+import { View, SafeAreaView, StyleSheet } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Surface, Text, SegmentedButtons, Button } from "react-native-paper";
 import { useDriverContext } from "../context/DriverContext";
@@ -9,10 +9,12 @@ const OptionsFirstSlide = ({ goToSlide }) => {
     setDateValue,
     setCustomSelectedTime,
     customSelectedTime,
+    customSelectedDate,
+    setCustomSelectedDate,
   } = useDriverContext();
+
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisible] = useState(false);
-  const [customSelectedDate, setCustomSelectedDate] = useState(null);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);

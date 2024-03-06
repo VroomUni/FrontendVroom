@@ -13,6 +13,16 @@ export const DriverContextProvider = ({ children }) => {
   const [btnGrpDateValue, setDateValue] = useState("today");
   const [spotsCount, setSpotsCount] = useState(4);
   const [customSelectedTime, setCustomSelectedTime] = useState(null);
+  const [recurrentDays, setRecurrentDays] = useState({
+    monday: false,
+    tuesday: false,
+    wednesday: false,
+    thursday: false,
+    friday: false,
+    saturday: false,
+    sunday: false,
+  });
+  const [customSelectedDate, setCustomSelectedDate] = useState(null);
 
   return (
     <DriverContext.Provider
@@ -31,6 +41,10 @@ export const DriverContextProvider = ({ children }) => {
         setSpotsCount,
         customSelectedTime,
         setCustomSelectedTime,
+        recurrentDays,
+        setRecurrentDays,
+        customSelectedDate,
+        setCustomSelectedDate,
       }}>
       {children}
     </DriverContext.Provider>
