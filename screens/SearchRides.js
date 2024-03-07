@@ -1,6 +1,6 @@
-import React from 'react'
+import React,{useState, useRef} from 'react'
 import DriverCard from '../components/DriverCard'
-import { StyleSheet, View,Text } from 'react-native'
+import { StyleSheet, View,Text,Animated  } from 'react-native'
 import Swiper from "react-native-deck-swiper";
 import LottieView from 'lottie-react-native';
 
@@ -43,6 +43,8 @@ const driversData = [
   
 
 function SearchRides() {
+  const [showRequestSent, setShowRequestSent] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current; 
   const onSwipedLeft = (cardIndex) => {
     console.log('Swiped left, no request sent for: ', driversData[cardIndex]);
     // Handle the 'no request' logic here
@@ -50,7 +52,22 @@ function SearchRides() {
 
   const onSwipedRight = (cardIndex) => {
     console.log('Swiped right, request sent for: ', driversData[cardIndex]);
-    // Send the request to the driver here
+    // Send the request to the driver here and show feedback
+    setShowRequestSent(true);
+    Animated.timing(fadeAnim, {
+      toValue: 1, // Fully visible
+      duration: 500, // 500ms
+      useNativeDriver: true // Add this line
+    }).start(() => {
+      // After the animation completes, start fading out the message
+      setTimeout(() => {
+        Animated.timing(fadeAnim, {
+          toValue: 0, // Fully transparent
+          duration: 500, // 500ms
+          useNativeDriver: true // Add this line
+        }).start(() => setShowRequestSent(false)); // Hide the message at the end
+      }, 2000); // Message stays visible for 2 seconds
+    });
   };
   return (
     <View style={styles.pageContainer}>
@@ -72,6 +89,11 @@ function SearchRides() {
       animateCardOpacity
       swipeBackCard
     />
+     {showRequestSent && (
+        <Animated.View style={[styles.requestSentBanner, {opacity: fadeAnim}]}>
+          <Text style={styles.requestSentText}>Request Sent!</Text>
+        </Animated.View>
+      )}
      <View style={styles.animationContainer}>
        <LottieView style={styles.animation} source={require('../assets/SwipeAnimation.json')} autoPlay loop />
       </View>
@@ -98,7 +120,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: '#e8f4f8',
     
-    textAlign: 'center', // Center the header text
+    textAlign: 'center', 
     marginBottom:30
   },
   subHeaderText: {
@@ -114,7 +136,7 @@ const styles = StyleSheet.create({
   animationContainer: {
     flex: 1,
     width: '100%',
-    justifyContent: 'flex-end', // Aligns children to the end of the container
+    justifyContent: 'flex-end', 
     alignItems: 'flex-end',
    marginTop:"100%",
   
@@ -124,4 +146,18 @@ const styles = StyleSheet.create({
     height: '50%',
     
   },
+  requestSentBanner: {
+    position: 'absolute',
+    bottom: 30,
+    alignSelf: 'center',
+    backgroundColor: 'green',
+    padding: 10,
+    borderRadius: 5,
+  },
+
+  requestSentText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  
 })
