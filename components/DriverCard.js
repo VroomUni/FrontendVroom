@@ -2,9 +2,10 @@ import React, { useState, useRef } from "react";
 import { Image, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { Chip } from "react-native-paper";
+
 import Map from "./Map";
 import { Modal, Portal, PaperProvider, Button } from "react-native-paper";
+import PreferenceItem from "./preferenceItem";
 
 export default function DriverCard({ driver }) {
   const [visible, setVisible] = useState(false);
@@ -38,14 +39,15 @@ export default function DriverCard({ driver }) {
             }}
           />
           <View>
-            <Text style={styles.name}>{driver.name}</Text>
+            <Text style={styles.name}>{`${driver.firstName} ${driver.lastName}`}</Text>
             <View style={styles.stars}>{renderStars(driver.rating)}</View>
           </View>
         </View>
         <View style={styles.preferences}>
-          {driver.preferences.map((preference, index) => (
-            <Chip style={styles.chip}> {preference}</Chip>
-          ))}
+          <PreferenceItem attribute="Smoking" value={driver.smoking} />
+          <PreferenceItem attribute="Talkative" value={driver.Talkative} />
+          <PreferenceItem attribute="Eating" value={driver.eating} />
+          <PreferenceItem attribute="Music Genre" value={driver.musicGenre} />
         </View>
         <View style={styles.departureInfo}>
           <View style={styles.infoRow}>
@@ -55,9 +57,7 @@ export default function DriverCard({ driver }) {
               color="#333"
               style={styles.icon}
             />
-            <Text style={styles.time}>
-              {driver.time}
-            </Text>
+            <Text style={styles.time}>{driver.time}</Text>
           </View>
           <View style={styles.departureInfo}>
             <View style={styles.infoRow}>
@@ -79,9 +79,7 @@ export default function DriverCard({ driver }) {
                 color="#00669B"
                 style={styles.icon}
               />
-              <Text style={styles.addressText}>
-                {driver.destination}
-              </Text>
+              <Text style={styles.addressText}>{driver.destination}</Text>
             </View>
           </View>
         </View>
@@ -150,6 +148,7 @@ const styles = StyleSheet.create({
   },
   stars: {
     flexDirection: "row",
+    marginLeft: 30,
   },
   filledStar: {
     color: "#FFD700",
@@ -164,11 +163,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
 
-  chip: {
-    margin: 4,
-    backgroundColor: "#e0f2f1",
-    borderRadius: 15,
-  },
   preferenceText: {
     color: "#333",
   },
@@ -179,7 +173,7 @@ const styles = StyleSheet.create({
   infoRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 4,
+    marginBottom: 6,
   },
   icon: {
     marginRight: 8,
@@ -191,16 +185,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
- dots: {
-    fontSize: 16, 
-    color: '#162447',
-    paddingVertical: 2, 
-    paddingHorizontal: 3, 
+  dots: {
+    fontSize: 16,
+    color: "#162447",
+    paddingVertical: 2,
+    paddingHorizontal: 3,
   },
-  
+
   addressText: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   footer: {
     flexDirection: "row",
@@ -219,5 +213,4 @@ const styles = StyleSheet.create({
   buttonIcon: {
     color: "#ffffff",
   },
-  
 });
