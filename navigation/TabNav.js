@@ -53,8 +53,8 @@ function TabNav({route}) {
       },
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
-      // Add elevation for Android
-      elevation: 5,
+     
+      elevation: 5, // Add elevation for Android
         },
         headerShown: false,
       })}>

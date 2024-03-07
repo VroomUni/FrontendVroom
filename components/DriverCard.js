@@ -1,23 +1,16 @@
-import React, { useState,useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Image, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { Chip } from "react-native-paper";
 import Map from "./Map";
-import { Modal, Portal, PaperProvider } from "react-native-paper";
+import { Modal, Portal, PaperProvider, Button } from "react-native-paper";
 
 export default function DriverCard({ driver }) {
   const [visible, setVisible] = useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-
-  const currentRegion = useRef({
-    latitude: 36.7277622657912, // Latitude of Tunisia
-    longitude: 10.203072895008471, // Longitude of Tunisia
-    latitudeDelta: 1, // Zoom level
-    longitudeDelta: 1, // Zoom level
-  });
 
   const renderStars = (rating) => {
     let stars = [];
@@ -37,14 +30,14 @@ export default function DriverCard({ driver }) {
   return (
     <PaperProvider>
       <View style={styles.card}>
-        <View style={styles.header}>
+        <View>
           <Image
             style={styles.image}
             source={{
               uri: "https://bootdey.com/img/Content/avatar/avatar1.png",
             }}
           />
-          <View style={styles.headerText}>
+          <View>
             <Text style={styles.name}>{driver.name}</Text>
             <View style={styles.stars}>{renderStars(driver.rating)}</View>
           </View>
@@ -54,32 +47,59 @@ export default function DriverCard({ driver }) {
             <Chip style={styles.chip}> {preference}</Chip>
           ))}
         </View>
-        <View style={styles.footer}>
-          <View>
-            <Text style={styles.time}>{driver.time}</Text>
-            <Text style={styles.location}>{driver.location}</Text>
+        <View style={styles.departureInfo}>
+          <View style={styles.infoRow}>
+            <FontAwesome
+              name="clock-o"
+              size={20}
+              color="#333"
+              style={styles.icon}
+            />
+            <Text style={styles.time}>
+              {driver.time}
+            </Text>
           </View>
-          <View style={styles.locationContainer}>
-            <TouchableOpacity onPress={showModal}>
-              <Text
-                style={[
-                  styles.location,
-                  { fontSize: 12, color: "red", marginLeft: 5 },
-                ]}
-              >
-                Show Map
+          <View style={styles.departureInfo}>
+            <View style={styles.infoRow}>
+              <FontAwesome
+                name="circle"
+                size={16}
+                color="#00669B"
+                style={styles.icon}
+              />
+              <Text style={styles.addressText}>{driver.departure}</Text>
+            </View>
+            <Text style={styles.dots}>
+              <FontAwesome name="ellipsis-v" size={16} color="#333" />
+            </Text>
+            <View style={styles.infoRow}>
+              <FontAwesome
+                name="map-marker"
+                size={16}
+                color="#00669B"
+                style={styles.icon}
+              />
+              <Text style={styles.addressText}>
+                {driver.destination}
               </Text>
-            </TouchableOpacity>
-            <FontAwesome name="map-marker" size={24} color="red" />
+            </View>
           </View>
+        </View>
+        <View style={styles.footer}>
+          <Button
+            mode="contained"
+            onPress={showModal}
+            style={styles.mapButton}
+            contentStyle={{ flexDirection: "row-reverse" }}
+            labelStyle={styles.buttonText}
+            icon="map-marker"
+          >
+            Show Map
+          </Button>
         </View>
       </View>
       <Portal>
-        <Modal
-          visible={visible}
-          onDismiss={hideModal}
-          // contentContainerStyle={containerStyle}
-        >
+        <Modal visible={visible} onDismiss={hideModal}>
           <View
             style={{
               alignItems: "center",
@@ -90,7 +110,7 @@ export default function DriverCard({ driver }) {
               padding: 20,
             }}
           >
-            <Map  currentRegion={currentRegion} routeData={driver.route}/>
+            <Map />
           </View>
         </Modal>
       </Portal>
@@ -104,86 +124,100 @@ const styles = StyleSheet.create({
     width: "95%",
     height: "70%",
     alignSelf: "center",
-    borderRadius: 10,
-    backgroundColor: "#E3E6F3",
-
-    borderRadius: 10,
+    borderRadius: 15,
+    backgroundColor: "#ffffff",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.36,
-    shadowRadius: 6.68,
-    elevation: 11,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
     padding: 20,
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
   },
 
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  headerText: {
-    flex: 1,
-    marginLeft: 10,
-  },
   image: {
     width: 90,
     height: 90,
     borderRadius: 40,
+    marginLeft: 40,
   },
   name: {
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 22,
     color: "#333",
+    marginBottom: 5,
   },
   stars: {
     flexDirection: "row",
-    marginTop: 4,
   },
   filledStar: {
-    color: "orange",
+    color: "#FFD700",
   },
   emptyStar: {
-    color: "grey",
+    color: "#CCCCCC",
   },
   preferences: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    marginVertical: 10,
+    marginVertical: 20,
   },
 
   chip: {
     margin: 4,
-    backgroundColor: "#9AD0D3",
+    backgroundColor: "#e0f2f1",
     borderRadius: 15,
-    elevation: 2,
   },
   preferenceText: {
     color: "#333",
   },
+
+  departureInfo: {
+    width: "100%",
+  },
+  infoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  icon: {
+    marginRight: 8,
+    color: "#162447",
+  },
+
+  time: {
+    color: "#333",
+    fontSize: 16,
+  },
+
+ dots: {
+    fontSize: 16, 
+    color: '#162447',
+    paddingVertical: 2, 
+    paddingHorizontal: 3, 
+  },
+  
+  addressText: {
+    fontSize: 16,
+    color: '#333',
+  },
   footer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     width: "100%",
-    borderTopColor: "#000000",
+    borderTopColor: "#eeeeee",
     borderTopWidth: 1,
     paddingTop: 8,
   },
-  time: {
-    fontWeight: "bold",
-    color: "#333",
-    fontSize: 16,
+  mapButton: {
+    backgroundColor: "#d9534f",
   },
-  locationContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+  buttonText: {
+    color: "#ffffff",
   },
-  location: {
-    fontWeight: "bold",
-    color: "#333",
-    fontSize: 16,
-    marginRight: 5,
+  buttonIcon: {
+    color: "#ffffff",
   },
+  
 });

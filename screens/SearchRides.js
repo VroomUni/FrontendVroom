@@ -2,7 +2,7 @@ import React from 'react'
 import DriverCard from '../components/DriverCard'
 import { StyleSheet, View,Text } from 'react-native'
 import Swiper from "react-native-deck-swiper";
-
+import LottieView from 'lottie-react-native';
 
 const driversData = [
     {
@@ -11,7 +11,8 @@ const driversData = [
       rating: 4,
       preferences: ["Non-Smoker", "Talkative", "Soft Music", "No Food"],
       time: "17:30",
-      location: "Mannouba",
+      departure: "Mannouba",
+      destination:"SMU",
       imageUri: 'https://bootdey.com/img/Content/avatar/avatar1.png'
     },
     {
@@ -20,7 +21,8 @@ const driversData = [
       rating: 5,
       preferences: ["Non-Smoker", "Quiet", "Classical Music", "Snacks Allowed"],
       time: "18:00",
-      location: "Carthage",
+      departure: "Carthage",
+      destination:"SMU",
       imageUri: 'https://bootdey.com/img/Content/avatar/avatar2.png'
     },
     {
@@ -29,7 +31,8 @@ const driversData = [
       rating: 3,
       preferences: ["Smoker", "Chatty", "Pop Music", "No Food"],
       time: "19:45",
-      location: "Sfax",
+      departure: "SMU",
+      destination:"Marsa",
       imageUri: 'https://bootdey.com/img/Content/avatar/avatar3.png',
       route:{
         encodedPath:"encodedPolylineStringForAhmed",
@@ -51,56 +54,74 @@ function SearchRides() {
   };
   return (
     <View style={styles.pageContainer}>
-      <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>
-          Swipe Right to Ride
-         
-          </Text>
-          <Text style={styles.headerText}>
-          Left to slide
-         
-          </Text>
-          </View>
-       <Swiper
-        cards={driversData}
-        renderCard={(card) => <DriverCard driver={card} />}
-        onSwipedLeft={onSwipedLeft}
-        onSwipedRight={onSwipedRight}
-        cardIndex={0}
-        backgroundColor={'transparent'}
-        stackSize={2} 
-        cardVerticalMargin={50}
-        containerStyle={{ backgroundColor: 'transparent' }}
-       
-        animateOverlayLabelsOpacity
-        animateCardOpacity
-        swipeBackCard
-      />
+    <View style={styles.headerContainer}>
+      <Text style={styles.headerText}>Swipe Your Way</Text>
       
     </View>
+    <Swiper
+      cards={driversData}
+      renderCard={(card) => <DriverCard driver={card} />}
+      onSwipedLeft={onSwipedLeft}
+      onSwipedRight={onSwipedRight}
+      cardIndex={0}
+      backgroundColor={'transparent'}
+      stackSize={2}
+      cardVerticalMargin={50}
+      containerStyle={styles.swiperContainer}
+      animateOverlayLabelsOpacity
+      animateCardOpacity
+      swipeBackCard
+    />
+     <View style={styles.animationContainer}>
+       <LottieView style={styles.animation} source={require('../assets/SwipeAnimation.json')} autoPlay loop />
+      </View>
+  </View>
     
   )
 }
 
 export default SearchRides
 const styles = StyleSheet.create({
-    pageContainer:{
-       
-        alignItems:'center',
-        flex:1,
-       
-        
-    },
-    headerContainer: {
-      
-      alignItems: 'center',
-      
-      marginTop:60 
-      
-    },
-    headerText: {
-      fontSize: 24, 
-      color: '#00669B', // Text color that contrasts with the background
-      fontWeight: 'bold', // Bold text
-    },
+  pageContainer: {
+    flex: 1,
+    backgroundColor: '#ecf0f1', 
+    
+    paddingTop: 0, 
+  },
+  headerContainer: {
+    marginBottom: 20, 
+    backgroundColor:"#2c3e50",
+    width: '100%',
+  },
+  headerText: {
+    marginTop:50,
+    fontSize: 28,
+    color: '#e8f4f8',
+    
+    textAlign: 'center', // Center the header text
+    marginBottom:30
+  },
+  subHeaderText: {
+    fontSize: 18,
+    color: '#e8f4f8',
+    textAlign: 'center', 
+    marginBottom: 10, 
+  },
+  swiperContainer: {
+    flexGrow: 1, 
+    justifyContent: 'center', 
+  },
+  animationContainer: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'flex-end', // Aligns children to the end of the container
+    alignItems: 'flex-end',
+   marginTop:"100%",
+  
+  },
+  animation: {
+    width: '50%',
+    height: '50%',
+    
+  },
 })

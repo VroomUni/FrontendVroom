@@ -24,7 +24,7 @@ export default function App() {
 
   return (
 
-
+    // <SearchRides/>
     <NavigationContainer>
       <Stack.Navigator 
       initialRouteName="LoadingScreen"
