@@ -76,14 +76,14 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
-    height: 500, // Fixed height (adjust as needed)
-    width: '100%', // Full width
+    height: 500,
+    width: '100%', 
     backgroundColor: 'white',
-    textAlignVertical: 'top', // Start the text from the top
+    textAlignVertical: 'top', 
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'center', // Center the buttons horizontally
+    justifyContent: 'center', 
     marginTop: 16, // Add marginTop to separate the buttons from the text input
     width: '100%',
     paddingVertical:80,
