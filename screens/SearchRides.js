@@ -3,7 +3,7 @@ import DriverCard from '../components/DriverCard'
 import { StyleSheet, View,Text,Animated  } from 'react-native'
 import Swiper from "react-native-deck-swiper";
 import LottieView from 'lottie-react-native';
-import LottieView from 'lottie-react-native';
+
 
 const driversData = [
     {
