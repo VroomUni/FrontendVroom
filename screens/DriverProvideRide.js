@@ -11,21 +11,30 @@ import {
   useDriverContext,
 } from "../components/context/DriverContext";
 import Map from "../components/Map";
+import axios from "axios";
+import rideApiService from "../services/RideService";
+import { fromToObjBuilder } from "../utils/RideHelpers";
 const DriverProvideRideScreen = () => {
   const [onLocationInputPage, setOnLocationInputPage] = useState(false);
   const [isCustomLocationMarker, setCustomLocationMarker] = useState(false);
   const [isOptionShown, setIsOptionShown] = useState(false);
-
-  const { destinationOrOrigin, setDestinationOrOrigin, isToSmu, setIsToSmu } =
-    useDriverContext();
-
-  const handleLocationInputPage = () => {
-    setOnLocationInputPage(true);
-    setIsOptionShown(false);
-  };
+  const [isPostRideBtnVisible, setPostRideBtnVisible] = useState(false);
+  const {
+    destinationOrOrigin,
+    setDestinationOrOrigin,
+    isToSmu,
+    setIsToSmu,
+    polylineCods,
+    polygonCods,
+    btnGrpDateValue: selectedDateType,
+    spotsCount,
+    customSelectedTime,
+    recurrentDays,
+    customSelectedDate,
+  } = useDriverContext();
 
   useEffect(() => {
-    if (destinationOrOrigin && !onLocationInputPage) {
+    if (destinationOrOrigin) {
       setIsOptionShown(true);
     } else {
       setIsOptionShown(false);
@@ -39,6 +48,46 @@ const DriverProvideRideScreen = () => {
     longitudeDelta: 1, // Zoom level
   });
 
+  useEffect(() => {
+    customSelectedTime
+      ? setPostRideBtnVisible(true)
+      : setPostRideBtnVisible(false);
+  }, [customSelectedTime]);
+
+  const goToLocationInputPage = () => {
+    setOnLocationInputPage(true);
+    setIsOptionShown(false);
+  };
+
+  const reverseGeoCodeCustomLocation = async customLocation => {
+    const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
+    const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${customLocation.latitude},${customLocation.longitude}&result_type=political&region=tn&key=${apiKey}`;
+
+    try {
+      const response = await axios.get(apiUrl);
+
+      return response.data.status === "OK"
+        ? response.data.results[0].formatted_address
+        : "Custom Location";
+    } catch (error) {
+      console.error("Error fetching reverse geocoding data:", error);
+      Alert.alert("error with determining custom location name ");
+    }
+  };
+
+  const createRide = async () => {
+    const ridePayload = {
+      //helper fct to determine from and to since its dynamic
+      ...fromToObjBuilder(isToSmu, destinationOrOrigin.name),
+      spots: spotsCount,
+      encodedPath: polylineCods,
+      encodedArea: polygonCods,
+      startTime: customSelectedTime,
+      initialDate: { customSelectedDate, selectedDateType },
+      recurrence: recurrentDays,
+    };
+    const resp=await rideApiService.postRide(ridePayload);
+  };
   return (
     <View style={{ flex: 1, paddingTop: 50 }}>
       {onLocationInputPage ? (
@@ -54,7 +103,7 @@ const DriverProvideRideScreen = () => {
           <DriverRideFromTo
             isToSmu={isToSmu}
             setIsToSmu={setIsToSmu}
-            setOnLocationInputPage={handleLocationInputPage}
+            setOnLocationInputPage={goToLocationInputPage}
             destinationOrOrigin={destinationOrOrigin}
           />
 
@@ -74,24 +123,39 @@ const DriverProvideRideScreen = () => {
                 icon={"pin"}
                 style={styles.PlaceMarkerBtn}
                 onPress={() => {
-                  if (isCustomLocationMarker) {
-                    setDestinationOrOrigin({
-                      name: "Custom Location",
-                      coords: {
-                        latitude: currentRegion.current.latitude,
-                        longitude: currentRegion.current.longitude,
-                      },
-                    });
-                  }
-                  setCustomLocationMarker(false);
+                  const customLocation = {
+                    latitude: currentRegion.current.latitude,
+                    longitude: currentRegion.current.longitude,
+                  };
+                  reverseGeoCodeCustomLocation(customLocation).then(
+                    customLocationAdressName => {
+                      setDestinationOrOrigin({
+                        name: customLocationAdressName,
+                        coords: { ...customLocation },
+                      });
+
+                      setCustomLocationMarker(false);
+                    }
+                  );
                 }}>
                 Place here
               </Button>
             </>
           )}
+          {/* post ride btn  */}
+          {isPostRideBtnVisible && isOptionShown && (
+            <Button
+              mode='contained-tonal'
+              buttonColor='#20c997'
+              icon={"plus"}
+              style={styles.PostRideBtn}
+              onPress={createRide}>
+              Post Ride
+            </Button>
+          )}
+          {isOptionShown && <DriverRideExtraOptions />}
         </>
       )}
-      {isOptionShown && <DriverRideExtraOptions />}
     </View>
   );
 };
@@ -118,6 +182,15 @@ const styles = StyleSheet.create({
     top: 250,
     right: 10,
     width: 180,
+    height: 50,
+    borderRadius: 10,
+    justifyContent: "center",
+  },
+  PostRideBtn: {
+    position: "absolute",
+    top: 195,
+    right: 10,
+    width: 160,
     height: 50,
     borderRadius: 10,
     justifyContent: "center",

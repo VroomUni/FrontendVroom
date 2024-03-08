@@ -9,6 +9,7 @@ import OptionsSecondSlide from "./OptionsSecondSlide";
 const DriverRideExtraOptions = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef();
+
   //to manually switch a slide
   const goToSlide = index => {
     carouselRef.current.snapToItem(index);
@@ -32,7 +33,11 @@ const DriverRideExtraOptions = () => {
         ref={carouselRef}
         data={[{}, {}]} // Dummy data to create two slides
         renderItem={({ index }) =>
-          index === 0 ? <OptionsFirstSlide goToSlide={goToSlide} /> : <OptionsSecondSlide />
+          index === 0 ? (
+            <OptionsFirstSlide goToSlide={goToSlide} />
+          ) : (
+            <OptionsSecondSlide />
+          )
         }
         sliderWidth={420}
         itemWidth={420}

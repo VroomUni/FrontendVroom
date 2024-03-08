@@ -4,6 +4,8 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import { Button, TextInput } from "react-native-paper";
 import * as Location from "expo-location";
 import { useDriverContext } from "../context/DriverContext";
+
+
 const DriverRideLocationInput = ({
   setOnLocationInputPage,
   setCustomLocationMarker,
