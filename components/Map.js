@@ -13,7 +13,13 @@ import { BufferOp } from "jsts/org/locationtech/jts/operation/buffer";
 import { useDriverContext } from "./context/DriverContext";
 import axios from "axios";
 
+
+
+//current region is passed as prop , because the custom marker in parent component needs it
 const Map = ({ currentRegion }) => {
+ 
+
+  //using context/global store for driver state
   const {
     destinationOrOrigin,
     setPolygonCods,
@@ -22,14 +28,20 @@ const Map = ({ currentRegion }) => {
     polylineCods,
     isToSmu,
   } = useDriverContext();
-  const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
+  //to be moved in env file
+
+  const apiKey =process.env.EXPO_PUBLIC_API_KEY;
+ 
+
   const SMUCOORDS = {
-    latitude: 36.84598089012623,
-    longitude: 10.268806957645351,
+    "latitude": "36.84598089012623",
+    "longitude": "10.268806957645351",
   };
+
   const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${apiKey}`;
   const mapViewRef = useRef(null);
 
+  //if  destinationOrOrigin !==null this is the logic to draw the route(polyline) & area(polygon)
   useEffect(() => {
     destinationOrOrigin &&
       axios
@@ -52,12 +64,7 @@ const Map = ({ currentRegion }) => {
           const bufferedGeometry = bufferOp.getResultGeometry(distance);
           const resultPolygonCods = geoWriter.write(bufferedGeometry);
 
-          setPolygonCods(
-            resultPolygonCods.coordinates[0].map(elt => ({
-              latitude: elt[0],
-              longitude: elt[1],
-            }))
-          );
+          setPolygonCods(resultPolygonCods.coordinates[0]);
           setPolylineCods(decodedPolylineCods);
         })
         .catch(error => {
@@ -66,18 +73,25 @@ const Map = ({ currentRegion }) => {
           Alert.alert("we encountered a problem");
         });
   }, [destinationOrOrigin]);
+
+  // when area , route or destination/origin change , then recenter the camera view on the route
   useEffect(() => {
-    // Use this useEffect to update the map region when PolylineCods changes
     if (mapViewRef.current && polygonCods) {
-      mapViewRef.current.fitToCoordinates(polygonCods, {
-        edgePadding: {
-          top: 20,
-          bottom: 10,
-          right: 10,
-          left: 10,
-        },
-        animated: true,
-      });
+      mapViewRef.current.fitToCoordinates(
+        polygonCods.map(coord => ({
+          latitude: coord[0],
+          longitude: coord[1],
+        })),
+        {
+          edgePadding: {
+            top: 20,
+            bottom: 10,
+            right: 10,
+            left: 10,
+          },
+          animated: true,
+        }
+      );
     }
   }, [polygonCods, destinationOrOrigin, polylineCods]);
   return (
@@ -95,11 +109,12 @@ const Map = ({ currentRegion }) => {
             longitude: destinationOrOrigin.coords.longitude,
             latitude: destinationOrOrigin.coords.latitude,
           }}
+          // destination marker is blue : origin is red 
           pinColor={isToSmu ? "red" : "blue"}
         />
       )}
       <Marker
-        // SMU blue marker
+        // SMU Constant blue marker
         coordinate={{
           longitude: SMUCOORDS.longitude,
           latitude: SMUCOORDS.latitude,
@@ -107,7 +122,7 @@ const Map = ({ currentRegion }) => {
         pinColor={isToSmu ? "blue" : "red"}
         title='SMU'
       />
-      {/* route line in blue */}
+      {/* route (polyline) in blue */}
       {polylineCods && (
         <Polyline
           coordinates={polylineCods.map(coord => ({
@@ -121,7 +136,10 @@ const Map = ({ currentRegion }) => {
       {/* area around the route , green surface */}
       {polygonCods && (
         <Polygon
-          coordinates={polygonCods}
+          coordinates={polygonCods.map(coord => ({
+            latitude: coord[0],
+            longitude: coord[1],
+          }))}
           strokeWidth={3}
           fillColor='rgba(67, 247, 154,0.3)'
         />
@@ -138,7 +156,7 @@ const styles = StyleSheet.create({
     // height: "70%",
     flex: 6,
   },
-  markerFixed: {
+  customMarkerFixed: {
     position: "absolute",
     top: "64.5%", // Center vertically
     left: "50%", // Center horizontally
@@ -149,7 +167,7 @@ const styles = StyleSheet.create({
     height: 48,
     width: 48,
   },
-  PlaceMarkerBtn: {
+  placeCustomMarkerBtn: {
     position: "absolute",
     top: 250,
     right: 10,
