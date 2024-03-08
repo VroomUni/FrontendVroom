@@ -14,7 +14,6 @@ import Car from './screens/Car';
 import SearchRides from './screens/SearchRides';
 import ImageUpload from './components/ImageUpload';
 
-
 export default function App() {
 
   const Stack = createStackNavigator();
@@ -37,6 +36,7 @@ export default function App() {
         <Stack.Screen name="SearchRides"  component={SearchRides}/>
         <Stack.Screen name="Car"  component={Car}/>
         <Stack.Screen name="TabNav" component={TabNav} />
+
 
 
 
