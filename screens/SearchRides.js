@@ -3,7 +3,14 @@ import DriverCard from '../components/DriverCard'
 import { StyleSheet, View,Text,Animated  } from 'react-native'
 import Swiper from "react-native-deck-swiper";
 import LottieView from 'lottie-react-native';
+import {  Snackbar,Provider as PaperProvider } from 'react-native-paper';
 
+const passengersPreferences = {
+  smoking: 'no', 
+  Talkative: 'light chitchat',
+  eating: 'no',
+  musicGenre: 'loud music',
+};
 
 const driversData = [
     {
@@ -56,41 +63,34 @@ const driversData = [
   
 
 function SearchRides() {
-  const [showRequestSent, setShowRequestSent] = useState(false);
-  const fadeAnim = useRef(new Animated.Value(0)).current; 
+
+  const [visible, setVisible] = useState(false);
+
   const onSwipedLeft = (cardIndex) => {
     console.log('Swiped left, no request sent for: ', driversData[cardIndex]);
     // Handle the 'no request' logic here
   };
 
+
+
   const onSwipedRight = (cardIndex) => {
     console.log('Swiped right, request sent for: ', driversData[cardIndex]);
-    // Send the request to the driver here and show feedback
-    setShowRequestSent(true);
-    Animated.timing(fadeAnim, {
-      toValue: 1, // Fully visible
-      duration: 500, // 500ms
-      useNativeDriver: true // Add this line
-    }).start(() => {
-      // After the animation completes, start fading out the message
-      setTimeout(() => {
-        Animated.timing(fadeAnim, {
-          toValue: 0, // Fully transparent
-          duration: 500, // 500ms
-          useNativeDriver: true // Add this line
-        }).start(() => setShowRequestSent(false)); // Hide the message at the end
-      }, 2000); // Message stays visible for 2 seconds
-    });
-  };
+    setVisible(!visible)
+    
+  };  
+  const onDismissSnackBar = () => setVisible(false);
+
   return (
     <View style={styles.pageContainer}>
     <View style={styles.headerContainer}>
       <Text style={styles.headerText}>Swipe Your Way</Text>
       
     </View>
+    
     <Swiper
+    
       cards={driversData}
-      renderCard={(card) => <DriverCard driver={card} />}
+      renderCard={(card) => <DriverCard driver={card} passengerPreferences={passengersPreferences}/>}
       onSwipedLeft={onSwipedLeft}
       onSwipedRight={onSwipedRight}
       cardIndex={0}
@@ -102,11 +102,18 @@ function SearchRides() {
       animateCardOpacity
       swipeBackCard
     />
-     {showRequestSent && (
-        <Animated.View style={[styles.requestSentBanner, {opacity: fadeAnim}]}>
-          <Text style={styles.requestSentText}>Request Sent!</Text>
-        </Animated.View>
-      )}
+
+     
+        <Snackbar
+          visible={visible}
+          onDismiss={onDismissSnackBar}
+         duration={400}
+         
+         style={styles.snackbarstyle}
+        >
+          request sent !
+        </Snackbar>
+      
      <View style={styles.animationContainer}>
        <LottieView style={styles.animation} source={require('../assets/SwipeAnimation.json')} autoPlay loop />
       </View>
@@ -159,18 +166,15 @@ const styles = StyleSheet.create({
     height: '50%',
     
   },
-  requestSentBanner: {
-    position: 'absolute',
-    bottom: 30,
-    alignSelf: 'center',
-    backgroundColor: 'green',
-    padding: 10,
-    borderRadius: 5,
-  },
-
-  requestSentText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
   
+  snackbarstyle:{
+    backgroundColor: 'green',
+    position: 'absolute', 
+    bottom: 20, 
+    
+    right: 0,
+    
+    width: '70%'
+    
+  }
 })
