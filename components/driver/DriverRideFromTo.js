@@ -91,7 +91,7 @@ const DriverRideFromTo = ({
         style={[{ transform: [{ rotate }] }, styles.iconContainer]}>
         <IconButton
           icon='swap-vertical'
-          iconColor='black'
+          iconColor='#162447'
           size={35}
           onPress={swapBtns}
         />
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flex: 1.7,
-    backgroundColor: "#96DDF4",
+    backgroundColor: "#E2EAF4",
   },
   itineraryImg: { height: 65, width: 50, resizeMode: "contain" },
 

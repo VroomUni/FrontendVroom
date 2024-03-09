@@ -42,7 +42,7 @@ function TabNav({route}) {
             <MaterialCommunityIcons name={iconName} size={size} color={color} />
           );
         },
-        tabBarActiveTintColor: "#00669B",
+        tabBarActiveTintColor: "#162447",
         tabBarInactiveTintColor: "#CCCCCC",
         tabBarStyle: {
           backgroundColor: "white",
