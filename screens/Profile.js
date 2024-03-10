@@ -19,7 +19,8 @@ function Profile() {
     gender: 'Girls only',
     color: 'color',
     brand: 'brand',
-    model: 'model'
+    model: 'model',
+    image:'https://bootdey.com/img/Content/avatar/avatar3.png',
   });
 
   useEffect(() => {
@@ -60,16 +61,16 @@ function Profile() {
     <View style={styles.container}>
       {/* Top */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>vroom</Text>
+        <Text style={styles.headerText}>Welcome</Text>
       </View>
 
       {/* Middle */}
       <View >
         <TouchableOpacity style={styles.editIconContainer} onPress={handleEdit}>
-          <AntDesign name="edit" size={35} color="black" />
+          <AntDesign name="edit" size={35} color="#DA554E" />
         </TouchableOpacity>
         <View style={styles.imageContainer}>
-          <Image style={styles.image} source={require('../assets/driver.jpg')} />
+          <Image style={styles.image} source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar7.png' }} />
           <Text style={styles.userName}>{userData.name} {userData.lastName}</Text>
         </View>
         <View style={styles.middleSection}>
@@ -88,8 +89,8 @@ function Profile() {
       {/* Bottom */}
       <View style={styles.bottomContainer}>
         {/* Card */}
-        <View style={[styles.card, { backgroundColor: '#EDBEA4' }]}>
-          <AntDesign name="user" size={24} color="#fff" />
+        <View style={[styles.card, { backgroundColor: 'white' }]}>
+          <AntDesign name="user" size={24} color="#DA554E" />
           {selectedSection === 'general' && (
             <>
               <View>
@@ -127,30 +128,28 @@ function Profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#DFF2F0',
     borderRadius: 0,
     margin: 0,
   },
   header: {
-    backgroundColor: 'white',
-    paddingTop: 20,
+    backgroundColor: '#DFF2F0',
+    paddingTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 25,
-    opacity: 0.8, 
+    borderRadius: 0,
+    opacity: 2, 
     shadowColor: '#9AD0D3', 
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation:5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#9AD0D3',
   },
   headerText: {
-    color: 'black',
+    color: 'white',
     fontSize: 30,
     fontWeight: 'bold',
+    textShadowColor: '#9AD0D3',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 5,
   },
   middleContainer: {
     alignItems: 'center',
@@ -167,16 +166,17 @@ const styles = StyleSheet.create({
   imageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 4,
   },
   image: {
     width: 150,
-    height: 150,
+    height: 140,
     borderRadius: 75,
-    marginBottom: 10,
+    marginBottom: 7,
   },
   userName: {
-    fontSize: 25,
-    color: '#9AD0D3',
+    fontSize: 20,
+    color: '#152544',
     fontWeight: 'bold',
     
   },
@@ -195,12 +195,13 @@ const styles = StyleSheet.create({
   middleSectionText: {
     fontSize: 8,
     padding: 15,
-    marginTop: 50,
-    backgroundColor: '#9AD0D3',
+    marginTop: 10,
+    backgroundColor: '#152544',
     borderRadius: 30,
+    color: 'white',
   },
   bottomContainer: {
-    marginTop: 50,
+    marginTop: 0,
     paddingHorizontal: 10,
   },
   card: {
@@ -208,9 +209,10 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     marginHorizontal: 0,
     borderRadius: 30,
+    
   },
   cardText: {
-    color: '#fff',
+    color: '#152544',
     margin: 10,
     fontSize: 14,
   },

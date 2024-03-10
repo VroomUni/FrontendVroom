@@ -7,6 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { TextInput } from 'react-native-paper';
 import axios from 'axios';
 
+
 function EditProfile() {
     const [name, setName] = useState('name');
     const [lastName, setLastName] = useState('last name');
@@ -115,21 +116,21 @@ function EditProfile() {
                             value="Boys"
                             status={item.value === 'Boys only' ? 'checked' : 'unchecked'}
                             onPress={() => item.onValueChange('Boys only')}
-                            color="#9AD0D3" 
+                            color="#172446" 
                         />
                         <Text>Girls</Text>
                         <RadioButton
                             value="Girls"
                             status={item.value === 'Girls only' ? 'checked' : 'unchecked'}
                             onPress={() => item.onValueChange('Girls only')}
-                            color="#9AD0D3" 
+                            color="#172446" 
                         />
                         <Text>Boys/Girls</Text>
                         <RadioButton
                             value="Boys/Girls"
                             status={item.value === 'Boys/Girls' ? 'checked' : 'unchecked'}
                             onPress={() => item.onValueChange('Boys/Girls')}
-                            color="#9AD0D3" 
+                            color="#172446" 
                         />
                     </View>
                 </View>
@@ -143,14 +144,14 @@ function EditProfile() {
                             value="Yes"
                             status={item.value === 'Yes' ? 'checked' : 'unchecked'}
                             onPress={() => item.onValueChange('Yes')}
-                            color="#9AD0D3" // Change the color of checked radio buttons to green
+                            color="#172446" // Change the color of checked radio buttons to green
                         />
                         <Text>Yes</Text>
                         <RadioButton
                             value="No"
                             status={item.value === 'No' ? 'checked' : 'unchecked'}
                             onPress={() => item.onValueChange('No')}
-                            color="#9AD0D3" // Change the color of checked radio buttons to green
+                            color="#DA554E" // Change the color of checked radio buttons to green
                         />
                         <Text>No</Text>
                     </View>
@@ -164,8 +165,8 @@ function EditProfile() {
                         label={item.label} 
                         value={item.value}
                         onChangeText={item.onChangeText}
-                        style={{ backgroundColor: 'beige', height: 55,margin: 10,fontSize: 10}}
-                        theme={{ colors: { primary: '#9AD0D3', underlineColor:'transparent'}, fonts: { bodySmall: 'Open Sans' } }}
+                        style={{ backgroundColor: '#DFF2F0', height: 55,margin: 10,fontSize: 10}}
+                        theme={{ colors: { primary: '#DA554E', underlineColor:'transparent'}, fonts: { bodySmall: 'Open Sans' } }}
                     />
                     
                 </View>
@@ -178,7 +179,7 @@ function EditProfile() {
             <Text style={styles.header}>Edit your information</Text>
             <TouchableOpacity onPress={toggleModal}>
                 <ImageBackground
-                    source={selectedImage ? { uri: selectedImage } : require('../assets/user.jpg')}
+                    source={selectedImage ? { uri: selectedImage } : { uri: 'https://bootdey.com/img/Content/avatar/avatar7.png' }}
                     style={styles.image}
                     imageStyle={{ borderRadius: 15 }}
                 >
@@ -201,7 +202,7 @@ function EditProfile() {
                 )}
                 ListFooterComponent={
                     <View style={styles.saveStyle}>
-                        <Button title="Save Changes" onPress={handleSave} color="#EDBEA4" />
+                        <Button title="Save Changes" onPress={handleSave} color="#DA554E" />
                     </View>
                 }
             />
@@ -258,7 +259,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 30,
         textAlign: 'center',
-        color: '#9AD0D3',
+        color: '#172446',
     },
     input: {
         height: 40,
@@ -280,7 +281,8 @@ const styles = StyleSheet.create({
     sectionHeader: {
         fontSize: 18,
         fontWeight: 'bold',
-        backgroundColor: '#EDBEA4',
+        backgroundColor: '#152544',
+        color: 'white',
         padding: 10,
     },
     image: {
@@ -311,7 +313,7 @@ const styles = StyleSheet.create({
     },
     modalView: {
         margin: 20,
-        backgroundColor: '#EDBEA4',
+        backgroundColor: '#152544',
         borderRadius: 20,
         padding: 35,
         alignItems: 'center',
@@ -338,7 +340,7 @@ const styles = StyleSheet.create({
     },
     modalButtonText: {
         fontSize: 16,
-        color: '#EDBEA4',
+        color: '#152544',
         fontWeight: 'bold',
         textAlign: 'center',},
 });
