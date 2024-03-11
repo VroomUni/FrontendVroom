@@ -14,6 +14,7 @@ import Car from './screens/Car';
 import SearchRides from './screens/SearchRides';
 import ImageUpload from './components/ImageUpload';
 import DriverProvideRide from './screens/DriverProvideRide';
+import DriverCard from './components/DriverCard';
 
 
 
@@ -47,7 +48,7 @@ export default function App() {
 
      </NavigationContainer>
     
-
+   
   );
 }
 //fix map curent location 
