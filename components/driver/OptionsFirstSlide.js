@@ -122,7 +122,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
         <DateTimePicker
           value={customSelectedDate || new Date()}
           mode='date'
-          display='default'
+          display={Platform.OS === "ios" ? "spinner" : "default"}
           onChange={handleDateTimeChange}
         />
       )}
@@ -131,7 +131,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
         <DateTimePicker
           value={customSelectedTime || new Date()}
           mode='time'
-          display='default'
+          display={Platform.OS === "ios" ? "spinner" : "default"}
           onChange={handleDateTimeChange}
         />
       )}

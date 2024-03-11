@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 // import { isPointInPolygon } from "geolib";
 import DriverRideFromTo from "../components/driver/DriverRideFromTo";
 import DriverRideLocationInput from "../components/driver/DriverRideLocationInput";
-import { Button } from "react-native-paper";
+import { Button, Icon, Portal, Snackbar } from "react-native-paper";
 import DriverRideExtraOptions from "../components/driver/DriverRideExtraOptions";
 import {
   DriverContextProvider,
@@ -32,7 +32,8 @@ const DriverProvideRideScreen = () => {
     recurrentDays,
     customSelectedDate,
   } = useDriverContext();
-
+  const [rideSuccessCreation, setRideSucessCreation] = useState(false);
+  const [postRideBtnLoading, setPostRideBtnLoading] = useState(false);
   useEffect(() => {
     if (destinationOrOrigin) {
       setIsOptionShown(true);
@@ -86,7 +87,7 @@ const DriverProvideRideScreen = () => {
       initialDate: { customSelectedDate, selectedDateType },
       recurrence: recurrentDays,
     };
-    const resp=await rideApiService.postRide(ridePayload);
+    const resp = await rideApiService.postRide(ridePayload);
   };
   return (
     <View style={{ flex: 1, paddingTop: 50 }}>
@@ -148,14 +149,38 @@ const DriverProvideRideScreen = () => {
               mode='contained-tonal'
               buttonColor='#20c997'
               icon={"plus"}
+              loading={postRideBtnLoading}
               style={styles.PostRideBtn}
-              onPress={createRide}>
+              onPress={() => {
+                setPostRideBtnLoading(true);
+                createRide()
+                  .then(() => {
+                    setRideSucessCreation(true);
+                    setPostRideBtnLoading(false);
+                  })
+                  .catch(err => {
+                    Alert.alert("There was a problem creating your ride");
+                    setPostRideBtnLoading(false);
+                  });
+              }}>
               Post Ride
             </Button>
           )}
           {isOptionShown && <DriverRideExtraOptions />}
         </>
       )}
+      {/* todo fix iocn  */}
+      <Snackbar
+        visible={rideSuccessCreation}
+        onDismiss={() => {
+          setRideSucessCreation(false);
+        }}
+        icon={"check"}
+        duration={3000}
+        style={{ backgroundColor: "green" }} // Set the background color to green
+      >
+        Your ride was created successfully
+      </Snackbar>
     </View>
   );
 };

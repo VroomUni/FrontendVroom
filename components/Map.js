@@ -102,7 +102,7 @@ const Map = ({ currentRegion }) => {
             latitude: destinationOrOrigin.coords.latitude,
           }}
           // destination marker is blue : origin is red 
-          pinColor={isToSmu ? "red" : "blue"}
+          pinColor={!isToSmu &&"blue"}
         />
       )}
       <Marker
@@ -111,7 +111,7 @@ const Map = ({ currentRegion }) => {
           longitude: SMUCOORDS.longitude,
           latitude: SMUCOORDS.latitude,
         }}
-        pinColor={isToSmu ? "blue" : "red"}
+        pinColor={isToSmu&&"blue"}
         title='SMU'
       />
       {/* route (polyline) in blue */}
