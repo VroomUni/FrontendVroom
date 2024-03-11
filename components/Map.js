@@ -13,8 +13,12 @@ import { BufferOp } from "jsts/org/locationtech/jts/operation/buffer";
 import { useDriverContext } from "./context/DriverContext";
 import axios from "axios";
 
-//current region is passed as prop , becuase the custom marker in parent component needs it
+
+
+//current region is passed as prop , because the custom marker in parent component needs it
 const Map = ({ currentRegion }) => {
+ 
+
   //using context/global store for driver state
   const {
     destinationOrOrigin,
@@ -25,11 +29,15 @@ const Map = ({ currentRegion }) => {
     isToSmu,
   } = useDriverContext();
   //to be moved in env file
-  const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
+
+  const apiKey =process.env.EXPO_PUBLIC_API_KEY;
+ 
+
   const SMUCOORDS = {
-    latitude: 36.84598089012623,
-    longitude: 10.268806957645351,
+    "latitude": "36.84598089012623",
+    "longitude": "10.268806957645351",
   };
+
   const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${apiKey}`;
   const mapViewRef = useRef(null);
 
