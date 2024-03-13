@@ -1,27 +1,46 @@
-import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Card, Text, Avatar, IconButton } from 'react-native-paper';
+import * as React from "react";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { Card, Text,Button } from "react-native-paper";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const LeftContent = () => <Avatar.Icon size={30} icon="car" style={styles.icon} color="red" />;
-const RightContent = () => <Text style={styles.requests}>REQUESTS: 3</Text>;
-const CancelAction = () => <IconButton icon="close-circle" style={styles.cancelAction} color="red" size={20} onPress={() => console.log('Cancel pressed')} />;
-
-function RideCard() {
+function RideCard({id,title, location, time, requests, onDelete}) {
+  const handleDelete = ()=>{
+    onDelete(id)
+  }
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
         <Card.Title
-          title="Ride from SMU to AOUINA"
-          subtitle="Today, 5:00PM"
-          left={LeftContent}
-          right={RightContent}
+          title={title}
           titleStyle={styles.title}
-          subtitleStyle={styles.subtitle}
           style={styles.cardTitle}
         />
-        <Card.Actions style={styles.cardActions}>
-          <CancelAction />
+        <Card.Content>
+          <Text variant="titleLarge" style={{marginBottom:10}}>{location}</Text>
+
+          <Text variant="bodyMedium">{time}</Text>
+         
+          <View style={styles.requestsRow}>
+            <Text variant="bodyMedium" >Requests: </Text>
+            <View style={styles.requestsContainer}>
+              <Text style={styles.requestsText}>{requests}</Text>
+            </View>
+            </View>
+          
+        </Card.Content>
+        <Card.Actions style={styles.actions}>
+          <Button
+            mode="outlined"
+            onPress={() => console.log('See details pressed')}
+            
+            labelStyle={{color:"#162447"}}
+          >
+            See Details
+          </Button>
         </Card.Actions>
+        <TouchableOpacity style={styles.iconContainer} onPress={handleDelete}>
+          <MaterialIcons name="delete-forever" color="red" size={24} />
+        </TouchableOpacity>
       </Card>
     </View>
   );
@@ -29,40 +48,61 @@ function RideCard() {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    marginTop: 30,
+    alignItems: "center",
+    
   },
   card: {
-    backgroundColor: 'white',
-    width: '95%',
+    marginTop: 20,
+    backgroundColor: "white",
+    width: "95%",
     borderRadius: 8,
-    elevation: 1, 
-    shadowColor: 'black', 
+    elevation: 1,
+    shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
+    paddingBottom:10,
   },
- 
+
   title: {
-    fontWeight: 'bold',
-    color: 'black',
+    fontWeight: "bold",
+    color: "#162447",
     fontSize: 18,
+  
   },
-  subtitle: {
-    color: 'black',
+  iconContainer: {
+    position: "absolute",
+    top: 10,
+    right: 10,
   },
-  requests: {
-    color: 'red',
+  requestsRow: {
+    marginTop:10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  requestsContainer: {
+    backgroundColor: 'red',
+    borderRadius: 50,
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  requestsText: {
+    color: 'white',
     fontWeight: 'bold',
-    fontSize: 14,
   },
-  icon: {
-    backgroundColor: 'transparent',
-  },
-  cardActions: {
-    justifyContent: 'flex-end', // align the cancel button to the right
+  actions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end', // This aligns the button to the right
+    paddingRight: 8, // This adds some padding on the right
+    paddingBottom: 5, // This adds some padding at the bottom
+    width: "100%",
     
   },
+ 
+
+  
  
 });
 
