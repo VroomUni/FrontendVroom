@@ -6,7 +6,7 @@ import OptionsSecondSlide from "./OptionsSecondSlide";
 
 //carousel of the 2 pages / slides
 //  This final component is only responsible for swiping between them
-const DriverRideExtraOptions = () => {
+const DriverRideExtraOptions = ({ allOptions }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef();
 
@@ -29,21 +29,27 @@ const DriverRideExtraOptions = () => {
 
   return (
     <View style={commonStyles.carouselContainer}>
-      <Carousel
-        ref={carouselRef}
-        data={[{}, {}]} // Dummy data to create two slides
-        renderItem={({ index }) =>
-          index === 0 ? (
-            <OptionsFirstSlide goToSlide={goToSlide} />
-          ) : (
-            <OptionsSecondSlide />
-          )
-        }
-        sliderWidth={420}
-        itemWidth={420}
-        onSnapToItem={index => setActiveIndex(index)}
-      />
-      {renderPagination()}
+      {allOptions ? (
+        <>
+          <Carousel
+            ref={carouselRef}
+            data={[{}, {}]} // Dummy data to create two slides
+            renderItem={({ index }) =>
+              index === 0 ? (
+                <OptionsFirstSlide goToSlide={goToSlide} />
+              ) : (
+                <OptionsSecondSlide />
+              )
+            }
+            sliderWidth={420}
+            itemWidth={420}
+            onSnapToItem={index => setActiveIndex(index)}
+          />
+          {renderPagination()}
+        </>
+      ) : (
+        <OptionsFirstSlide />
+      )}
     </View>
   );
 };
@@ -56,6 +62,7 @@ const commonStyles = StyleSheet.create({
     overflow: "hidden",
     alignItems: "center",
     flex: 3.5,
+    width:'auto'
   },
 
   // related to the dots pagination ( that indicate which slider currently on) , no need to edit

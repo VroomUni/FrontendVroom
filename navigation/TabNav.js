@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import DriverRides from "../screens/DriverRides";
-import HistoryDriver from "../screens/HistoryDriver";
+import DriverRides from "../screens/driver/DriverRides";
+import HistoryDriver from "../screens/driver/HistoryDriver";
 import Profile from "../screens/Profile";
-import SearchRides from "../screens/SearchRides";
-import PassengerRides from "../screens/PassengerRides";
+import PassengerSearchRides from "../screens/passenger/PassengerSearchRides";
+import PassengerRides from "../screens/passenger/PassengerRides";
 import { Alert, Platform, TouchableOpacity, View } from "react-native";
-import DiverProvideRide from "../screens/DriverProvideRide";
+import DiverProvideRide from "../screens/RideInfoInput";
+import DriverProvideRide from "../screens/RideInfoInput";
 
 const Tab = createBottomTabNavigator();
 
@@ -65,13 +66,13 @@ function TabNav({route}) {
         </>
       ) : (
         <>
-          <Tab.Screen name='Search Rides' component={SearchRides} />
+          <Tab.Screen name='Search Rides' component={DriverProvideRide} />
           <Tab.Screen name='My Rides' component={PassengerRides} />
         </>
       )}
       <Tab.Screen
         name='test'
-        component={userType === "driver" ? DiverProvideRide : SearchRides}
+        component= {DiverProvideRide}
         options={{
           tabBarButton: props => (
             <TouchableOpacity

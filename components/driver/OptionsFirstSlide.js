@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { View, SafeAreaView, StyleSheet } from "react-native";
+import { View, SafeAreaView, StyleSheet, Platform } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Surface, Text, SegmentedButtons, Button } from "react-native-paper";
-import { useDriverContext } from "../context/DriverContext";
+import { useRideContext } from "../../context/UserRideContext";
 const OptionsFirstSlide = ({ goToSlide }) => {
   const {
     btnGrpDateValue,
@@ -11,7 +11,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
     customSelectedTime,
     customSelectedDate,
     setCustomSelectedDate,
-  } = useDriverContext();
+  } = useRideContext();
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisible] = useState(false);
@@ -149,6 +149,7 @@ const commonStyles = StyleSheet.create({
     flex: 1,
     rowGap: 50,
     margin: 20,
+    width:'90%'
   },
 });
 export default OptionsFirstSlide;

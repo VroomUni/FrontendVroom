@@ -32,12 +32,9 @@ const rideApiService = {
 
     try {
       const response = await axios.post(url, validatedRidePayload);
-      if (response.status !== 200) {
-        console.log("error");
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
       console.log("SUCCESS");
       return response;
+      
     } catch (err) {
       console.error("Error fetching data:", err);
       throw err;

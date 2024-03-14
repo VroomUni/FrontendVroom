@@ -3,14 +3,14 @@ import React, { useState, useEffect } from "react";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Button, TextInput } from "react-native-paper";
 import * as Location from "expo-location";
-import { useDriverContext } from "../context/DriverContext";
+import { useRideContext } from "../../context/UserRideContext";
 
 
 const DriverRideLocationInput = ({
   setOnLocationInputPage,
   setCustomLocationMarker,
 }) => {
-  const { isToSmu, setDestinationOrOrigin } = useDriverContext();
+  const { isToSmu, setDestinationOrOrigin } = useRideContext();
 
   return (
     <>

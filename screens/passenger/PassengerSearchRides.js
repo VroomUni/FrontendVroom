@@ -1,8 +1,7 @@
 import React,{useState, useRef} from 'react'
-import DriverCard from '../components/DriverCard'
+import DriverCard from '../../components/DriverCard'
 import { StyleSheet, View,Text,Animated  } from 'react-native'
 import Swiper from "react-native-deck-swiper";
-import LottieView from 'lottie-react-native';
 import LottieView from 'lottie-react-native';
 
 const driversData = [
@@ -108,7 +107,7 @@ function SearchRides() {
         </Animated.View>
       )}
      <View style={styles.animationContainer}>
-       <LottieView style={styles.animation} source={require('../assets/SwipeAnimation.json')} autoPlay loop />
+       <LottieView style={styles.animation} source={require('../../assets/SwipeAnimation.json')} autoPlay loop />
       </View>
   </View>
     

@@ -1,16 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import { StyleSheet, Text, View, Image, Animated, Easing } from "react-native";
 import { Surface, Button, IconButton } from "react-native-paper";
-import { useDriverContext } from "../context/DriverContext";
+import { useRideContext } from "../../context/UserRideContext";
 
-const DriverRideFromTo = ({
-  isToSmu,
-  setIsToSmu,
-  setOnLocationInputPage,
-  destinationOrOrigin,
-}) => {
-
-  const {setPolygonCods,setPolylineCods} = useDriverContext();
+const DriverRideFromTo = ({ setOnLocationInputPage }) => {
+  const {
+    setPolygonCods,
+    setPolylineCods,
+    isToSmu,
+    setIsToSmu,
+    destinationOrOrigin,
+  } = useRideContext();
   const swapAnimation = useRef(new Animated.Value(0)).current;
 
   const translateY1 = swapAnimation.interpolate({
@@ -65,8 +65,6 @@ const DriverRideFromTo = ({
               setOnLocationInputPage();
               setPolygonCods(null);
               setPolylineCods(null);
-          
-             
             }}>
             {destinationOrOrigin
               ? destinationOrOrigin.name

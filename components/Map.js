@@ -10,15 +10,11 @@ import { decode } from "@googlemaps/polyline-codec";
 import GeoJSONReader from "jsts/org/locationtech/jts/io/GeoJSONReader";
 import GeoJSONWriter from "jsts/org/locationtech/jts/io/GeoJSONWriter";
 import { BufferOp } from "jsts/org/locationtech/jts/operation/buffer";
-import { useDriverContext } from "./context/DriverContext";
+import { useRideContext } from "../context/UserRideContext";
 import axios from "axios";
-
-
 
 //current region is passed as prop , because the custom marker in parent component needs it
 const Map = ({ currentRegion }) => {
- 
-
   //using context/global store for driver state
   const {
     destinationOrOrigin,
@@ -27,19 +23,18 @@ const Map = ({ currentRegion }) => {
     polygonCods,
     polylineCods,
     isToSmu,
-  } = useDriverContext();
+  } = useRideContext();
   //to be moved in env file
 
-  const apiKey =process.env.EXPO_PUBLIC_API_KEY;
- 
+  const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
 
   const SMUCOORDS = {
-    "latitude": "36.84598089012623",
-    "longitude": "10.268806957645351",
+    latitude: 36.84598089012623,
+    longitude: 10.268806957645351,
   };
 
   const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${apiKey}`;
-  const mapViewRef = useRef(null);
+  const mapViewRef = useRef();
 
   //if  destinationOrOrigin !==null this is the logic to draw the route(polyline) & area(polygon)
   useEffect(() => {
@@ -49,22 +44,27 @@ const Map = ({ currentRegion }) => {
         .then(response => {
           const overviewPath = response.data.routes[0].overview_polyline.points;
           const decodedPolylineCods = decode(overviewPath);
-          const geoJsonFeature = {
-            type: "LineString",
-            coordinates: decodedPolylineCods.map(coord => [coord[0], coord[1]]),
+          const computePolygon = () => {
+            const geoJsonFeature = {
+              type: "LineString",
+              coordinates: decodedPolylineCods.map(coord => [
+                coord[0],
+                coord[1],
+              ]),
+            };
+            const geoReader = new GeoJSONReader();
+            const geoWriter = new GeoJSONWriter();
+            const geometry = geoReader.read(geoJsonFeature);
+
+            // Use BufferOp to buffer the geometry
+            const bufferOp = new BufferOp(geometry);
+            const distance = 10 / 500.12;
+            const bufferedGeometry = bufferOp.getResultGeometry(distance);
+            const resultPolygonCods = geoWriter.write(bufferedGeometry);
+
+            setPolygonCods(resultPolygonCods.coordinates[0]);
           };
-
-          const geoReader = new GeoJSONReader();
-          const geoWriter = new GeoJSONWriter();
-          const geometry = geoReader.read(geoJsonFeature);
-
-          // Use BufferOp to buffer the geometry
-          const bufferOp = new BufferOp(geometry);
-          const distance = 10 / 500.12;
-          const bufferedGeometry = bufferOp.getResultGeometry(distance);
-          const resultPolygonCods = geoWriter.write(bufferedGeometry);
-
-          setPolygonCods(resultPolygonCods.coordinates[0]);
+          computePolygon();
           setPolylineCods(decodedPolylineCods);
         })
         .catch(error => {
@@ -76,16 +76,16 @@ const Map = ({ currentRegion }) => {
 
   // when area , route or destination/origin change , then recenter the camera view on the route
   useEffect(() => {
-    if (mapViewRef.current && polygonCods) {
+    if (mapViewRef.current && polylineCods) {
       mapViewRef.current.fitToCoordinates(
-        polygonCods.map(coord => ({
+        polylineCods.map(coord => ({
           latitude: coord[0],
           longitude: coord[1],
         })),
         {
           edgePadding: {
-            top: 20,
-            bottom: 10,
+            top: 40,
+            bottom: 40,
             right: 10,
             left: 10,
           },
@@ -93,7 +93,7 @@ const Map = ({ currentRegion }) => {
         }
       );
     }
-  }, [polygonCods, destinationOrOrigin, polylineCods]);
+  }, [polylineCods]);
   return (
     <MapView
       ref={mapViewRef}
@@ -109,8 +109,8 @@ const Map = ({ currentRegion }) => {
             longitude: destinationOrOrigin.coords.longitude,
             latitude: destinationOrOrigin.coords.latitude,
           }}
-          // destination marker is blue : origin is red 
-          pinColor={!isToSmu &&"blue"}
+          // destination marker is blue : origin is red
+          pinColor={!isToSmu && "blue"}
         />
       )}
       <Marker
@@ -119,7 +119,7 @@ const Map = ({ currentRegion }) => {
           longitude: SMUCOORDS.longitude,
           latitude: SMUCOORDS.latitude,
         }}
-        pinColor={isToSmu&&"blue"}
+        pinColor={isToSmu && "blue"}
         title='SMU'
       />
       {/* route (polyline) in blue */}
@@ -129,7 +129,7 @@ const Map = ({ currentRegion }) => {
             latitude: coord[0],
             longitude: coord[1],
           }))}
-          strokeWidth={2}
+          strokeWidth={3}
           strokeColor='blue'
         />
       )}
