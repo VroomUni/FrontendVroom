@@ -1,19 +1,42 @@
 import React, { useState } from 'react'
 import RideCard from './RideCard';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet,Text,Alert } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
-function RideCardList() {
-    const [rideData,setRideData] =useState ([
-        { id: "1", title: "Ride 1", location: "SMU to Aouina", time: "Today, 5:00PM", requests: 5 },
-        { id: "2", title: "Ride 2", location: "Downtown to Airport", time: "Tomorrow, 8:30AM", requests: 3 },
-        { id: "3", title: "Ride 3", location: "Beach to City Center", time: "March 15, 10:00AM", requests: 2 },
-        { id: "4", title: "Ride 4", location: "Suburb to Shopping Mall", time: "March 16, 3:45PM", requests: 7 },
+function RideCardList({selectedDate}) {
+    const [rideData, setRideData] =useState ([
+        { id: "1", title: "Ride 1", location: "SMU to Aouina", time: "5:00PM", date:'2024-03-14', requests: 5 },
+        { id: "2", title: "Ride 2", location: "Downtown to Airport", time: "8:30AM",  date: '2024-03-15', requests: 3 },
+        { id: "3", title: "Ride 3", location: "Beach to City Center", time: "10:00AM", date: '2024-03-15',requests: 2 },
+        { id: "4", title: "Ride 4", location: "Suburb to Shopping Mall", time: "3:45PM", date: '2024-03-16', requests: 7 },
         
       ]);
+
+      const filteredData = rideData.filter(item => item.date === selectedDate);
+
       const handleDelete = (id)=>{
-        setRideData(rideData.filter(item=>item.id !== id))
+      Alert.alert(
+        "Cancel Ride",
+        "Are you sure you want to cancel this ride ?",
+        [
+          {
+            text:"No",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+
+          },
+          {
+            text:"Yes",
+            onPress:()=> setRideData(rideData.filter(item=>item.id !== id))
+          }
+
+        ],
+       
+      )
       }
+      
+
+
       const renderItem=({item})=>(
         <RideCard
         id={item.id}
@@ -27,12 +50,16 @@ function RideCardList() {
 
   return (
     <View style={styles.container}>
+        {filteredData.length > 0 ? (
         <FlatList
-        data={rideData}
-        renderItem={renderItem}
-        keyExtractor={(item)=>item.id}
-        contentContainerStyle={styles.flatListContent}/>
-
+          data={filteredData}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.flatListContent}
+        />
+      ) : (
+        <Text style={styles.noRidesText}>No scheduled rides for this date.</Text>
+      )}
     </View>
   )
 }
@@ -44,6 +71,12 @@ const styles = StyleSheet.create({
     flatListContent: {
       paddingHorizontal: 10,
       paddingBottom:30,
+    },
+    noRidesText: {
+      color: '#162447', 
+      fontSize: 16,
+      textAlign: 'center',
+      marginTop: 20,
     },
   });
   

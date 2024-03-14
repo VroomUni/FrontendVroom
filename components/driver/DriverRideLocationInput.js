@@ -53,8 +53,8 @@ const DriverRideLocationInput = ({
         />
         <Button
           mode='outlined'
-          buttonColor='#39AFEA'
-          textColor='white'
+          buttonColor='#E2EAF4'
+          textColor='#162447'
           icon={"map-marker-radius"}
           style={styles.buttons}
           onPress={async () => {
@@ -84,8 +84,8 @@ const DriverRideLocationInput = ({
 
         <Button
           mode='outlined'
-          buttonColor='#39AFEA'
-          textColor='white'
+          buttonColor='#E2EAF4'
+          textColor='#162447'
           icon={"pin"}
           style={styles.buttons}
           onPress={() => {

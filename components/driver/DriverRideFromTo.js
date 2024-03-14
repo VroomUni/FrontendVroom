@@ -60,7 +60,7 @@ const DriverRideFromTo = ({
           <Button
             style={styles.buttons}
             mode='outlined'
-            labelStyle={{ alignSelf: "center" }}
+            labelStyle={{ alignSelf: "center",color: '#162447' }}
             onPress={() => {
               setOnLocationInputPage();
               setPolygonCods(null);

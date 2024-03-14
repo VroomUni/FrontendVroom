@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     marginBottom: 20, 
-    backgroundColor:"#2c3e50",
+    backgroundColor:"#162447",
     width: '100%',
   },
   headerText: {

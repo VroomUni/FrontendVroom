@@ -44,14 +44,14 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     passengerContainer: {
-      backgroundColor: '#E3E6F3',
+      backgroundColor: '#E2EAF4',
       flex:1,   
       width:'100%'   ,
       padding: 20,
       alignItems: 'center',
     },
     driverContainer: {
-      backgroundColor: '#30AADD',
+      backgroundColor: '#162447',
       flex:1,   
       width: '100%',
       padding: 20,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     passengerText: {
     marginTop:80,
-      color: '#30AADD',
+      color: '#162447',
       fontSize: 24,
       fontWeight: 'bold',
     },
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#E3E6F3',
       padding: 20,
       borderRadius: 10,
-      borderColor:'#30AADD',
+      borderColor:'#162447',
       borderWidth: 2,
       
     },
