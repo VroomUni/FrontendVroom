@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -6,42 +6,55 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
-  Image,
   Pressable,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
 import Button from "../components/Button";
+import { signIn } from "../api/UserService";
 
 const Login = ({ navigation }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      if (email !== "" && password !== "") {
+        await signIn(email, password);
+        navigation.navigate("Home");
+      }
+    } catch (err) {
+      console.log(err);
+      Alert.alert("wrong username or password");
+    }
+  };
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
+      style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.innerContainer}>
-          {/* <Image
-            style={{ width: 200, height: 50,  }}
-            source={require("../assets/Logo-2.jpg")}
-          /> */}
-            <Text style={styles.title}>VROOM</Text>
+          <Text style={styles.title}>VROOM</Text>
           <Text style={styles.welcomeText}>Hi, Welcome Back! 👋</Text>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Email Address</Text>
             <TextInput
+              value={email}
+              onChangeText={val => {
+                setEmail(val);
+              }}
               style={styles.input}
-              placeholder="Enter your email address"
+              placeholder='Enter your email address'
               placeholderTextColor={COLORS.darkGray}
-              keyboardType="email-address"
+              keyboardType='email-address'
             />
           </View>
           <View style={styles.inputContainer}>
@@ -49,7 +62,11 @@ const Login = ({ navigation }) => {
             <View style={styles.passwordContainer}>
               <TextInput
                 // style={styles.input}
-                placeholder="Enter your password"
+                value={password}
+                onChangeText={val => {
+                  setPassword(val);
+                }}
+                placeholder='Enter your password'
                 placeholderTextColor={COLORS.darkGray}
                 secureTextEntry={isPasswordShown}
               />
@@ -59,12 +76,11 @@ const Login = ({ navigation }) => {
                 style={{
                   position: "absolute",
                   right: 12,
-                }}
-              >
+                }}>
                 {isPasswordShown == true ? (
-                  <Ionicons name="eye-off" size={24} color={COLORS.black} />
+                  <Ionicons name='eye-off' size={24} color={COLORS.black} />
                 ) : (
-                  <Ionicons name="eye" size={24} color={COLORS.black} />
+                  <Ionicons name='eye' size={24} color={COLORS.black} />
                 )}
               </TouchableOpacity>
             </View>
@@ -80,10 +96,10 @@ const Login = ({ navigation }) => {
           </View>
 
           <Button
-            title="Login"
+            title='Login'
             filled
             style={styles.loginButton}
-            onPress={() => navigation.navigate("Home")}
+            onPress={handleLogin}
           />
           <View style={styles.registerContainer}>
             <Pressable onPress={() => navigation.navigate("Signup")}>
@@ -113,10 +129,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     color: "#30AADD",
-    fontWeight: 'bold',
+    fontWeight: "bold",
     textAlign: "center",
     marginVertical: 20,
-    
   },
   welcomeText: {
     fontSize: 24,

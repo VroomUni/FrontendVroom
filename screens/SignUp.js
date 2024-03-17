@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,7 +16,7 @@ import Checkbox from "expo-checkbox";
 import Button from "../components/Button";
 import { RadioButton } from "react-native-paper";
 import ImageUpload from "../components/ImageUpload";
-import userApiService from "../api/UserService";
+import { createUser } from "../api/UserService";
 
 const Signup = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -28,7 +29,6 @@ const Signup = ({ navigation }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(true);
   const [termsChecked, setTermsChecked] = useState(false);
   const [gender, setGender] = useState("");
-
   const [message, setMessage] = useState("");
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -109,18 +109,8 @@ const Signup = ({ navigation }) => {
     } else if (!termsChecked) {
       setMessage("Please agree to the terms and conditions");
     } else {
-      setMessage("");
-      setPassword("");
-      setPhone("");
-      setFirstname("");
-      setLastname("");
-      setEmail("");
-      setAge("");
-      setRePassword("");
-      setGender("");
-      setTermsChecked(false);
       try {
-        await userApiService.createUser({
+        await createUser({
           email,
           firstName,
           lastName,
@@ -129,8 +119,11 @@ const Signup = ({ navigation }) => {
           phoneNumber,
           profilePicPath: "toBeAdded",
         });
-      } catch (err) {}
-      // navigation.navigate("Preferences");
+        navigation.navigate("Preferences");
+      } catch (err) {
+        console.log(err);
+        Alert.alert("We encountered a problem during sign up");
+      }
     }
   };
 
@@ -148,15 +141,6 @@ const Signup = ({ navigation }) => {
               }}>
               Create Account
             </Text>
-
-            {/* <Text
-              style={{
-                fontSize: 16,
-                color: COLORS.blue,
-              }}
-            >
-              VROOM
-            </Text> */}
           </View>
 
           <View style={{ marginBottom: 12 }}>
@@ -168,7 +152,7 @@ const Signup = ({ navigation }) => {
                 color: COLORS.blue,
                 fontWeight: "bold",
               }}>
-              Email address{" "}
+              Email address
               {errorMessage && (
                 <Text style={{ color: "red" }}>{errorMessage}</Text>
               )}
