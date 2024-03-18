@@ -5,10 +5,10 @@ import { FlatList } from 'react-native-gesture-handler';
 
 function RideCardList({selectedDate}) {
     const [rideData, setRideData] =useState ([
-        { id: "1", title: "Ride 1", location: "SMU to Aouina", time: "5:00PM", date:'2024-03-14', requests: 5 },
-        { id: "2", title: "Ride 2", location: "Downtown to Airport", time: "8:30AM",  date: '2024-03-15', requests: 3 },
-        { id: "3", title: "Ride 3", location: "Beach to City Center", time: "10:00AM", date: '2024-03-15',requests: 2 },
-        { id: "4", title: "Ride 4", location: "Suburb to Shopping Mall", time: "3:45PM", date: '2024-03-16', requests: 7 },
+        { id: "1", title: "Ride 1", location: "SMU to Aouina", time: "5:00PM", date:'2024-03-19', requests: 5 },
+        { id: "2", title: "Ride 2", location: "Aouina to SMU", time: "8:30AM",  date: '2024-03-19', requests: 3 },
+        { id: "3", title: "Ride 3", location: "Menzah to SMU", time: "10:00AM", date: '2024-03-19',requests: 2 },
+        { id: "4", title: "Ride 4", location: "SMU  to  Lac1", time: "3:45PM", date: '2024-03-21', requests: 7 },
         
       ]);
 
