@@ -52,6 +52,7 @@ export default function App() {
    
   );
 }
+
 //fix map curent location 
 const styles = StyleSheet.create({
   container: {
