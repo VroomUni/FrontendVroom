@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState } from "react";
 
 // import { isPointInPolygon } from "geolib";
 import DriverRideFromTo from "../components/driver/DriverRideFromTo";
-import DriverRideLocationInput from "../components/driver/DriverRideLocationInput";
+import RideLocationInput from "../components/driver/DriverRideLocationInput";
 import { Button, Icon, Portal, Snackbar } from "react-native-paper";
 import DriverRideExtraOptions from "../components/driver/DriverRideExtraOptions";
 import {
@@ -15,7 +15,9 @@ import axios from "axios";
 import rideApiService from "../api/RideService";
 import { fromToObjBuilder } from "../utils/RideHelpers";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-const DriverProvideRideScreen = () => {
+import { useAuth } from "../context/AuthContext";
+import { useNavigation } from "@react-navigation/native";
+const DriverProvideRideScreen = ({}) => {
   const {
     destinationOrOrigin,
     setDestinationOrOrigin,
@@ -28,13 +30,14 @@ const DriverProvideRideScreen = () => {
     recurrentDays,
     customSelectedDate,
   } = useRideContext();
-  const [onLocationInputPage, setOnLocationInputPage] = useState(false);
-  const [isCustomLocationMarker, setCustomLocationMarker] = useState(false);
+  const { user, isPassenger } = useAuth();
   const [isOptionShown, setOptionShown] = useState(false);
   const [confirmBtnVisible, setConfirmBtnVisible] = useState(false);
   const [rideSuccessCreation, setRideSucessCreation] = useState(false);
   const [postRideBtnLoading, setPostRideBtnLoading] = useState(false);
-  const [isDriver, setIsDriver] = useState(false);
+  const [onLocationInputPage, setOnLocationInputPage] = useState(false);
+  const [isCustomLocationMarker, setCustomLocationMarker] = useState(false);
+
   useEffect(() => {
     if (destinationOrOrigin) {
       setOptionShown(true);
@@ -49,7 +52,6 @@ const DriverProvideRideScreen = () => {
     latitudeDelta: 1, // Zoom level
     longitudeDelta: 1, // Zoom level
   });
-
   useEffect(() => {
     customSelectedTime
       ? setConfirmBtnVisible(true)
@@ -87,6 +89,7 @@ const DriverProvideRideScreen = () => {
       startTime: customSelectedTime,
       initialDate: { customSelectedDate, selectedDateType },
       recurrence: recurrentDays,
+      driverFirebaseId: user.uid,
     };
     const resp = await rideApiService.postRide(ridePayload);
   };
@@ -94,7 +97,7 @@ const DriverProvideRideScreen = () => {
     <View style={{ flex: 1, paddingTop: 50 }}>
       {onLocationInputPage ? (
         //Destination/origin places autocomplete page
-        <DriverRideLocationInput
+        <RideLocationInput
           isToSmu={isToSmu}
           setOnLocationInputPage={setOnLocationInputPage}
           setCustomLocationMarker={setCustomLocationMarker}
@@ -144,7 +147,11 @@ const DriverProvideRideScreen = () => {
             <Button
               mode='contained-tonal'
               buttonColor='#20c997'
-              icon={isDriver ? "checkbox-marked-circle-plus-outline" : "card-search-outline"}
+              icon={
+                !isPassenger
+                  ? "checkbox-marked-circle-plus-outline"
+                  : "card-search-outline"
+              }
               loading={postRideBtnLoading}
               style={styles.PostRideBtn}
               onPress={() => {
@@ -155,31 +162,33 @@ const DriverProvideRideScreen = () => {
                     setPostRideBtnLoading(false);
                   })
                   .catch(err => {
+                    console.error(err);
                     Alert.alert("There was a problem creating your ride");
                     setPostRideBtnLoading(false);
                   });
               }}>
-              {isDriver ? "Post Ride" : "Search"}
+              {!isPassenger ? "Post Ride" : "Search"}
             </Button>
           )}
           {isOptionShown && <DriverRideExtraOptions allOptions={false} />}
+          {/* todo fix iocn  */}
+          <Snackbar
+            visible={rideSuccessCreation}
+            onDismiss={() => {
+              setRideSucessCreation(false);
+            }}
+            icon={"check"}
+            duration={3000}
+            style={{ backgroundColor: "green" }} // Set the background color to green
+          >
+            Your ride was created successfully
+          </Snackbar>
         </>
       )}
-      {/* todo fix iocn  */}
-      <Snackbar
-        visible={rideSuccessCreation}
-        onDismiss={() => {
-          setRideSucessCreation(false);
-        }}
-        icon={"check"}
-        duration={3000}
-        style={{ backgroundColor: "green" }} // Set the background color to green
-      >
-        Your ride was created successfully
-      </Snackbar>
     </View>
   );
 };
+
 const DriverProvideRide = () => (
   <UserRideContextProvider>
     <SafeAreaProvider>

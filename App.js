@@ -16,7 +16,7 @@ import { AuthContextProvider, useAuth } from "./context/AuthContext";
 function App() {
   const Stack = createStackNavigator();
   const { user } = useAuth();
-  console.log("user ", user);
+  console.log("user ", user?.email);
 
   return (
     <NavigationContainer>
