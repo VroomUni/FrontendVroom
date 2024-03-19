@@ -165,10 +165,9 @@ function EditProfile() {
                         label={item.label} 
                         value={item.value}
                         onChangeText={item.onChangeText}
-                        style={{ backgroundColor: '#DFF2F0', height: 55,margin: 10,fontSize: 10}}
-                        theme={{ colors: { primary: '#DA554E', underlineColor:'transparent'}, fonts: { bodySmall: 'Open Sans' } }}
+                        style={{ backgroundColor: '#DFF2F0', height: 55, margin: 10, fontSize: 16, lineHeight: 24 }}
+                        theme={{ colors: { primary: '#DA554E', underlineColor:'transparent'}, roundness: 10 }}
                     />
-                    
                 </View>
             );
         }
