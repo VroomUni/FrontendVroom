@@ -8,7 +8,7 @@ import { PaperProvider, Button } from "react-native-paper";
 import PreferenceItem from "./preferenceItem";
 import { UserRideContextProvider } from "../context/UserRideContext";
 
-export default function DriverCard({ driver }) {
+export default function DriverCard({ driver , passengerPreferences}) {
   const [isMapShown, setShowMap] = useState(false);
 
   const toggleMap = () => setShowMap(!isMapShown);
@@ -49,13 +49,11 @@ export default function DriverCard({ driver }) {
               </View>
             </View>
             <View style={styles.preferences}>
-              <PreferenceItem attribute='Smoking' value={driver.smoking} />
-              <PreferenceItem attribute='Talkative' value={driver.Talkative} />
-              <PreferenceItem attribute='Eating' value={driver.eating} />
-              <PreferenceItem
-                attribute='Music Genre'
-                value={driver.musicGenre}
-              />
+            <PreferenceItem attribute="Smoking" value={driver.smoking} matched= {driver.smoking === passengerPreferences.smoking}/>
+          <PreferenceItem attribute="Talkative" value={driver.Talkative} matched={driver.Talkative === passengerPreferences.Talkative} />
+          <PreferenceItem attribute="Eating" value={driver.eating} matched={driver.eating=== passengerPreferences.eating}/>
+          <PreferenceItem attribute="Music Genre" value={driver.musicGenre} matched={driver.musicGenre=== passengerPreferences.musicGenre} />
+       
             </View>
             <View style={styles.departureInfo}>
               <View style={styles.infoRow}>

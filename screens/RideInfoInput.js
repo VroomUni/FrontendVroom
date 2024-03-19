@@ -94,7 +94,8 @@ const DriverProvideRideScreen = ({}) => {
     const resp = await rideApiService.postRide(ridePayload);
   };
   return (
-    <View style={{ flex: 1, paddingTop: 50 }}>
+      
+      <View style={{ flex: 1, paddingTop: 50 , backgroundColor:"#E2EAF4"}}>
       {onLocationInputPage ? (
         //Destination/origin places autocomplete page
         <RideLocationInput

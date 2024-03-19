@@ -9,6 +9,7 @@ import PassengerRides from "../screens/passenger/PassengerRides";
 import { Alert, Platform, TouchableOpacity, View } from "react-native";
 import RideInfoInput from "../screens/RideInfoInput";
 import { useAuth } from "../context/AuthContext";
+import EditNav from "./EditNav";
 
 const Tab = createBottomTabNavigator();
 function TabNav() {
@@ -39,7 +40,7 @@ function TabNav() {
             <MaterialCommunityIcons name={iconName} size={size} color={color} />
           );
         },
-        tabBarActiveTintColor: "#00669B",
+        tabBarActiveTintColor: "#162447",
         tabBarInactiveTintColor: "#CCCCCC",
         tabBarStyle: {
           backgroundColor: "white",
@@ -108,7 +109,8 @@ function TabNav() {
         }}
       />
       <Tab.Screen name='History' component={HistoryDriver} />
-      <Tab.Screen name='Profile' component={Profile} />
+      <Tab.Screen name='Profile' component={EditNav} />
+
     </Tab.Navigator>
   );
 }
