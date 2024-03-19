@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   middleSectionText: {
     fontSize: 8,
     padding: 15,
-    marginTop: 10,
+    marginTop:5,
     backgroundColor: '#152544',
     borderRadius: 30,
     color: 'white',
