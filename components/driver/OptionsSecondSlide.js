@@ -8,10 +8,10 @@ import {
   IconButton,
   Checkbox,
 } from "react-native-paper";
-import { useDriverContext } from "../context/DriverContext";
+import { useRideContext } from "../../context/UserRideContext";
 
 const OptionsSecondSlide = () => {
-  const { spotsCount, setSpotsCount , recurrentDays , setRecurrentDays } = useDriverContext();
+  const { spotsCount, setSpotsCount , recurrentDays , setRecurrentDays } = useRideContext();
   const [isRecurernceModalVisible, setRecurrenceModalVisible] = useState(false);
   const handleSpotsCountChange = increment => {
     // Ensure spotsCount stays within the interval of 1 to 4

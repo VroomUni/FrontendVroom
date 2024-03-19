@@ -2,31 +2,29 @@ import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import DriverRides from "../screens/DriverRides";
-import HistoryDriver from "../screens/HistoryDriver";
+import DriverRides from "../screens/driver/DriverRides";
+import HistoryDriver from "../screens/driver/HistoryDriver";
 import Profile from "../screens/Profile";
-import SearchRides from "../screens/SearchRides";
-import PassengerRides from "../screens/PassengerRides";
+import PassengerRides from "../screens/passenger/PassengerRides";
 import { Alert, Platform, TouchableOpacity, View } from "react-native";
-import DiverProvideRide from "../screens/DriverProvideRide";
+import RideInfoInput from "../screens/RideInfoInput";
+import { useAuth } from "../context/AuthContext";
+import EditNav from "./EditNav";
 
 const Tab = createBottomTabNavigator();
+function TabNav() {
 
-function TabNav({route}) {
-  const [userType, setUserType] = useState(route.params.user);
-  console.log(userType)
+  const { isPassenger, setIsPassenger } = useAuth();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Provide Rides" && userType === "driver") {
+          if (route.name === "Provide Rides" && !isPassenger) {
             iconName = focused ? "car" : "car-outline";
-          } else if (
-            route.name === "Search Rides" &&
-            userType === "passenger"
-          ) {
+          } else if (route.name === "Search Rides" && isPassenger) {
             iconName = focused ? "magnify" : "magnify";
           } else if (route.name === "My Rides") {
             iconName = focused ? "calendar-check" : "calendar-check-outline";
@@ -42,46 +40,46 @@ function TabNav({route}) {
             <MaterialCommunityIcons name={iconName} size={size} color={color} />
           );
         },
-        tabBarActiveTintColor: "#00669B",
+        tabBarActiveTintColor: "#162447",
         tabBarInactiveTintColor: "#CCCCCC",
         tabBarStyle: {
           backgroundColor: "white",
           shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-     
-      elevation: 5, // Add elevation for Android
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+
+          elevation: 5, // Add elevation for Android
         },
         headerShown: false,
       })}>
-      {userType === "driver" ? (
+      {!isPassenger ? (
         <>
-          <Tab.Screen name='Provide Rides' component={DiverProvideRide} />
+          <Tab.Screen name='Provide Rides' component={RideInfoInput} />
           <Tab.Screen name='My Rides' component={DriverRides} />
         </>
       ) : (
         <>
-          <Tab.Screen name='Search Rides' component={SearchRides} />
+          <Tab.Screen name='Search Rides' component={RideInfoInput} />
           <Tab.Screen name='My Rides' component={PassengerRides} />
         </>
       )}
       <Tab.Screen
         name='test'
-        component={userType === "driver" ? DiverProvideRide : SearchRides}
+        component={RideInfoInput}
         options={{
           tabBarButton: props => (
             <TouchableOpacity
               {...props}
               onPress={() => {
                 Alert.alert(
-                  `switch from ${userType}`,
-                  `Are you sure you want to switch from ${userType} to ${
-                    userType === "driver" ? "passenger" : "driver"
-                  }?`,
+                  `switch from ${isPassenger ? "passenger" : "driver"}`,
+                  `Are you sure you want to switch from ${
+                    isPassenger ? "passenger" : "driver"
+                  } to ${!isPassenger ? "passenger" : "driver"}?`,
                   [
                     {
                       text: "Cancel",
@@ -89,10 +87,7 @@ function TabNav({route}) {
                     },
                     {
                       text: "Switch",
-                      onPress: () =>
-                        setUserType(
-                          userType === "driver" ? "passenger" : "driver"
-                        ),
+                      onPress: () => setIsPassenger(!isPassenger),
                     },
                   ]
                 );
@@ -114,7 +109,8 @@ function TabNav({route}) {
         }}
       />
       <Tab.Screen name='History' component={HistoryDriver} />
-      <Tab.Screen name='Profile' component={Profile} />
+      <Tab.Screen name='Profile' component={EditNav} />
+
     </Tab.Navigator>
   );
 }

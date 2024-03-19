@@ -1,41 +1,35 @@
-import React from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { useAuth } from "../context/AuthContext";
 
-function Home({navigation}) {
-    const handlePassengerClick = () => {
-      navigation.navigate('TabNav', { user: 'passenger' });
-      };
-    
-      const handleDriverClick = () => {
-        navigation.navigate('TabNav', { user: 'driver' });
-      };
+function Home({ navigation }) {
+  const { setIsPassenger } = useAuth();
+  const handlePassengerClick = () => {
+    setIsPassenger(true);
+    navigation.navigate("TabNav");
+  };
+
+  const handleDriverClick = () => {
+    setIsPassenger(false);
+    navigation.navigate("TabNav");
+  };
   return (
     <View style={styles.container}>
-    <View style={styles.passengerContainer}>
-      <Text style={styles.passengerText}>PASSENGER</Text>
-      {/* <Image
-        source={require('./path-to-your-passenger-car-image.png')}
-        style={styles.carImage}
-      /> */}
-      <TouchableOpacity style={styles.button} onPress={handlePassengerClick}>
-        <Text style={styles.buttonText}>CLICK HERE</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.passengerContainer}>
+        <Text style={styles.passengerText}>PASSENGER</Text>
+        <TouchableOpacity style={styles.button} onPress={handlePassengerClick}>
+          <Text style={styles.buttonText}>CLICK HERE</Text>
+        </TouchableOpacity>
+      </View>
 
-    <View style={styles.driverContainer}>
-      <Text style={styles.driverText}>DRIVER</Text>
-      {/* <Image
-        source={require('./path-to-your-driver-image.png')}
-        style={styles.driverImage}
-      /> */}
-      <TouchableOpacity style={styles.button} onPress={handleDriverClick}>
-        <Text style={styles.buttonText}>CLICK HERE</Text>
-      </TouchableOpacity>
+      <View style={styles.driverContainer}>
+        <Text style={styles.driverText}>DRIVER</Text>
+        <TouchableOpacity style={styles.button} onPress={handleDriverClick}>
+          <Text style={styles.buttonText}>CLICK HERE</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  </View>
   );
-  
-
 }
 const styles = StyleSheet.create({
     container: {
@@ -44,14 +38,14 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     passengerContainer: {
-      backgroundColor: '#E3E6F3',
+      backgroundColor: '#E2EAF4',
       flex:1,   
       width:'100%'   ,
       padding: 20,
       alignItems: 'center',
     },
     driverContainer: {
-      backgroundColor: '#30AADD',
+      backgroundColor: '#162447',
       flex:1,   
       width: '100%',
       padding: 20,
@@ -59,7 +53,7 @@ const styles = StyleSheet.create({
     },
     passengerText: {
     marginTop:80,
-      color: '#30AADD',
+      color: '#162447',
       fontSize: 24,
       fontWeight: 'bold',
     },
@@ -74,7 +68,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#E3E6F3',
       padding: 20,
       borderRadius: 10,
-      borderColor:'#30AADD',
+      borderColor:'#162447',
       borderWidth: 2,
       
     },

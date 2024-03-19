@@ -50,7 +50,7 @@ function OnBoarding({navigation}) {
       <View style={{
         alignItems:'flex-end',
         padding:15}}>
-        <Button title="Skip" onPress={() => navigation.navigate('Login')} />
+        <Button title="Skip" onPress={() => navigation.navigate('Home')} />
       </View>
       <Carousel
         ref={_carousel}
@@ -109,7 +109,7 @@ function OnBoarding({navigation}) {
               if (activeDotIndex + 1 < data.length) {
                 _carousel.current.snapToItem(activeDotIndex + 1);
               } else {
-                navigation.navigate("Login"); 
+                navigation.navigate("Home"); 
               }
             }}
           >

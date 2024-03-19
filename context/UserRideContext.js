@@ -1,11 +1,11 @@
 import React, { useState, createContext } from "react";
 import { useContext } from "react";
 
-const DriverContext = createContext();
-export const useDriverContext = () => {
-  return useContext(DriverContext);
+const UserRideContext = createContext();
+export const useRideContext = () => {
+  return useContext(UserRideContext);
 };
-export const DriverContextProvider = ({ children }) => {
+export const UserRideContextProvider = ({ children }) => {
   const [polylineCods, setPolylineCods] = useState(null);
   const [polygonCods, setPolygonCods] = useState(null);
   const [destinationOrOrigin, setDestinationOrOrigin] = useState(null);
@@ -25,7 +25,7 @@ export const DriverContextProvider = ({ children }) => {
   const [customSelectedDate, setCustomSelectedDate] = useState(null);
 
   return (
-    <DriverContext.Provider
+    <UserRideContext.Provider
       value={{
         polylineCods,
         setPolylineCods,
@@ -47,6 +47,6 @@ export const DriverContextProvider = ({ children }) => {
         setCustomSelectedDate,
       }}>
       {children}
-    </DriverContext.Provider>
+    </UserRideContext.Provider>
   );
 };

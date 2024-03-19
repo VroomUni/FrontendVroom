@@ -12,7 +12,7 @@ const Car = ({ navigation }) => {
               mode="contained-tonal"
               buttonColor="#188bff"
               textColor="white"
-              onPress={() => navigation.navigate("Home")}
+              onPress={() => navigation.navigate("OnBoarding")}
               
             >
               Next

@@ -3,14 +3,14 @@ import React, { useState, useEffect } from "react";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Button, TextInput } from "react-native-paper";
 import * as Location from "expo-location";
-import { useDriverContext } from "../context/DriverContext";
+import { useRideContext } from "../../context/UserRideContext";
 
 
 const DriverRideLocationInput = ({
   setOnLocationInputPage,
   setCustomLocationMarker,
 }) => {
-  const { isToSmu, setDestinationOrOrigin } = useDriverContext();
+  const { isToSmu, setDestinationOrOrigin } = useRideContext();
 
   return (
     <>
@@ -53,8 +53,8 @@ const DriverRideLocationInput = ({
         />
         <Button
           mode='outlined'
-          buttonColor='#39AFEA'
-          textColor='white'
+          buttonColor='#E2EAF4'
+          textColor='#162447'
           icon={"map-marker-radius"}
           style={styles.buttons}
           onPress={async () => {
@@ -84,8 +84,8 @@ const DriverRideLocationInput = ({
 
         <Button
           mode='outlined'
-          buttonColor='#39AFEA'
-          textColor='white'
+          buttonColor='#E2EAF4'
+          textColor='#162447'
           icon={"pin"}
           style={styles.buttons}
           onPress={() => {

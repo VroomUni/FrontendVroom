@@ -1,16 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import { StyleSheet, Text, View, Image, Animated, Easing } from "react-native";
 import { Surface, Button, IconButton } from "react-native-paper";
-import { useDriverContext } from "../context/DriverContext";
+import { useRideContext } from "../../context/UserRideContext";
 
-const DriverRideFromTo = ({
-  isToSmu,
-  setIsToSmu,
-  setOnLocationInputPage,
-  destinationOrOrigin,
-}) => {
-
-  const {setPolygonCods,setPolylineCods} = useDriverContext();
+const DriverRideFromTo = ({ setOnLocationInputPage }) => {
+  const {
+    setPolygonCods,
+    setPolylineCods,
+    isToSmu,
+    setIsToSmu,
+    destinationOrOrigin,
+  } = useRideContext();
   const swapAnimation = useRef(new Animated.Value(0)).current;
 
   const translateY1 = swapAnimation.interpolate({
@@ -60,13 +60,11 @@ const DriverRideFromTo = ({
           <Button
             style={styles.buttons}
             mode='outlined'
-            labelStyle={{ alignSelf: "center" }}
+            labelStyle={{ alignSelf: "center",color: '#162447' }}
             onPress={() => {
               setOnLocationInputPage();
               setPolygonCods(null);
               setPolylineCods(null);
-          
-             
             }}>
             {destinationOrOrigin
               ? destinationOrOrigin.name
@@ -91,7 +89,7 @@ const DriverRideFromTo = ({
         style={[{ transform: [{ rotate }] }, styles.iconContainer]}>
         <IconButton
           icon='swap-vertical'
-          iconColor='black'
+          iconColor='#162447'
           size={35}
           onPress={swapBtns}
         />
@@ -107,7 +105,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flex: 1.7,
-    backgroundColor: "#96DDF4",
+    backgroundColor: "#E2EAF4",
   },
   itineraryImg: { height: 65, width: 50, resizeMode: "contain" },
 
