@@ -100,7 +100,7 @@ const OptionsSecondSlide = () => {
               <Icon source={"seat-passenger"} color='black' size={20} />
             )}
             showSelectedCheck={false}>
-            Spots
+            Seats
           </Chip>
           {renderCounter()}
         </View>

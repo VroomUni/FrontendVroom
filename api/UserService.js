@@ -50,7 +50,6 @@ const signIn = async (email, password) => {
     .then(userCredential => {
       // Signed in
       const user = userCredential.user;
-      console.log(userCredential);
       // ...
     })
     .catch(error => {

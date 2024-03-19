@@ -3,12 +3,14 @@ import { View, StyleSheet } from "react-native";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import OptionsFirstSlide from "./OptionsFirstSlide";
 import OptionsSecondSlide from "./OptionsSecondSlide";
+import { useAuth } from "../../context/AuthContext";
 
 //carousel of the 2 pages / slides
 //  This final component is only responsible for swiping between them
-const DriverRideExtraOptions = ({ allOptions }) => {
+const DriverRideExtraOptions = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselRef = useRef();
+  const { isPassenger } = useAuth();
 
   //to manually switch a slide
   const goToSlide = index => {
@@ -29,7 +31,8 @@ const DriverRideExtraOptions = ({ allOptions }) => {
 
   return (
     <View style={commonStyles.carouselContainer}>
-      {allOptions ? (
+      {/* since component is reused for passenger and driver */}
+      {!isPassenger ? (
         <>
           <Carousel
             ref={carouselRef}
@@ -62,7 +65,6 @@ const commonStyles = StyleSheet.create({
     overflow: "hidden",
     alignItems: "center",
     flex: 3.5,
-    width:'auto'
   },
 
   // related to the dots pagination ( that indicate which slider currently on) , no need to edit

@@ -23,6 +23,7 @@ export const UserRideContextProvider = ({ children }) => {
     sunday: false,
   });
   const [customSelectedDate, setCustomSelectedDate] = useState(null);
+  const [customSelectedToTime, setCustomToTime] = useState(null);
 
   return (
     <UserRideContext.Provider
@@ -45,6 +46,8 @@ export const UserRideContextProvider = ({ children }) => {
         setRecurrentDays,
         customSelectedDate,
         setCustomSelectedDate,
+        customSelectedToTime,
+        setCustomToTime,
       }}>
       {children}
     </UserRideContext.Provider>

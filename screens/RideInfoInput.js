@@ -16,7 +16,6 @@ import rideApiService from "../api/RideService";
 import { fromToObjBuilder } from "../utils/RideHelpers";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
-import { useNavigation } from "@react-navigation/native";
 const DriverProvideRideScreen = ({}) => {
   const {
     destinationOrOrigin,
@@ -171,7 +170,7 @@ const DriverProvideRideScreen = ({}) => {
               {!isPassenger ? "Post Ride" : "Search"}
             </Button>
           )}
-          {isOptionShown && <DriverRideExtraOptions allOptions={false} />}
+          {isOptionShown && <DriverRideExtraOptions/>}
           {/* todo fix iocn  */}
           <Snackbar
             visible={rideSuccessCreation}
