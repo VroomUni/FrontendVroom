@@ -16,7 +16,7 @@ import rideApiService from "../api/RideService";
 import { fromToObjBuilder } from "../utils/RideHelpers";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
-const DriverProvideRideScreen = ({}) => {
+const RideInfo = ({ navigation }) => {
   const {
     destinationOrOrigin,
     setDestinationOrOrigin,
@@ -28,6 +28,8 @@ const DriverProvideRideScreen = ({}) => {
     customSelectedTime,
     recurrentDays,
     customSelectedDate,
+    setPolygonCods,
+    setPolylineCods,
   } = useRideContext();
   const { user, isPassenger } = useAuth();
   const [isOptionShown, setOptionShown] = useState(false);
@@ -93,8 +95,7 @@ const DriverProvideRideScreen = ({}) => {
     const resp = await rideApiService.postRide(ridePayload);
   };
   return (
-      
-      <View style={{ flex: 1, paddingTop: 50 , backgroundColor:"#E2EAF4"}}>
+    <View style={{ flex: 1, paddingTop: 50, backgroundColor: "#E2EAF4" }}>
       {onLocationInputPage ? (
         //Destination/origin places autocomplete page
         <RideLocationInput
@@ -107,7 +108,16 @@ const DriverProvideRideScreen = ({}) => {
         <>
           <DriverRideFromTo setOnLocationInputPage={goToLocationInputPage} />
 
-          <Map currentRegion={currentRegion} />
+          <Map
+            currentRegion={currentRegion}
+            showPolygon={isPassenger ? false : true}
+            destinationOrOrigin={destinationOrOrigin}
+            setPolygonCods={setPolygonCods}
+            setPolylineCods={setPolylineCods}
+            polygonCods={polygonCods}
+            polylineCods={polylineCods}
+            isToSmu={isToSmu}
+          />
 
           {isCustomLocationMarker && (
             <>
@@ -154,23 +164,29 @@ const DriverProvideRideScreen = ({}) => {
               }
               loading={postRideBtnLoading}
               style={styles.PostRideBtn}
-              onPress={() => {
-                setPostRideBtnLoading(true);
-                createRide()
-                  .then(() => {
-                    setRideSucessCreation(true);
-                    setPostRideBtnLoading(false);
-                  })
-                  .catch(err => {
-                    console.error(err);
-                    Alert.alert("There was a problem creating your ride");
-                    setPostRideBtnLoading(false);
-                  });
-              }}>
+              onPress={
+                !isPassenger
+                  ? () => {
+                      setPostRideBtnLoading(true);
+                      createRide()
+                        .then(() => {
+                          setRideSucessCreation(true);
+                          setPostRideBtnLoading(false);
+                        })
+                        .catch(err => {
+                          console.error(err);
+                          Alert.alert("There was a problem creating your ride");
+                          setPostRideBtnLoading(false);
+                        });
+                    }
+                  : () => {
+                      navigation.navigate("Rides");
+                    }
+              }>
               {!isPassenger ? "Post Ride" : "Search"}
             </Button>
           )}
-          {isOptionShown && <DriverRideExtraOptions/>}
+          {isOptionShown && <DriverRideExtraOptions />}
           {/* todo fix iocn  */}
           <Snackbar
             visible={rideSuccessCreation}
@@ -189,10 +205,10 @@ const DriverProvideRideScreen = ({}) => {
   );
 };
 
-const DriverProvideRide = () => (
+const RideInfoInput = ({ navigation }) => (
   <UserRideContextProvider>
     <SafeAreaProvider>
-      <DriverProvideRideScreen />
+      <RideInfo navigation={navigation} />
     </SafeAreaProvider>
   </UserRideContextProvider>
 );
@@ -228,31 +244,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-const fromToComponentStyles = StyleSheet.create({
-  itineraryComponentContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1.7,
-    backgroundColor: "#96DDF4",
-  },
-  itineraryImg: { height: 65, width: 50, resizeMode: "contain" },
 
-  innerFromToBtnsContainer: {
-    width: "60%",
-  },
-  buttons: {
-    borderRadius: 10,
-    margin: 5,
-    justifyContent: "center",
-    backgroundColor: "#F4F4FB",
-    borderColor: "black",
-    borderWidth: 1,
-  },
-  iconContainer: {
-    alignItems: "center", // Center the IconButton horizontally
-    justifyContent: "center", // Center the IconButton vertically
-    marginLeft: 30,
-  },
-});
-
-export default DriverProvideRide;
+export default RideInfoInput;

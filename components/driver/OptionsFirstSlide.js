@@ -28,7 +28,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
   const showTimePicker = () => {
     setFromTimePickerVisible(true);
   };
-
+  //used for both From time and Date
   const handleDateTimeChange = (event, selectedDateOrTime) => {
     if (selectedDateOrTime) {
       if (isDatePickerVisible) {
@@ -38,11 +38,13 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       } else if (isFromTimePickrVisible) {
         setFromTimePickerVisible(false);
         setCustomSelectedTime(selectedDateOrTime);
-        goToSlide(1);
+        setTimeout(() => {
+          goToSlide(1);
+        }, 200);
       }
     }
   };
-
+  //handles only ToTime for passenger searching ride with time interval
   const handleToTimeChange = (event, toTime) => {
     if (toTime < customSelectedFromTime) {
       Alert.alert(
@@ -146,7 +148,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
             textColor='black'
             icon={"clock-time-eight"}
             onPress={showTimePicker}>
-            From &nbsp;
+            {isPassenger ? "From " : "At "}&nbsp;
             {customSelectedFromTime && timeTo24Format(customSelectedFromTime)}
           </Button>
           {isPassenger && customSelectedFromTime && (
@@ -197,7 +199,10 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       {isToTimePickrVisible && (
         <DateTimePicker
           is24Hour
-          value={customSelectedToTime || new Date()}
+          value={
+            customSelectedToTime ||
+            new Date(new Date().getTime() + 60 * 60 * 1000)
+          }
           mode='time'
           display={Platform.OS === "ios" ? "spinner" : "default"}
           onChange={handleToTimeChange}

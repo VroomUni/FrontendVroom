@@ -65,6 +65,7 @@ const commonStyles = StyleSheet.create({
     overflow: "hidden",
     alignItems: "center",
     flex: 3.5,
+    // paddingBottom:15
   },
 
   // related to the dots pagination ( that indicate which slider currently on) , no need to edit

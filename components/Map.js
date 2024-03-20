@@ -10,22 +10,21 @@ import { decode } from "@googlemaps/polyline-codec";
 import GeoJSONReader from "jsts/org/locationtech/jts/io/GeoJSONReader";
 import GeoJSONWriter from "jsts/org/locationtech/jts/io/GeoJSONWriter";
 import { BufferOp } from "jsts/org/locationtech/jts/operation/buffer";
-import { useRideContext } from "../context/UserRideContext";
 import axios from "axios";
 
 //current region is passed as prop , because the custom marker in parent component needs it
-const Map = ({ currentRegion }) => {
-  //using context/global store for driver state
-  const {
-    destinationOrOrigin,
-    setPolygonCods,
-    setPolylineCods,
-    polygonCods,
-    polylineCods,
-    isToSmu,
-  } = useRideContext();
-  //to be moved in env file
+const Map = ({
+  currentRegion,
+  showPolygon,
+  destinationOrOrigin,
+  setPolygonCods,
+  setPolylineCods,
+  polygonCods,
+  polylineCods,
+  isToSmu,
+}) => {
 
+  //to be moved in env file
   const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
 
   const SMUCOORDS = {
@@ -64,7 +63,7 @@ const Map = ({ currentRegion }) => {
 
             setPolygonCods(resultPolygonCods.coordinates[0]);
           };
-          computePolygon();
+          showPolygon && computePolygon();
           setPolylineCods(decodedPolylineCods);
         })
         .catch(error => {
@@ -73,7 +72,7 @@ const Map = ({ currentRegion }) => {
           Alert.alert("we encountered a problem");
         });
   }, [destinationOrOrigin]);
-
+  console.log(destinationOrOrigin);
   // when area , route or destination/origin change , then recenter the camera view on the route
   useEffect(() => {
     if (mapViewRef.current && polylineCods) {

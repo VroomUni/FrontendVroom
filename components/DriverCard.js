@@ -8,10 +8,12 @@ import { PaperProvider, Button } from "react-native-paper";
 import PreferenceItem from "./preferenceItem";
 import { UserRideContextProvider } from "../context/UserRideContext";
 
-export default function DriverCard({ driver , passengerPreferences}) {
+export default function DriverCard({
+  driver,
+  passengerPreferences,
+  navigation,
+}) {
   const [isMapShown, setShowMap] = useState(false);
-
-  const toggleMap = () => setShowMap(!isMapShown);
 
   const renderStars = rating => {
     let stars = [];
@@ -31,66 +33,81 @@ export default function DriverCard({ driver , passengerPreferences}) {
   return (
     <PaperProvider>
       <View style={styles.card}>
-        {!isMapShown ? (
-          <>
+        {/* {!isMapShown ? ( */}
+        <>
+          <View>
+            <Image
+              style={styles.image}
+              source={{
+                uri: "https://bootdey.com/img/Content/avatar/avatar1.png",
+              }}
+            />
             <View>
-              <Image
-                style={styles.image}
-                source={{
-                  uri: "https://bootdey.com/img/Content/avatar/avatar1.png",
-                }}
-              />
-              <View>
-                <Text
-                  style={
-                    styles.name
-                  }>{`${driver.firstName} ${driver.lastName}`}</Text>
-                <View style={styles.stars}>{renderStars(driver.rating)}</View>
-              </View>
+              <Text
+                style={
+                  styles.name
+                }>{`${driver.firstName} ${driver.lastName}`}</Text>
+              <View style={styles.stars}>{renderStars(driver.rating)}</View>
             </View>
-            <View style={styles.preferences}>
-            <PreferenceItem attribute="Smoking" value={driver.smoking} matched= {driver.smoking === passengerPreferences.smoking}/>
-          <PreferenceItem attribute="Talkative" value={driver.Talkative} matched={driver.Talkative === passengerPreferences.Talkative} />
-          <PreferenceItem attribute="Eating" value={driver.eating} matched={driver.eating=== passengerPreferences.eating}/>
-          <PreferenceItem attribute="Music Genre" value={driver.musicGenre} matched={driver.musicGenre=== passengerPreferences.musicGenre} />
-       
+          </View>
+          <View style={styles.preferences}>
+            <PreferenceItem
+              attribute='Smoking'
+              value={driver.smoking}
+              matched={driver.smoking === passengerPreferences.smoking}
+            />
+            <PreferenceItem
+              attribute='Talkative'
+              value={driver.Talkative}
+              matched={driver.Talkative === passengerPreferences.Talkative}
+            />
+            <PreferenceItem
+              attribute='Eating'
+              value={driver.eating}
+              matched={driver.eating === passengerPreferences.eating}
+            />
+            <PreferenceItem
+              attribute='Music Genre'
+              value={driver.musicGenre}
+              matched={driver.musicGenre === passengerPreferences.musicGenre}
+            />
+          </View>
+          <View style={styles.departureInfo}>
+            <View style={styles.infoRow}>
+              <FontAwesome
+                name='clock-o'
+                size={20}
+                color='#333'
+                style={styles.icon}
+              />
+              <Text style={styles.time}>{driver.time}</Text>
             </View>
             <View style={styles.departureInfo}>
               <View style={styles.infoRow}>
                 <FontAwesome
-                  name='clock-o'
-                  size={20}
-                  color='#333'
+                  name='circle'
+                  size={16}
+                  color='#00669B'
                   style={styles.icon}
                 />
-                <Text style={styles.time}>{driver.time}</Text>
+                <Text style={styles.addressText}>{driver.departure}</Text>
               </View>
-              <View style={styles.departureInfo}>
-                <View style={styles.infoRow}>
-                  <FontAwesome
-                    name='circle'
-                    size={16}
-                    color='#00669B'
-                    style={styles.icon}
-                  />
-                  <Text style={styles.addressText}>{driver.departure}</Text>
-                </View>
-                <Text style={styles.dots}>
-                  <FontAwesome name='ellipsis-v' size={16} color='#333' />
-                </Text>
-                <View style={styles.infoRow}>
-                  <FontAwesome
-                    name='map-marker'
-                    size={16}
-                    color='#00669B'
-                    style={styles.icon}
-                  />
-                  <Text style={styles.addressText}>{driver.destination}</Text>
-                </View>
+              <Text style={styles.dots}>
+                <FontAwesome name='ellipsis-v' size={16} color='#333' />
+              </Text>
+              <View style={styles.infoRow}>
+                <FontAwesome
+                  name='map-marker'
+                  size={16}
+                  color='#00669B'
+                  style={styles.icon}
+                />
+                <Text style={styles.addressText}>{driver.destination}</Text>
               </View>
             </View>
-          </>
-        ) : (
+          </View>
+        </>
+        {/* ) : (
           //take map to a new screen and fix the props inside of the map 
           <View style={{ height: "100%", width: "100%", borderRadius: 15 }}>
             <Map
@@ -170,25 +187,19 @@ export default function DriverCard({ driver , passengerPreferences}) {
                 [36.84598, 10.26872],
                 [36.84599, 10.2688],
               ]}
-            />
-          </View>
-        )}
+            /> */}
+        {/* </View> */}
         <View style={styles.footer}>
           <Button
             mode='contained'
-            onPress={toggleMap}
-            style={[
-              styles.mapButton,
-              isMapShown && {
-                position: "relative",
-                bottom: 70,
-                marginRight: 10,
-              },
-            ]}
+            onPress={() => {
+              navigation.navigate("Map");
+            }}
+            style={styles.mapButton}
             contentStyle={{ flexDirection: "row-reverse" }}
             labelStyle={styles.buttonText}
-            icon={!isMapShown ? "map-marker" : "arrow-left"}>
-            {!isMapShown && "Show Map"}
+            icon={"map-marker"}>
+            Show Map
           </Button>
         </View>
       </View>

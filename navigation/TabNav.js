@@ -4,12 +4,12 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import DriverRides from "../screens/driver/DriverRides";
 import HistoryDriver from "../screens/driver/HistoryDriver";
-import Profile from "../screens/Profile";
 import PassengerRides from "../screens/passenger/PassengerRides";
 import { Alert, Platform, TouchableOpacity, View } from "react-native";
 import RideInfoInput from "../screens/RideInfoInput";
 import { useAuth } from "../context/AuthContext";
-import EditNav from "./EditNav";
+import EditProfileStack from "./EditProfileStack";
+import PassengerSearchRidesStack from "./PassengerSearchRideStack";
 
 const Tab = createBottomTabNavigator();
 function TabNav() {
@@ -63,7 +63,7 @@ function TabNav() {
         </>
       ) : (
         <>
-          <Tab.Screen name='Search Rides' component={RideInfoInput} />
+          <Tab.Screen name='Search Rides' component={PassengerSearchRidesStack} />
           <Tab.Screen name='My Rides' component={PassengerRides} />
         </>
       )}
@@ -109,7 +109,7 @@ function TabNav() {
         }}
       />
       <Tab.Screen name='History' component={HistoryDriver} />
-      <Tab.Screen name='Profile' component={EditNav} />
+      <Tab.Screen name='Profile' component={EditProfileStack} />
 
     </Tab.Navigator>
   );

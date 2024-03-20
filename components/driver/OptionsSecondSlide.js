@@ -11,7 +11,8 @@ import {
 import { useRideContext } from "../../context/UserRideContext";
 
 const OptionsSecondSlide = () => {
-  const { spotsCount, setSpotsCount , recurrentDays , setRecurrentDays } = useRideContext();
+  const { spotsCount, setSpotsCount, recurrentDays, setRecurrentDays } =
+    useRideContext();
   const [isRecurernceModalVisible, setRecurrenceModalVisible] = useState(false);
   const handleSpotsCountChange = increment => {
     // Ensure spotsCount stays within the interval of 1 to 4
@@ -43,12 +44,6 @@ const OptionsSecondSlide = () => {
         [day]: !prevDays[day],
       }));
     };
-
-    const handleSave = () => {
-      // Close the modal
-      setRecurrenceModalVisible(false);
-    };
-
     return (
       <Modal
         animationType='slide'
@@ -81,6 +76,21 @@ const OptionsSecondSlide = () => {
         </View>
       </Modal>
     );
+  };
+  const renderRecurrentDays = () => {
+    // there is no day with value true
+    if (!Object.keys(recurrentDays).some(day => recurrentDays[day])) {
+      return "Only once";
+    }
+    let daysRepeating = [];
+    Object.keys(recurrentDays).forEach(day => {
+      recurrentDays[day] && daysRepeating.push(day.substring(0, 3));
+    });
+    return daysRepeating.join(",");
+  };
+  const handleSave = () => {
+    // Close the modal
+    setRecurrenceModalVisible(false);
   };
   return (
     <>
@@ -122,13 +132,14 @@ const OptionsSecondSlide = () => {
             contentStyle={{
               flexDirection: "row-reverse",
               borderColor: "black",
+              maxWidth:140
             }}
             style={{ borderRadius: 5, marginRight: 15 }}
             icon={"chevron-right"}
             onPress={() => {
               setRecurrenceModalVisible(true);
             }}>
-            Only once
+            {renderRecurrentDays()}{" "}
           </Button>
         </View>
       </View>
@@ -216,4 +227,3 @@ const commonStyles = StyleSheet.create({
 });
 
 export default OptionsSecondSlide;
-
