@@ -1,8 +1,10 @@
 import React,{useState, useRef} from 'react'
 import DriverCard from '../../components/DriverCard'
-import { StyleSheet, View,Text,Animated  } from 'react-native'
+import { StyleSheet, View,Text,Animated ,Image } from 'react-native'
 import Swiper from "react-native-deck-swiper";
 import LottieView from 'lottie-react-native';
+import { Button } from 'react-native-paper';
+
 
 const driversData = [
     {
@@ -52,11 +54,19 @@ const driversData = [
       }
     },
   ];
-  
+  const passengerPreferences = {
+    smoking: "no",
+    Talkative: "light chitchat",
+    eating: "no",
+    musicGenre: "calm music"
+  };
 
 function SearchRides() {
   const [showRequestSent, setShowRequestSent] = useState(false);
+  const [allCardsSwiped, setAllCardsSwiped] = useState(false);
+
   const fadeAnim = useRef(new Animated.Value(0)).current; 
+
   const onSwipedLeft = (cardIndex) => {
     console.log('Swiped left, no request sent for: ', driversData[cardIndex]);
     // Handle the 'no request' logic here
@@ -65,6 +75,7 @@ function SearchRides() {
   const onSwipedRight = (cardIndex) => {
     console.log('Swiped right, request sent for: ', driversData[cardIndex]);
     // Send the request to the driver here and show feedback
+
     setShowRequestSent(true);
     Animated.timing(fadeAnim, {
       toValue: 1, // Fully visible
@@ -77,10 +88,19 @@ function SearchRides() {
           toValue: 0, // Fully transparent
           duration: 500, // 500ms
           useNativeDriver: true // Add this line
-        }).start(() => setShowRequestSent(false)); // Hide the message at the end
-      }, 2000); // Message stays visible for 2 seconds
+        }).start(() => setShowRequestSent(false)); 
+         
+      }, 1000); // Message stays visible for 1 second
     });
   };
+  const onSwipedAll = () => {
+    setAllCardsSwiped(true);
+   
+  };
+  const resetCards = () => {
+    setAllCardsSwiped(false);
+    // Additional logic if needed, like resetting filters or fetching new data
+  }
   return (
     <View style={styles.pageContainer}>
     <View style={styles.headerContainer}>
@@ -89,9 +109,10 @@ function SearchRides() {
     </View>
     <Swiper
       cards={driversData}
-      renderCard={(card) => <DriverCard driver={card} />}
+      renderCard={(card) => <DriverCard driver={card} passengerPreferences={passengerPreferences} />}
       onSwipedLeft={onSwipedLeft}
       onSwipedRight={onSwipedRight}
+      onSwipedAll={onSwipedAll}
       cardIndex={0}
       backgroundColor={'transparent'}
       stackSize={2}
@@ -106,9 +127,19 @@ function SearchRides() {
           <Text style={styles.requestSentText}>Request Sent!</Text>
         </Animated.View>
       )}
-     <View style={styles.animationContainer}>
-       <LottieView style={styles.animation} source={require('../../assets/SwipeAnimation.json')} autoPlay loop />
-      </View>
+     {allCardsSwiped ? (
+        <View style={styles.allCardsSwipedContainer}>
+          <Image style={styles.NoSuggestionImage} source={require("../../assets/noMoreFilter.png")}/>
+          <Text style={styles.allCardsSwipedText}>No more filtered suggestions</Text>
+          <Button style={styles.showAllButton} mode="contained" onPress={resetCards}>
+            Show All
+          </Button>
+        </View>
+      ) : (
+        <View style={styles.animationContainer}>
+          <LottieView  style={styles.animation} source={require('../../assets/SwipeAnimation.json')} autoPlay loop />
+        </View>
+      )}
   </View>
     
   )
@@ -119,45 +150,46 @@ const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
     backgroundColor: '#ecf0f1', 
-    
     paddingTop: 0, 
   },
   headerContainer: {
-    marginBottom: 20, 
+   
     backgroundColor:"#2c3e50",
     width: '100%',
   },
+
   headerText: {
     marginTop:50,
     fontSize: 28,
     color: '#e8f4f8',
-    
     textAlign: 'center', 
-    marginBottom:30
+    paddingBottom:10
   },
   subHeaderText: {
     fontSize: 18,
     color: '#e8f4f8',
     textAlign: 'center', 
-    marginBottom: 10, 
+  
   },
   swiperContainer: {
     flexGrow: 1, 
     justifyContent: 'center', 
   },
+
   animationContainer: {
     flex: 1,
     width: '100%',
     justifyContent: 'flex-end', 
     alignItems: 'flex-end',
-   marginTop:"100%",
-  
+    marginTop:"100%",
   },
+ 
   animation: {
     width: '50%',
     height: '50%',
     
   },
+
   requestSentBanner: {
     position: 'absolute',
     bottom: 30,
@@ -171,5 +203,27 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  
+  allCardsSwipedContainer: {
+    flex: 1, 
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:'white'
+  },
+
+  showAllButton: {
+    marginTop: 20, 
+    backgroundColor: '#162447',
+    borderRadius: 15, 
+  },
+
+  allCardsSwipedText:{
+    fontSize:20
+  },
+  NoSuggestionImage: {
+    width: "150%", 
+    height:"50%", 
+    resizeMode: 'contain', 
+    marginBottom:5
+  },
+ 
 })

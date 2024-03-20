@@ -2,21 +2,22 @@ import { StyleSheet, Image, View, Alert } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
 
 // import { isPointInPolygon } from "geolib";
-import DriverRideFromTo from "../components/driver/DriverRideFromTo";
-import RideLocationInput from "../components/driver/DriverRideLocationInput";
+import DriverRideFromTo from "../../components/driver/DriverRideFromTo";
+import RideLocationInput from "../../components/driver/DriverRideLocationInput";
 import { Button, Icon, Portal, Snackbar } from "react-native-paper";
-import DriverRideExtraOptions from "../components/driver/DriverRideExtraOptions";
+import DriverRideExtraOptions from "../../components/driver/DriverRideExtraOptions";
 import {
   UserRideContextProvider,
   useRideContext,
-} from "../context/UserRideContext";
-import Map from "../components/Map";
+} from "../../context/UserRideContext";
+import Map from "../../components/Map";
 import axios from "axios";
-import rideApiService from "../api/RideService";
-import { fromToObjBuilder } from "../utils/RideHelpers";
+import rideApiService from "../../api/RideService";
+import { fromToObjBuilder } from "../../utils/RideHelpers";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
+
 const DriverProvideRideScreen = ({}) => {
   const {
     destinationOrOrigin,
@@ -115,7 +116,7 @@ const DriverProvideRideScreen = ({}) => {
               <View style={styles.markerFixed}>
                 <Image
                   style={styles.marker}
-                  source={require("../assets/marker.png")}
+                  source={require("../../assets/marker.png")}
                 />
               </View>
               <Button

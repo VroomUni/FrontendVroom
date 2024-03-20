@@ -12,6 +12,10 @@ import Login from "./screens/Login";
 import Preferences from "./screens/Preferences";
 import Car from "./screens/Car";
 import { AuthContextProvider, useAuth } from "./context/AuthContext";
+import Report from "./screens/Report";
+import Profile from "./screens/Profile";
+import EditNav from "./navigation/EditNav";
+import SearchRides from "./screens/passenger/PassengerSearchRides"
 
 function App() {
   const Stack = createStackNavigator();
@@ -33,6 +37,8 @@ function App() {
         <Stack.Screen name='Login' component={Login} />
       </Stack.Navigator>
     </NavigationContainer>
+    
+  
   );
 }
 
