@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginBottom: 20,
     color: 'blue', // Change color to match the button color
-    textAlign: 'center',
+    textAlign: 'center',     
   },
   image: {
     width: 100,
