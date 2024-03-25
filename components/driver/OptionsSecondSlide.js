@@ -132,7 +132,7 @@ const OptionsSecondSlide = () => {
             contentStyle={{
               flexDirection: "row-reverse",
               borderColor: "black",
-              maxWidth:140
+              width:140
             }}
             style={{ borderRadius: 5, marginRight: 15 }}
             icon={"chevron-right"}

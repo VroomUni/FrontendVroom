@@ -81,6 +81,8 @@ const RideInfo = ({ navigation }) => {
   };
 
   const createRide = async () => {
+    setPostRideBtnLoading(true);
+
     const ridePayload = {
       //helper fct to determine from and to since its dynamic
       ...fromToObjBuilder(isToSmu, destinationOrOrigin.name),
@@ -92,7 +94,15 @@ const RideInfo = ({ navigation }) => {
       recurrence: recurrentDays,
       driverFirebaseId: user.uid,
     };
-    const resp = await rideApiService.postRide(ridePayload);
+    try {
+      const resp = await rideApiService.postRide(ridePayload);
+      setRideSucessCreation(true);
+      setPostRideBtnLoading(false);
+    } catch (err) {
+      console.error(err);
+      Alert.alert("There was a problem creating your ride");
+      setPostRideBtnLoading(false);
+    }
   };
   return (
     <View style={{ flex: 1, paddingTop: 50, backgroundColor: "#E2EAF4" }}>
@@ -166,19 +176,7 @@ const RideInfo = ({ navigation }) => {
               style={styles.PostRideBtn}
               onPress={
                 !isPassenger
-                  ? () => {
-                      setPostRideBtnLoading(true);
-                      createRide()
-                        .then(() => {
-                          setRideSucessCreation(true);
-                          setPostRideBtnLoading(false);
-                        })
-                        .catch(err => {
-                          console.error(err);
-                          Alert.alert("There was a problem creating your ride");
-                          setPostRideBtnLoading(false);
-                        });
-                    }
+                  ? createRide
                   : () => {
                       navigation.navigate("Rides");
                     }

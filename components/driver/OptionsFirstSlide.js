@@ -30,32 +30,59 @@ const OptionsFirstSlide = ({ goToSlide }) => {
   };
   //used for both From time and Date
   const handleDateTimeChange = (event, selectedDateOrTime) => {
-    if (selectedDateOrTime) {
-      if (isDatePickerVisible) {
-        setDatePickerVisibility(false);
+    setFromTimePickerVisible(false);
+
+    if (!selectedDateOrTime) return;
+
+    if (isDatePickerVisible) {
+      setDatePickerVisibility(false);
+      if (event.type === "set") {
         setCustomSelectedDate(selectedDateOrTime);
-        !customSelectedFromTime && setFromTimePickerVisible(true);
-      } else if (isFromTimePickrVisible) {
-        setFromTimePickerVisible(false);
+      }
+      if (!customSelectedFromTime) setFromTimePickerVisible(true);
+      return;
+    }
+
+    if (isFromTimePickrVisible) {
+      const currentTime = new Date();
+
+      if (selectedDateOrTime < currentTime) {
+        Alert.alert(
+          "Please pick a valid time after",
+          timeTo24Format(currentTime)
+        );
+        return;
+      }
+
+      if (event.type === "set") {
         setCustomSelectedTime(selectedDateOrTime);
-        setTimeout(() => {
-          goToSlide(1);
-        }, 200);
+        goToSlide &&
+          setTimeout(() => {
+            goToSlide(1);
+          }, 200);
       }
     }
   };
+
   //handles only ToTime for passenger searching ride with time interval
   const handleToTimeChange = (event, toTime) => {
+    setToTimePickerVisible(false);
+
+    if (!toTime) return;
+
     if (toTime < customSelectedFromTime) {
       Alert.alert(
-        "please pick a valid time after",
+        "Please pick a valid time after",
         timeTo24Format(customSelectedFromTime)
       );
-    } else {
-      setToTimePickerVisible(false);
+      return;
+    }
+
+    if (event.type === "set") {
       setCustomToTime(toTime);
     }
   };
+
   //today , tmrw  , date btn grp
   const renderBtnGrp = () => {
     return (
@@ -188,7 +215,10 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       {isFromTimePickrVisible && (
         <DateTimePicker
           is24Hour
-          value={customSelectedFromTime || new Date()}
+          value={
+            customSelectedFromTime ||
+            new Date(new Date().getTime() + 60 * 60 * 1000)
+          }
           mode='time'
           display={Platform.OS === "ios" ? "spinner" : "default"}
           onChange={handleDateTimeChange}
@@ -201,7 +231,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
           is24Hour
           value={
             customSelectedToTime ||
-            new Date(new Date().getTime() + 60 * 60 * 1000)
+            new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
           }
           mode='time'
           display={Platform.OS === "ios" ? "spinner" : "default"}

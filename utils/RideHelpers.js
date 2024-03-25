@@ -11,13 +11,14 @@ const dateObjBuilder = (selectedDateType, customDate) => {
   // console.log("date value =" + customDate);
 
   if (selectedDateType === "today") {
-    return new Date().toISOString().slice(0, 10).replace("T", " ");
+    return new Date();
   } else if (selectedDateType === "tomorrow") {
     let tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    return tomorrow.toISOString().slice(0, 10).replace("T", " ");
+    console.log(tomorrow);
+    return tomorrow;
   } else if (selectedDateType === "customDate") {
-    return customDate.toISOString().slice(0, 10).replace("T", " ");
+    return customDate;
   }
 };
 
