@@ -4,7 +4,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   deleteUser,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import apiConfig from "./apiConfig";
 import axios from "axios";
@@ -28,6 +28,7 @@ const createUser = async userValidatedPayload => {
 
     return response;
   } catch (err) {
+    //to fix this , add more errors for users
     deleteUser(FbaseUser.user);
     console.error("Error creating user :", err);
     throw err;

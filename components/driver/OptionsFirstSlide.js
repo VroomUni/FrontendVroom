@@ -39,14 +39,20 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       if (event.type === "set") {
         setCustomSelectedDate(selectedDateOrTime);
       }
+      //if date picking is canceled then set it back to today
+      if (event.type !== "set"&&!customSelectedDate) {
+        setDateValue("today");
+      }
       if (!customSelectedFromTime) setFromTimePickerVisible(true);
       return;
     }
-
+//MUST FIX ONE HOUR DIFFERENCE IN DATETIMEPICKER
     if (isFromTimePickrVisible) {
       const currentTime = new Date();
+      // console.log("Changed",selectedDateOrTime);
+      // console.log("CURRENT" ,currentTime);
 
-      if (selectedDateOrTime < currentTime) {
+      if (selectedDateOrTime < currentTime&&btnGrpDateValue==="today") {
         Alert.alert(
           "Please pick a valid time after",
           timeTo24Format(currentTime)

@@ -82,6 +82,9 @@ const OptionsSecondSlide = () => {
     if (!Object.keys(recurrentDays).some(day => recurrentDays[day])) {
       return "Only once";
     }
+    if (Object.values(recurrentDays).filter(day => day).length === 7) {
+      return "Everyday";
+    }
     let daysRepeating = [];
     Object.keys(recurrentDays).forEach(day => {
       recurrentDays[day] && daysRepeating.push(day.substring(0, 3));
@@ -132,7 +135,7 @@ const OptionsSecondSlide = () => {
             contentStyle={{
               flexDirection: "row-reverse",
               borderColor: "black",
-              width:140
+              width: 140,
             }}
             style={{ borderRadius: 5, marginRight: 15 }}
             icon={"chevron-right"}

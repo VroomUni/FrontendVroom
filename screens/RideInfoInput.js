@@ -12,7 +12,7 @@ import {
 } from "../context/UserRideContext";
 import Map from "../components/Map";
 import axios from "axios";
-import rideApiService from "../api/RideService";
+import { postRide, searchForRides } from "../api/RideService";
 import { fromToObjBuilder } from "../utils/RideHelpers";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
@@ -25,17 +25,18 @@ const RideInfo = ({ navigation }) => {
     polygonCods,
     btnGrpDateValue: selectedDateType,
     spotsCount,
-    customSelectedTime,
+    customSelectedTime: customSelectedFromTime,
     recurrentDays,
     customSelectedDate,
     setPolygonCods,
     setPolylineCods,
+    customSelectedToTime,
   } = useRideContext();
   const { user, isPassenger } = useAuth();
   const [isOptionShown, setOptionShown] = useState(false);
-  const [confirmBtnVisible, setConfirmBtnVisible] = useState(false);
+  const [postSearchBtnVisible, setPostSearchBtnVisible] = useState(false);
   const [rideSuccessCreation, setRideSucessCreation] = useState(false);
-  const [postRideBtnLoading, setPostRideBtnLoading] = useState(false);
+  const [postSearchBtnLoading, setPostSearchBtnLoading] = useState(false);
   const [onLocationInputPage, setOnLocationInputPage] = useState(false);
   const [isCustomLocationMarker, setCustomLocationMarker] = useState(false);
 
@@ -54,10 +55,10 @@ const RideInfo = ({ navigation }) => {
     longitudeDelta: 1, // Zoom level
   });
   useEffect(() => {
-    customSelectedTime
-      ? setConfirmBtnVisible(true)
-      : setConfirmBtnVisible(false);
-  }, [customSelectedTime]);
+    customSelectedFromTime
+      ? setPostSearchBtnVisible(true)
+      : setPostSearchBtnVisible(false);
+  }, [customSelectedFromTime]);
 
   const goToLocationInputPage = () => {
     setOnLocationInputPage(true);
@@ -81,7 +82,7 @@ const RideInfo = ({ navigation }) => {
   };
 
   const createRide = async () => {
-    setPostRideBtnLoading(true);
+    setPostSearchBtnLoading(true);
 
     const ridePayload = {
       //helper fct to determine from and to since its dynamic
@@ -89,19 +90,36 @@ const RideInfo = ({ navigation }) => {
       spots: spotsCount,
       encodedPath: polylineCods,
       encodedArea: polygonCods,
-      startTime: customSelectedTime,
+      startTime: customSelectedFromTime,
       initialDate: { customSelectedDate, selectedDateType },
       recurrence: recurrentDays,
       driverFirebaseId: user.uid,
     };
     try {
-      const resp = await rideApiService.postRide(ridePayload);
+      const response = await postRide(ridePayload);
       setRideSucessCreation(true);
-      setPostRideBtnLoading(false);
+      setPostSearchBtnLoading(false);
     } catch (err) {
       console.error(err);
       Alert.alert("There was a problem creating your ride");
-      setPostRideBtnLoading(false);
+      setPostSearchBtnLoading(false);
+    }
+  };
+
+  const searchRides = async () => {
+    const ridefiltersPayload = {
+      ...fromToObjBuilder(isToSmu, destinationOrOrigin.name),
+      destinationOrOrigin: destinationOrOrigin.coords,
+      initialDate: { customSelectedDate, selectedDateType },
+      fromTime: customSelectedFromTime,
+      toTime: customSelectedToTime,
+    };
+    try {
+      const data = await searchForRides(ridefiltersPayload);
+      navigation.navigate("Rides", data);
+    } catch (err) {
+      console.error(err);
+      Alert.alert("An error occured while searching for a ride");
     }
   };
   return (
@@ -163,7 +181,7 @@ const RideInfo = ({ navigation }) => {
             </>
           )}
           {/* post ride btn  */}
-          {confirmBtnVisible && isOptionShown && (
+          {postSearchBtnVisible && isOptionShown && (
             <Button
               mode='contained-tonal'
               buttonColor='#20c997'
@@ -172,15 +190,9 @@ const RideInfo = ({ navigation }) => {
                   ? "checkbox-marked-circle-plus-outline"
                   : "card-search-outline"
               }
-              loading={postRideBtnLoading}
+              loading={postSearchBtnLoading}
               style={styles.PostRideBtn}
-              onPress={
-                !isPassenger
-                  ? createRide
-                  : () => {
-                      navigation.navigate("Rides");
-                    }
-              }>
+              onPress={!isPassenger ? createRide : searchRides}>
               {!isPassenger ? "Post Ride" : "Search"}
             </Button>
           )}

@@ -37,14 +37,14 @@ const daysRecurrenceObjBuilder = days => {
 };
 
 const timeObjBuilder = preFormattedTime => {
-  // Extract hours considering local time zone and adjust for GMT+1
-  const hours = preFormattedTime.getHours() + 1;
+// Extract hours, minutes, and seconds
+const hours = String(preFormattedTime.getHours()).padStart(2, '0'); // padStart ensures two digits
+const minutes = String(preFormattedTime.getMinutes()).padStart(2, '0');
+const seconds = String(preFormattedTime.getSeconds()).padStart(2, '0');
 
-  // Create a new Date object with adjusted hours in UTC
-  const updatedDate = new Date(preFormattedTime.setHours(hours));
-
-  // Convert to ISO 8601 string and extract the time portion (slice for desired format)
-  return updatedDate.toISOString().slice(11, 19);
+// Format time in 24-hour mode
+const time24h = `${hours}:${minutes}:${seconds}`;
+  return time24h
 };
 
 module.exports = {

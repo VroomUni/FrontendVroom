@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Alert } from "react-native";
-import React, { useRef, useEffect, useState } from "react";
+import { StyleSheet,Alert } from "react-native";
+import React, { useRef, useEffect, } from "react";
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
@@ -72,7 +72,6 @@ const Map = ({
           Alert.alert("we encountered a problem");
         });
   }, [destinationOrOrigin]);
-  console.log(destinationOrOrigin);
   // when area , route or destination/origin change , then recenter the camera view on the route
   useEffect(() => {
     if (mapViewRef.current && polylineCods) {
