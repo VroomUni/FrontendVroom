@@ -208,6 +208,7 @@ const styles = StyleSheet.create({
   },
   new: {
     margin: 12,
+    borderRadius: 30,
 
   },
   middleSectionText: {

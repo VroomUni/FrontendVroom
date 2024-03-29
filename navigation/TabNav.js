@@ -10,6 +10,7 @@ import PassengerRides from "../screens/PassengerRides";
 import { Alert, Platform, TouchableOpacity, View } from "react-native";
 import DiverProvideRide from "../screens/DriverProvideRide";
 import EditNav from "./EditNav";
+import DetailsNav from "./DetailsNav";
 
 const Tab = createBottomTabNavigator();
 
@@ -63,6 +64,7 @@ function TabNav({route}) {
         <>
           <Tab.Screen name='Provide Rides' component={DiverProvideRide} />
           <Tab.Screen name='My Rides' component={DriverRides} />
+          
         </>
       ) : (
         <>
@@ -114,8 +116,17 @@ function TabNav({route}) {
           ),
         }}
       />
-      <Tab.Screen name='History' component={HistoryDriver} />
+
+
+      <Tab.Screen name='History'>
+        {() => <DetailsNav userType={userType} />}
+      </Tab.Screen>
+
       <Tab.Screen name='Profile' component={EditNav} />
+     
+
+     
+
 
     </Tab.Navigator>
   );
