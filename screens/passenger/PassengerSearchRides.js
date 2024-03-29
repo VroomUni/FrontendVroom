@@ -1,10 +1,9 @@
 import React,{useState, useRef} from 'react'
-import DriverCard from '../../components/DriverCard'
 import { StyleSheet, View,Text,Animated ,Image } from 'react-native'
 import Swiper from "react-native-deck-swiper";
 import LottieView from 'lottie-react-native';
 import { Button } from 'react-native-paper';
-
+import DriverCard from '../../components/Passenger/DriverCard';
 
 const driversData = [
     {

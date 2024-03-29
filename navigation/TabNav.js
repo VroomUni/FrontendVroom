@@ -11,6 +11,7 @@ import RideInfoInput from "../screens/passenger/RideInfoInput";
 import { useAuth } from "../context/AuthContext";
 import EditNav from "./EditNav";
 import SearchRides from "../screens/passenger/PassengerSearchRides";
+import DriverRequestNav from "./DriverRequestNav";
 
 const Tab = createBottomTabNavigator();
 function TabNav() {
@@ -60,7 +61,7 @@ function TabNav() {
       {!isPassenger ? (
         <>
           <Tab.Screen name='Provide Rides' component={RideInfoInput} />
-          <Tab.Screen name='My Rides' component={DriverRides} />
+          <Tab.Screen name='My Rides' component={DriverRequestNav} />
         </>
       ) : (
         <>

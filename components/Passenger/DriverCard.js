@@ -3,10 +3,10 @@ import { Image, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-import Map from "./Map";
+import Map from "../Map";
 import { PaperProvider, Button } from "react-native-paper";
 import PreferenceItem from "./preferenceItem";
-import { UserRideContextProvider } from "../context/UserRideContext";
+import { UserRideContextProvider } from "../../context/UserRideContext";
 
 export default function DriverCard({ driver , passengerPreferences}) {
   const [isMapShown, setShowMap] = useState(false);

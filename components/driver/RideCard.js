@@ -3,10 +3,13 @@ import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Card, Text,Button } from "react-native-paper";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-function RideCard({id,title, location, time, requests, onDelete}) {
+function RideCard({id,title, location, time, requests, onDelete, navigation}) {
   const handleDelete = ()=>{
     onDelete(id)
   }
+  const handleSeeDetails = () => {
+    navigation.navigate('requestDetails', { id });
+  };
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
@@ -31,11 +34,11 @@ function RideCard({id,title, location, time, requests, onDelete}) {
         <Card.Actions style={styles.actions}>
           <Button
             mode="outlined"
-            onPress={() => console.log('See details pressed')}
+            onPress={handleSeeDetails}
             
             labelStyle={{color:"#162447"}}
           >
-            See Details
+            Check Requests
           </Button>
         </Card.Actions>
         <TouchableOpacity style={styles.iconContainer} onPress={handleDelete}>
