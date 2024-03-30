@@ -74,7 +74,6 @@ function HistoryPassenger() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.headerText}>Ride's History</Text>
       <ScrollView>
         {userData.map((user) => (
           <View key={user.id} style={styles.cardView} >
@@ -108,11 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingTop: 50,
   },
-  headerText: {
-    fontSize: 20,
-    color: '#05375a',
-    marginBottom: 10,
-  },
+ 
   cardView: {
     backgroundColor: '#fff',
     flexDirection: 'row',

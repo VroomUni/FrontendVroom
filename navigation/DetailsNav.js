@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import HistoryDriver from '../screens/HistoryDriver';
-import HistoryPassenger from '../screens/HistoryPassenger'; // Import HistoryPassenger
+import SeeDetails from '../components/driver/SeeDetails';
+import HistoryPassenger from '../screens/HistoryPassenger';
 
 const DetailsStack = createStackNavigator();
 
 function DetailsNav({ userType }) {
   return (
     <DetailsStack.Navigator>
-      {/* Render HistoryDriver for driver */}
-      {userType === 'driver' && (
+      {userType === 'passenger' ? (
+        <DetailsStack.Screen name='HistoryPassenger' component={HistoryPassenger} />
+      ) : (
         <DetailsStack.Screen name='HistoryDriver' component={HistoryDriver} />
       )}
-      {/* Render HistoryPassenger for passenger */}
-      {userType === 'passenger' && (
-        <DetailsStack.Screen name='HistoryPassenger' component={HistoryPassenger} />
-      )}
+      <DetailsStack.Screen name='Passengers' component={SeeDetails} />
     </DetailsStack.Navigator>
   );
 }

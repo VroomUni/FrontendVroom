@@ -1,53 +1,56 @@
 import React from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 const SeeDetails = ({ route }) => {
-  const { selectedPassengers } = route.params;
-  const navigation = useNavigation();
+    const { selectedPassengers } = route.params;
+    const navigation = useNavigation();
 
-  const handleRateButton = (passenger) => {
-    console.log('Rate passenger:', passenger);
-  };
+    const handleRateButton = (passenger) => {
+        console.log('Rate passenger:', passenger);
+    };
 
-  const handleReportButton = (passenger) => {
-    console.log('Report passenger:', passenger);
-  };
+    const handleReportButton = (passenger) => {
+        console.log('Report passenger:', passenger);
+    };
 
-  const closeModal = () => {
-    navigation.goBack(); // Navigate back to the previous screen
-  };
+    if (!selectedPassengers) {
+        return <Text>No passengers selected</Text>;
+    }
 
-  if (!selectedPassengers) {
-    return <Text>No passengers selected</Text>;
-  }
-
-  return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <ScrollView>
-        <Text style={{ fontSize: 20, color: 'black', marginBottom: 10 }}>Passengers</Text>
-        {selectedPassengers.map((passenger, index) => (
-          <View key={index} style={{ marginBottom: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 5 }}>
-            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, backgroundColor: '#f0f0f0' }}>
-              <Text style={{ fontSize: 16 }}>{passenger.name} {passenger.lastName}</Text>
-              <Image source={{ uri: passenger.photo }} style={{ width: 50, height: 50, borderRadius: 25 }} />
-            </TouchableOpacity>
-            <View style={{ padding: 10 }}>
-              <Text>Age: {passenger.age}</Text>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
-                <Button onPress={() => handleRateButton(passenger)}>Rate</Button>
-                <Button onPress={() => handleReportButton(passenger)}>Report</Button>
-              </View>
-            </View>
-          </View>
-        ))}
-        <TouchableOpacity onPress={closeModal}>
-          <Text style={{ marginTop: 20, color: 'red' }}>Close</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </View>
-  );
+    return (
+        <View style={{ flex: 1, padding: 20 }}>
+            <ScrollView>
+                {selectedPassengers.map((passenger, index) => (
+                    <View key={index} style={{ marginBottom: 20, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: '#f0f0f0'}}>
+                            <Image source={{ uri: passenger.photo }} style={{ width: 50, height: 50, borderRadius: 25 }} />
+                            <View style={{ marginLeft: 10 }}>
+                                <Text style={{ fontSize: 16, marginVertical: 5 }}>{passenger.name} {passenger.lastName}</Text>
+                                <Text>Age: {passenger.age}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            <Button onPress={() => handleRateButton(passenger)} style={styles.button}>Rate</Button>
+                            <Button onPress={() => handleReportButton(passenger)} style={styles.button}>Report</Button>
+                        </View>
+                    </View>
+                ))}
+            </ScrollView>
+        </View>
+    );
 };
+
+const styles = StyleSheet.create({
+    buttonContainer: {
+        flexDirection: 'row',
+        marginTop: 0,
+        padding: 0,
+    },
+    button: {
+       
+    },
+});
 
 export default SeeDetails;

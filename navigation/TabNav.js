@@ -123,6 +123,7 @@ function TabNav({route}) {
       </Tab.Screen>
 
       <Tab.Screen name='Profile' component={EditNav} />
+      
      
 
      

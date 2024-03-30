@@ -118,14 +118,13 @@ function HistoryDriver() {
   const navigation = useNavigation();
   const handleCardPress = (user) => {
     setSelectedPassengers(user.passengers);
-    navigation.navigate('SeeDetails', { selectedPassengers: user.passengers });
+    navigation.navigate('Passengers', { selectedPassengers: user.passengers });
   };
 
  
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.headerText}>Ride's History</Text>
       <ScrollView>
         {userData.map((user) => (
           <View key={user.id} style={styles.cardView}>
@@ -139,7 +138,7 @@ function HistoryDriver() {
                   <Image key={index} source={{ uri: passenger.photo }} style={styles.passengerPhoto} />
                 ))}
                 <TouchableOpacity onPress={() => handleCardPress(user)} style={styles.details}>
-                  <Text style={styles.buttonText}>See Details</Text>
+                  <Text style={styles.buttonText}>Rate passengers</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -157,11 +156,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingTop: 50,
   },
-  headerText: {
-    fontSize: 20,
-    color: '#05375a',
-    marginBottom: 10,
-  },
+ 
   cardView: {
     backgroundColor: '#fff',
     flexDirection: 'row',
