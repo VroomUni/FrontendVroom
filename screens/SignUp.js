@@ -119,7 +119,7 @@ const Signup = ({ navigation }) => {
           phoneNumber,
           profilePicPath: "toBeAdded",
         });
-        navigation.navigate("SplashScreen");
+        navigation.navigate("Preferences");
       } catch (err) {
         console.log(err);
         Alert.alert("We encountered a problem during sign up");

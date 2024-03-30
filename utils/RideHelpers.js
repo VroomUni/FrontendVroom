@@ -11,13 +11,14 @@ const dateObjBuilder = (selectedDateType, customDate) => {
   // console.log("date value =" + customDate);
 
   if (selectedDateType === "today") {
-    return new Date().toISOString().slice(0, 10).replace("T", " ");
+    return new Date();
   } else if (selectedDateType === "tomorrow") {
     let tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    return tomorrow.toISOString().slice(0, 10).replace("T", " ");
+    console.log(tomorrow);
+    return tomorrow;
   } else if (selectedDateType === "customDate") {
-    return customDate.toISOString().slice(0, 10).replace("T", " ");
+    return customDate;
   }
 };
 
@@ -36,14 +37,34 @@ const daysRecurrenceObjBuilder = days => {
 };
 
 const timeObjBuilder = preFormattedTime => {
-  // Extract hours considering local time zone and adjust for GMT+1
-  const hours = preFormattedTime.getHours() + 1;
+  // Extract hours, minutes, and seconds
+  const hours = String(preFormattedTime.getHours()).padStart(2, "0"); // padStart ensures two digits
+  const minutes = String(preFormattedTime.getMinutes()).padStart(2, "0");
+  const seconds = String(preFormattedTime.getSeconds()).padStart(2, "0");
 
-  // Create a new Date object with adjusted hours in UTC
-  const updatedDate = new Date(preFormattedTime.setHours(hours));
+  // Format time in 24-hour mode
+  const time24h = `${hours}:${minutes}:${seconds}`;
+  return time24h;
+};
 
-  // Convert to ISO 8601 string and extract the time portion (slice for desired format)
-  return updatedDate.toISOString().slice(11, 19);
+const encodeUrlQuery = dataToEncode => {
+  // Function to stringify an object and encode it
+  const stringifyAndEncode = (key, value) => {
+    return `${encodeURIComponent(key)}=${encodeURIComponent(
+      JSON.stringify(value)
+    )}`;
+  };
+
+  return Object.keys(dataToEncode)
+    .map(key => {
+      if (key === "destinationOrOrigin") {
+        return stringifyAndEncode(key, dataToEncode[key]);
+      }
+      return `${encodeURIComponent(key)}=${encodeURIComponent(
+        dataToEncode[key]
+      )}`;
+    })
+    .join("&");
 };
 
 module.exports = {
@@ -51,4 +72,5 @@ module.exports = {
   dateObjBuilder,
   daysRecurrenceObjBuilder,
   timeObjBuilder,
+  encodeUrlQuery,
 };

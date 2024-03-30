@@ -12,13 +12,15 @@ import Login from "./screens/Login";
 import Preferences from "./screens/Preferences";
 import Car from "./screens/Car";
 import { AuthContextProvider, useAuth } from "./context/AuthContext";
-
+import PassengerSearchRides from "./screens/passenger/PassengerSearchRides";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 function App() {
   const Stack = createStackNavigator();
   const { user } = useAuth();
   console.log("user ", user?.email);
 
   return (
+    // <PassengerSearchRides />
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} >
 
@@ -39,7 +41,9 @@ function App() {
 export default function AppWrapper() {
   return (
     <AuthContextProvider>
-      <App />
+      <SafeAreaProvider>
+        <App />
+      </SafeAreaProvider>
     </AuthContextProvider>
   );
 }

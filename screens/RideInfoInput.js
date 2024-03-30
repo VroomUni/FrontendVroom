@@ -12,12 +12,11 @@ import {
 } from "../context/UserRideContext";
 import Map from "../components/Map";
 import axios from "axios";
-import rideApiService from "../api/RideService";
+import { postRide, searchForRides } from "../api/RideService";
 import { fromToObjBuilder } from "../utils/RideHelpers";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
-import { useNavigation } from "@react-navigation/native";
-const DriverProvideRideScreen = ({}) => {
+const RideInfo = ({ navigation }) => {
   const {
     destinationOrOrigin,
     setDestinationOrOrigin,
@@ -26,15 +25,18 @@ const DriverProvideRideScreen = ({}) => {
     polygonCods,
     btnGrpDateValue: selectedDateType,
     spotsCount,
-    customSelectedTime,
+    customSelectedTime: customSelectedFromTime,
     recurrentDays,
     customSelectedDate,
+    setPolygonCods,
+    setPolylineCods,
+    customSelectedToTime,
   } = useRideContext();
   const { user, isPassenger } = useAuth();
   const [isOptionShown, setOptionShown] = useState(false);
-  const [confirmBtnVisible, setConfirmBtnVisible] = useState(false);
+  const [postSearchBtnVisible, setPostSearchBtnVisible] = useState(false);
   const [rideSuccessCreation, setRideSucessCreation] = useState(false);
-  const [postRideBtnLoading, setPostRideBtnLoading] = useState(false);
+  const [postSearchBtnLoading, setPostSearchBtnLoading] = useState(false);
   const [onLocationInputPage, setOnLocationInputPage] = useState(false);
   const [isCustomLocationMarker, setCustomLocationMarker] = useState(false);
 
@@ -53,10 +55,10 @@ const DriverProvideRideScreen = ({}) => {
     longitudeDelta: 1, // Zoom level
   });
   useEffect(() => {
-    customSelectedTime
-      ? setConfirmBtnVisible(true)
-      : setConfirmBtnVisible(false);
-  }, [customSelectedTime]);
+    customSelectedFromTime
+      ? setPostSearchBtnVisible(true)
+      : setPostSearchBtnVisible(false);
+  }, [customSelectedFromTime]);
 
   const goToLocationInputPage = () => {
     setOnLocationInputPage(true);
@@ -80,22 +82,48 @@ const DriverProvideRideScreen = ({}) => {
   };
 
   const createRide = async () => {
+    setPostSearchBtnLoading(true);
+
     const ridePayload = {
       //helper fct to determine from and to since its dynamic
       ...fromToObjBuilder(isToSmu, destinationOrOrigin.name),
       spots: spotsCount,
       encodedPath: polylineCods,
       encodedArea: polygonCods,
-      startTime: customSelectedTime,
+      startTime: customSelectedFromTime,
       initialDate: { customSelectedDate, selectedDateType },
       recurrence: recurrentDays,
       driverFirebaseId: user.uid,
     };
-    const resp = await rideApiService.postRide(ridePayload);
+    try {
+      const response = await postRide(ridePayload);
+      setRideSucessCreation(true);
+      setPostSearchBtnLoading(false);
+    } catch (err) {
+      console.error(err);
+      Alert.alert("There was a problem creating your ride");
+      setPostSearchBtnLoading(false);
+    }
+  };
+
+  const searchRides = async () => {
+    const ridefiltersPayload = {
+      ...fromToObjBuilder(isToSmu, destinationOrOrigin.name),
+      destinationOrOrigin: destinationOrOrigin.coords,
+      initialDate: { customSelectedDate, selectedDateType },
+      fromTime: customSelectedFromTime,
+      toTime: customSelectedToTime,
+    };
+    try {
+      const data = await searchForRides(ridefiltersPayload);
+      navigation.navigate("Rides", data.rides);
+    } catch (err) {
+      console.error(err);
+      Alert.alert("An error occured while searching for a ride");
+    }
   };
   return (
-      
-      <View style={{ flex: 1, paddingTop: 50 , backgroundColor:"#E2EAF4"}}>
+    <View style={{ flex: 1, paddingTop: 50, backgroundColor: "#E2EAF4" }}>
       {onLocationInputPage ? (
         //Destination/origin places autocomplete page
         <RideLocationInput
@@ -108,7 +136,16 @@ const DriverProvideRideScreen = ({}) => {
         <>
           <DriverRideFromTo setOnLocationInputPage={goToLocationInputPage} />
 
-          <Map currentRegion={currentRegion} />
+          <Map
+            currentRegion={currentRegion}
+            showPolygon={isPassenger ? false : true}
+            destinationOrOrigin={destinationOrOrigin}
+            setPolygonCods={setPolygonCods}
+            setPolylineCods={setPolylineCods}
+            polygonCods={polygonCods}
+            polylineCods={polylineCods}
+            isToSmu={isToSmu}
+          />
 
           {isCustomLocationMarker && (
             <>
@@ -144,7 +181,7 @@ const DriverProvideRideScreen = ({}) => {
             </>
           )}
           {/* post ride btn  */}
-          {confirmBtnVisible && isOptionShown && (
+          {postSearchBtnVisible && isOptionShown && (
             <Button
               mode='contained-tonal'
               buttonColor='#20c997'
@@ -153,25 +190,13 @@ const DriverProvideRideScreen = ({}) => {
                   ? "checkbox-marked-circle-plus-outline"
                   : "card-search-outline"
               }
-              loading={postRideBtnLoading}
+              loading={postSearchBtnLoading}
               style={styles.PostRideBtn}
-              onPress={() => {
-                setPostRideBtnLoading(true);
-                createRide()
-                  .then(() => {
-                    setRideSucessCreation(true);
-                    setPostRideBtnLoading(false);
-                  })
-                  .catch(err => {
-                    console.error(err);
-                    Alert.alert("There was a problem creating your ride");
-                    setPostRideBtnLoading(false);
-                  });
-              }}>
+              onPress={!isPassenger ? createRide : searchRides}>
               {!isPassenger ? "Post Ride" : "Search"}
             </Button>
           )}
-          {isOptionShown && <DriverRideExtraOptions allOptions={false} />}
+          {isOptionShown && <DriverRideExtraOptions />}
           {/* todo fix iocn  */}
           <Snackbar
             visible={rideSuccessCreation}
@@ -190,10 +215,10 @@ const DriverProvideRideScreen = ({}) => {
   );
 };
 
-const DriverProvideRide = () => (
+const RideInfoInput = ({ navigation }) => (
   <UserRideContextProvider>
     <SafeAreaProvider>
-      <DriverProvideRideScreen />
+      <RideInfo navigation={navigation} />
     </SafeAreaProvider>
   </UserRideContextProvider>
 );
@@ -229,31 +254,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-const fromToComponentStyles = StyleSheet.create({
-  itineraryComponentContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1.7,
-    backgroundColor: "#96DDF4",
-  },
-  itineraryImg: { height: 65, width: 50, resizeMode: "contain" },
 
-  innerFromToBtnsContainer: {
-    width: "60%",
-  },
-  buttons: {
-    borderRadius: 10,
-    margin: 5,
-    justifyContent: "center",
-    backgroundColor: "#F4F4FB",
-    borderColor: "black",
-    borderWidth: 1,
-  },
-  iconContainer: {
-    alignItems: "center", // Center the IconButton horizontally
-    justifyContent: "center", // Center the IconButton vertically
-    marginLeft: 30,
-  },
-});
-
-export default DriverProvideRide;
+export default RideInfoInput;

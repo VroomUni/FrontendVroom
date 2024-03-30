@@ -2,7 +2,7 @@
 //Get-NetIPAddress | Where-Object {$_.AddressFamily -eq "IPv4" -and $_.PrefixOrigin -eq "Dhcp"} | Select-Object IPAddress
 
 //replace here
-const localhost = "192.168.1.15";
+const localhost = "192.168.1.13";
 
 const apiConfig = {
   baseURL: `http://${localhost}:8080/api`, // Your API base URL

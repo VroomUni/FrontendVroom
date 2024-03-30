@@ -32,7 +32,7 @@ const Preferences = ({ navigation }) => {
       });
       isYesClick
         ? navigation.navigate("Car")
-        : navigation.navigate("OnBoarding");
+        : navigation.navigate("SplashScreen");
     } catch (err) {
       console.error(err);
       Alert.alert("there was a problem setting up preferences");
@@ -70,7 +70,7 @@ const Preferences = ({ navigation }) => {
           buttonColor='#00f0dc'
           textColor='white'
           icon='chevron-right'
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => navigation.navigate("SplashScreen")}
           contentStyle={{ flexDirection: "row-reverse" }}>
           Skip
         </Button>
