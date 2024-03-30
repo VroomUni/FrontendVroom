@@ -4,9 +4,13 @@ import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
-
 function Profile() {
   const [selectedSection, setSelectedSection] = useState(null);
+  const [buttonColors, setButtonColors] = useState({
+    general: '#152544',
+    preferences: '#152544',
+    car: '#152544',
+  });
   const [userData, setUserData] = useState({
     name: 'Name',
     lastName: 'Name',
@@ -20,7 +24,7 @@ function Profile() {
     color: 'color',
     brand: 'brand',
     model: 'model',
-    image:'https://bootdey.com/img/Content/avatar/avatar3.png',
+    image: 'https://bootdey.com/img/Content/avatar/avatar3.png',
   });
 
   useEffect(() => {
@@ -40,14 +44,32 @@ function Profile() {
 
   const handleGeneralInformationPress = () => {
     setSelectedSection('general');
+    setButtonColors({
+      ...buttonColors,
+      general: '#DA554E', // Change button color to red
+      preferences:'#152544',
+      car:'#152544'
+    });
   };
 
   const handlePreferencesPress = () => {
     setSelectedSection('preferences');
+    setButtonColors({
+      ...buttonColors,
+      preferences: '#DA554E', // Change button color to red
+      general:'#152544',
+      car:'#152544'
+    });
   };
 
   const handleCarInformationPress = () => {
     setSelectedSection('car');
+    setButtonColors({
+      ...buttonColors,
+      car: '#DA554E', // Change button color to red
+      preferences:'#152544',
+      general:'#152544'
+    });
   };
 
   const navigation = useNavigation();
@@ -56,16 +78,15 @@ function Profile() {
     navigation.navigate('EditProfile');
   };
 
-
   return (
     <View style={styles.container}>
       {/* Top */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Welcome</Text>
+        <Text style={styles.headerText}>profile settings</Text>
       </View>
 
       {/* Middle */}
-      <View >
+      <View>
         <TouchableOpacity style={styles.editIconContainer} onPress={handleEdit}>
           <AntDesign name="edit" size={35} color="#DA554E" />
         </TouchableOpacity>
@@ -75,21 +96,20 @@ function Profile() {
         </View>
         <View style={styles.middleSection}>
           <TouchableOpacity onPress={handleGeneralInformationPress} style={styles.new}>
-            <Text style={styles.middleSectionText}>General Information</Text>
+            <Text style={[styles.middleSectionText, { backgroundColor: buttonColors.general }]}>General Information</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handlePreferencesPress} style={styles.new}>
-            <Text style={styles.middleSectionText}>Preferences</Text>
+            <Text style={[styles.middleSectionText, { backgroundColor: buttonColors.preferences }]}>Preferences</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleCarInformationPress} style={styles.new}>
-            <Text style={styles.middleSectionText}>Car Information</Text>
+            <Text style={[styles.middleSectionText, { backgroundColor: buttonColors.car }]}>Car Information</Text>
           </TouchableOpacity>
         </View>
       </View>
 
       {/* Bottom */}
       <View style={styles.bottomContainer}>
-        {/* Card */}
-        <View style={[styles.card, { backgroundColor: 'white' }]}>
+        <View style={[styles.card, { backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }]}>
           <AntDesign name="user" size={24} color="#DA554E" />
           {selectedSection === 'general' && (
             <>
@@ -128,28 +148,28 @@ function Profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#DFF2F0',
+    backgroundColor: 'white',
     borderRadius: 0,
     margin: 0,
   },
   header: {
-    backgroundColor: '#DFF2F0',
+    backgroundColor: 'white',
     paddingTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 0,
-    opacity: 2, 
-    shadowColor: '#9AD0D3', 
-    borderBottomWidth: 1,
-    borderBottomColor: '#9AD0D3',
+    opacity: 2,
+    shadowColor: '#9AD0D3',
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#152544',
   },
   headerText: {
-    color: 'white',
+    color: '#152544',
     fontSize: 30,
     fontWeight: 'bold',
-    textShadowColor: '#9AD0D3',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 5,
+    textShadowColor: '#152544',
+    //textShadowOffset: { width: 3, height: 2 },
+    textShadowRadius: 2,
   },
   middleContainer: {
     alignItems: 'center',
@@ -161,7 +181,7 @@ const styles = StyleSheet.create({
     right: 20,
     zIndex: 1,
     padding: 10,
-    
+
   },
   imageContainer: {
     justifyContent: 'center',
@@ -178,9 +198,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#152544',
     fontWeight: 'bold',
-    
+
   },
-  //not used
   middleSection: {
     flexDirection: 'row',
     justifyContent: 'flex-middle',
@@ -188,14 +207,14 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   new: {
-    margin: 7,
-    //padding: 10,
-    //borderRadius: 60,
+    margin: 12,
+    borderRadius: 30,
+
   },
   middleSectionText: {
     fontSize: 8,
     padding: 15,
-    marginTop: 10,
+    marginTop:5,
     backgroundColor: '#152544',
     borderRadius: 30,
     color: 'white',
@@ -209,7 +228,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     marginHorizontal: 0,
     borderRadius: 30,
-    
+
   },
   cardText: {
     color: '#152544',

@@ -10,10 +10,10 @@ import RideInfoInput from "../screens/RideInfoInput";
 import { useAuth } from "../context/AuthContext";
 import EditProfileStack from "./EditProfileStack";
 import PassengerSearchRidesStack from "./PassengerSearchRideStack";
+import DetailsNav from "./DetailsNav";
 
 const Tab = createBottomTabNavigator();
 function TabNav() {
-
   const { isPassenger, setIsPassenger } = useAuth();
 
   return (
@@ -63,7 +63,10 @@ function TabNav() {
         </>
       ) : (
         <>
-          <Tab.Screen name='Search Rides' component={PassengerSearchRidesStack} />
+          <Tab.Screen
+            name='Search Rides'
+            component={PassengerSearchRidesStack}
+          />
           <Tab.Screen name='My Rides' component={PassengerRides} />
         </>
       )}
@@ -108,9 +111,9 @@ function TabNav() {
           ),
         }}
       />
-      <Tab.Screen name='History' component={HistoryDriver} />
-      <Tab.Screen name='Profile' component={EditProfileStack} />
 
+      <Tab.Screen name='History' component={DetailsNav} />
+      <Tab.Screen name='Profile' component={EditProfileStack} />
     </Tab.Navigator>
   );
 }
