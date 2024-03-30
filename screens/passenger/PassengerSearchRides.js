@@ -62,72 +62,84 @@ const driversData = [
 ];
 
 function PassengerSearchRides({ navigation, route }) {
-  const [visible, setVisible] = useState(false);
-  const [ridesData, setRidesData] = useState(null);
-  console.log(route.params);
-//investigate with response data
+  const [requestSentVisible, setSentVisible] = useState(false);
+  const [ridesData, setRidesData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  //investigate with response data
   useEffect(() => {
     const fetchData = async () => {
-      return await fetchRidesData(route.params);
+      try {
+        const rides = await fetchRidesData(route.params);
+        setRidesData(rides);
+        setLoading(false);
+
+      } catch (err) {
+        console.error(err);
+      }
     };
 
     fetchData();
   }, []);
 
   const onSwipedLeft = cardIndex => {
-    console.log("Swiped left, no request sent for: ", driversData[cardIndex]);
+    console.log("Swiped left, no request sent for: ", ridesData[cardIndex]);
     // Handle the 'no request' logic here
   };
 
   const onSwipedRight = cardIndex => {
-    console.log("Swiped right, request sent for: ", driversData[cardIndex]);
-    setVisible(!visible);
+    console.log("Swiped right, request sent for: ", ridesData[cardIndex]);
+    setSentVisible(!requestSentVisible);
   };
-  const onDismissSnackBar = () => setVisible(false);
-
+  const onDismissSnackBar = () => setSentVisible(false);
+  console.log("IS LOADING", loading);
   return (
     <View style={styles.pageContainer}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Swipe Your Way</Text>
       </View>
-
-      <Swiper
-        cards={driversData}
-        renderCard={card => (
-          <DriverCard
-            driver={card}
-            passengerPreferences={passengersPreferences}
-            navigation={navigation}
+      {!loading ? (
+        <>
+          <Swiper
+            cards={ridesData}
+            renderCard={data => (
+              <DriverCard
+                data={data}
+                passengerPreferences={passengersPreferences}
+                navigation={navigation}
+              />
+            )}
+            onSwipedLeft={onSwipedLeft}
+            onSwipedRight={onSwipedRight}
+            cardIndex={0}
+            backgroundColor={"transparent"}
+            stackSize={2}
+            cardVerticalMargin={50}
+            containerStyle={styles.swiperContainer}
+            animateOverlayLabelsOpacity
+            animateCardOpacity
+            swipeBackCard
           />
-        )}
-        onSwipedLeft={onSwipedLeft}
-        onSwipedRight={onSwipedRight}
-        cardIndex={0}
-        backgroundColor={"transparent"}
-        stackSize={2}
-        cardVerticalMargin={50}
-        containerStyle={styles.swiperContainer}
-        animateOverlayLabelsOpacity
-        animateCardOpacity
-        swipeBackCard
-      />
 
-      <Snackbar
-        visible={visible}
-        onDismiss={onDismissSnackBar}
-        duration={400}
-        style={styles.snackbarstyle}>
-        request sent !
-      </Snackbar>
+          <Snackbar
+            visible={requestSentVisible}
+            onDismiss={onDismissSnackBar}
+            duration={400}
+            style={styles.snackbarstyle}>
+            request sent !
+          </Snackbar>
 
-      <View style={styles.animationContainer}>
-        <LottieView
-          style={styles.animation}
-          source={require("../../assets/SwipeAnimation.json")}
-          autoPlay
-          loop
-        />
-      </View>
+          <View style={styles.animationContainer}>
+            <LottieView
+              style={styles.animation}
+              source={require("../../assets/SwipeAnimation.json")}
+              autoPlay
+              loop
+            />
+          </View>
+        </>
+      ) : (
+        <Text>LOADING...</Text>
+      )}
     </View>
   );
 }
