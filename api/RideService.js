@@ -4,6 +4,7 @@ import { encode } from "@googlemaps/polyline-codec";
 import {
   dateObjBuilder,
   daysRecurrenceObjBuilder,
+  encodeUrlQuery,
   timeObjBuilder,
 } from "../utils/RideHelpers";
 
@@ -45,32 +46,33 @@ const searchForRides = async rideFilters => {
     ),
   };
 
-  // Function to stringify an object and encode it
-  const stringifyAndEncode = (key, value) => {
-    return `${encodeURIComponent(key)}=${encodeURIComponent(
-      JSON.stringify(value)
-    )}`;
-  };
-
-  const queryString = Object.keys(validatedRidePayload)
-    .map(key => {
-      if (key === "destinationOrOrigin") {
-        return stringifyAndEncode(key, validatedRidePayload[key]);
-      }
-      return `${encodeURIComponent(key)}=${encodeURIComponent(
-        validatedRidePayload[key]
-      )}`;
-    })
-    .join("&");
+  const queryString = encodeUrlQuery(validatedRidePayload);
 
   const finalUrl = `${url}?${queryString}`;
   try {
-    const response = await axios.get(finalUrl, validatedRidePayload);
+    const response = await axios.get(finalUrl);
+    // console.log(response.data);
     return response.data;
   } catch (err) {
-    console.error("error ferching filtered rides data", err);
+    console.error("error ferching filtered rides IDS", err);
     throw err;
   }
 };
 
-module.exports = { postRide, searchForRides };
+//REDO HERE
+const fetchRidesData = async ridesIds => {
+  const queryString = `ids=${ridesIds
+    .map(ride => encodeURIComponent(ride))
+    .join(",")}`;
+  const finalUrl = `${url}/byIds?${queryString}`;
+  console.log("final url ", finalUrl);
+  try {
+    const response = await axios.get(finalUrl);
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    console.error("error fetching Rides Data ", err);
+    throw err;
+  }
+};
+module.exports = { postRide, searchForRides, fetchRidesData };

@@ -37,14 +37,34 @@ const daysRecurrenceObjBuilder = days => {
 };
 
 const timeObjBuilder = preFormattedTime => {
-// Extract hours, minutes, and seconds
-const hours = String(preFormattedTime.getHours()).padStart(2, '0'); // padStart ensures two digits
-const minutes = String(preFormattedTime.getMinutes()).padStart(2, '0');
-const seconds = String(preFormattedTime.getSeconds()).padStart(2, '0');
+  // Extract hours, minutes, and seconds
+  const hours = String(preFormattedTime.getHours()).padStart(2, "0"); // padStart ensures two digits
+  const minutes = String(preFormattedTime.getMinutes()).padStart(2, "0");
+  const seconds = String(preFormattedTime.getSeconds()).padStart(2, "0");
 
-// Format time in 24-hour mode
-const time24h = `${hours}:${minutes}:${seconds}`;
-  return time24h
+  // Format time in 24-hour mode
+  const time24h = `${hours}:${minutes}:${seconds}`;
+  return time24h;
+};
+
+const encodeUrlQuery = dataToEncode => {
+  // Function to stringify an object and encode it
+  const stringifyAndEncode = (key, value) => {
+    return `${encodeURIComponent(key)}=${encodeURIComponent(
+      JSON.stringify(value)
+    )}`;
+  };
+
+  return Object.keys(dataToEncode)
+    .map(key => {
+      if (key === "destinationOrOrigin") {
+        return stringifyAndEncode(key, dataToEncode[key]);
+      }
+      return `${encodeURIComponent(key)}=${encodeURIComponent(
+        dataToEncode[key]
+      )}`;
+    })
+    .join("&");
 };
 
 module.exports = {
@@ -52,4 +72,5 @@ module.exports = {
   dateObjBuilder,
   daysRecurrenceObjBuilder,
   timeObjBuilder,
+  encodeUrlQuery,
 };

@@ -116,7 +116,7 @@ const RideInfo = ({ navigation }) => {
     };
     try {
       const data = await searchForRides(ridefiltersPayload);
-      navigation.navigate("Rides", data);
+      navigation.navigate("Rides", data.rides);
     } catch (err) {
       console.error(err);
       Alert.alert("An error occured while searching for a ride");

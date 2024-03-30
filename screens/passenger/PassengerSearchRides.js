@@ -1,9 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import DriverCard from "../../components/DriverCard";
 import { StyleSheet, View, Text, Animated } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import LottieView from "lottie-react-native";
 import { Snackbar, Provider as PaperProvider } from "react-native-paper";
+import { fetchRidesData } from "../../api/RideService";
 
 const passengersPreferences = {
   smoking: "no",
@@ -60,8 +61,18 @@ const driversData = [
   },
 ];
 
-function PassengerSearchRides({ navigation }) {
+function PassengerSearchRides({ navigation, route }) {
   const [visible, setVisible] = useState(false);
+  const [ridesData, setRidesData] = useState(null);
+  console.log(route.params);
+//investigate with response data
+  useEffect(() => {
+    const fetchData = async () => {
+      return await fetchRidesData(route.params);
+    };
+
+    fetchData();
+  }, []);
 
   const onSwipedLeft = cardIndex => {
     console.log("Swiped left, no request sent for: ", driversData[cardIndex]);
