@@ -1,4 +1,5 @@
 require("../config/Firebase");
+
 import {
   getAuth,
   createUserWithEmailAndPassword,

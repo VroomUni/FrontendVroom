@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import DriverCard from "../../components/DriverCard";
+import DriverCard from "../../components/Passenger/DriverCard";
 import { StyleSheet, View, Text, Animated, Alert } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import LottieView from "lottie-react-native";

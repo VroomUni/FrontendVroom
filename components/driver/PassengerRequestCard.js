@@ -1,11 +1,13 @@
-import React,{useEffect} from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Animated } from 'react-native';
+import React,{useEffect,useState} from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Animated,Modal } from 'react-native';
 import { AntDesign } from "@expo/vector-icons";
 import { TouchableHighlight } from 'react-native-gesture-handler';
 
 
 
 function PassengerRequestCard({ id, FName, LName, rating, rowHeightAnimatedValue, removeRow, leftActionState, rightActionState}) {
+  const [modalVisible, setModalVisible] = useState(false);
+  
   console.log('in passenger',rowHeightAnimatedValue)
   useEffect(() => {
     if (rightActionState) {
@@ -48,7 +50,7 @@ function PassengerRequestCard({ id, FName, LName, rating, rowHeightAnimatedValue
   return (
     <Animated.View style={[styles.outerCard, {height:rowHeightAnimatedValue}]}>
     <TouchableOpacity onPress={showDetails} style={styles.card}  underlayColor={'#aaa'}>
-      
+   
       
       <View style={styles.userInfo}>
         <Text style={styles.userName}>{`${FName} ${LName}`}</Text>
@@ -64,7 +66,27 @@ function PassengerRequestCard({ id, FName, LName, rating, rowHeightAnimatedValue
         </TouchableOpacity>
 
       </View> */}
-      
+       <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          {/* <Image source={require('./path-to-your-image.png')} style={styles.profilePic} /> */}
+          <Text style={styles.modalName}>{`${FName} ${LName}`}</Text>
+          {/* ... display other information ... */}
+          <Text style={styles.detailsText}>22 YO</Text>
+          <Text style={styles.detailsText}>NON SMOKER</Text>
+          <Text style={styles.detailsText}>LOUD MUSIC</Text>
+          <Text style={styles.detailsText}>FOOD FRIENDLY</Text>
+          <View style={styles.stars}>{renderStars()}</View>
+          {/* ... include buttons ... */}
+        </View>
+      </View>
+    </Modal>
       
     </TouchableOpacity>
     </Animated.View>
@@ -74,7 +96,6 @@ function PassengerRequestCard({ id, FName, LName, rating, rowHeightAnimatedValue
 
 const styles = StyleSheet.create({
   outerCard:{
-    
     backgroundColor: '#FFF',
     borderRadius: 5,
     height: 65,
@@ -85,8 +106,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 10,
     elevation: 5,
-    
-    
   },
   card:{
     backgroundColor: '#FFF',
@@ -96,7 +115,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   userInfo: {
-  
     flexDirection: 'column',
     justifyContent: 'center',
     marginLeft: 10,
@@ -140,6 +158,48 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+   
+    width: '80%', // Set a width for the modal
+    alignItems: 'center', // Center items horizontally
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  profilePic: {
+    width: 100, // Set the width of the image
+    height: 100, // Set the height of the image
+    borderRadius: 50, // Round the corners
+    marginBottom: 10, // Add some margin below the image
+  },
+  modalName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10, // Add some margin below the name
+  },
+  detailsText: {
+    fontSize: 16,
+    marginBottom: 5, // Add some space between details
+  },
+  stars: {
+    flexDirection: 'row',
+    marginTop: 4,
   },
 });
 

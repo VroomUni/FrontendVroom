@@ -6,11 +6,12 @@ import DriverRides from "../screens/driver/DriverRides";
 import HistoryDriver from "../screens/driver/HistoryDriver";
 import PassengerRides from "../screens/passenger/PassengerRides";
 import { Alert, Platform, TouchableOpacity, View } from "react-native";
-import RideInfoInput from "../screens/passenger/RideInfoInput";
+import RideInfoInput from "../screens/RideInfoInput";
 import { useAuth } from "../context/AuthContext";
 import EditProfileStack from "./EditProfileStack";
 import PassengerSearchRidesStack from "./PassengerSearchRideStack";
 import DetailsNav from "./DetailsNav";
+import DriverRequestNav from "./DriverRequestNav";
 
 const Tab = createBottomTabNavigator();
 function TabNav() {
