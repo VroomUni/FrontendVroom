@@ -1,42 +1,95 @@
 import React, { useState } from "react";
-import { View, SafeAreaView, StyleSheet, Platform } from "react-native";
+import { View, SafeAreaView, StyleSheet, Platform, Alert } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Surface, Text, SegmentedButtons, Button } from "react-native-paper";
 import { useRideContext } from "../../context/UserRideContext";
+import { useAuth } from "../../context/AuthContext";
+import { timeTo24Format } from "../../utils/RideHelpers";
 const OptionsFirstSlide = ({ goToSlide }) => {
   const {
     btnGrpDateValue,
     setDateValue,
     setCustomSelectedTime,
-    customSelectedTime,
+    customSelectedTime: customSelectedFromTime,
     customSelectedDate,
     setCustomSelectedDate,
+    customSelectedToTime,
+    setCustomToTime,
   } = useRideContext();
 
+  const { isPassenger } = useAuth();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [isTimePickerVisible, setTimePickerVisible] = useState(false);
+  const [isFromTimePickrVisible, setFromTimePickerVisible] = useState(false);
+  const [isToTimePickrVisible, setToTimePickerVisible] = useState(false);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
 
   const showTimePicker = () => {
-    setTimePickerVisible(true);
+    setFromTimePickerVisible(true);
   };
+  //used for both From time and Date
+  const handleDateTimeChange = (event, selectedDateOrTime) => {
+    setFromTimePickerVisible(false);
 
-  const handleDateTimeChange = (event, selectedDate) => {
-    if (selectedDate) {
-      if (isDatePickerVisible) {
-        setDatePickerVisibility(false);
-        setCustomSelectedDate(selectedDate);
-        !customSelectedTime && setTimePickerVisible(true);
-      } else if (isTimePickerVisible) {
-        setTimePickerVisible(false);
-        setCustomSelectedTime(selectedDate);
-        goToSlide(1);
+    if (!selectedDateOrTime) return;
+
+    if (isDatePickerVisible) {
+      setDatePickerVisibility(false);
+      if (event.type === "set") {
+        setCustomSelectedDate(selectedDateOrTime);
+      }
+      //if date picking is canceled then set it back to today
+      if (event.type !== "set"&&!customSelectedDate) {
+        setDateValue("today");
+      }
+      if (!customSelectedFromTime) setFromTimePickerVisible(true);
+      return;
+    }
+//MUST FIX ONE HOUR DIFFERENCE IN DATETIMEPICKER
+    if (isFromTimePickrVisible) {
+      const currentTime = new Date();
+      // console.log("Changed",selectedDateOrTime);
+      // console.log("CURRENT" ,currentTime);
+
+      if (selectedDateOrTime < currentTime&&btnGrpDateValue==="today") {
+        Alert.alert(
+          "Please pick a valid time after",
+          timeTo24Format(currentTime)
+        );
+        return;
+      }
+
+      if (event.type === "set") {
+        setCustomSelectedTime(selectedDateOrTime);
+        goToSlide &&
+          setTimeout(() => {
+            goToSlide(1);
+          }, 200);
       }
     }
   };
+
+  //handles only ToTime for passenger searching ride with time interval
+  const handleToTimeChange = (event, toTime) => {
+    setToTimePickerVisible(false);
+
+    if (!toTime) return;
+
+    if (toTime < customSelectedFromTime) {
+      Alert.alert(
+        "Please pick a valid time after",
+        timeTo24Format(customSelectedFromTime)
+      );
+      return;
+    }
+
+    if (event.type === "set") {
+      setCustomToTime(toTime);
+    }
+  };
+
   //today , tmrw  , date btn grp
   const renderBtnGrp = () => {
     return (
@@ -85,6 +138,21 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       </SafeAreaView>
     );
   };
+  
+  const commonStyles = StyleSheet.create({
+    //inner container for slider content , the one with white background
+    innerSliderContainer: {
+      borderRadius: 7,
+      padding: 15,
+      backgroundColor: "#F4F4FB",
+      borderWidth: 1,
+      borderColor: "black",
+      flex: 1,
+      rowGap: isPassenger && customSelectedFromTime ? 30 : 50,
+      margin: 20,
+      width: "90%",
+    },
+  });
 
   return (
     <Surface style={commonStyles.innerSliderContainer}>
@@ -101,55 +169,81 @@ const OptionsFirstSlide = ({ goToSlide }) => {
         }}>
         <Text variant='titleMedium'> Time:</Text>
         {/* pick Time btn */}
-        <Button
-          mode='outlined'
-          style={{
-            borderRadius: 10,
-          }}
-          textColor='black'
-          icon={"clock-time-eight"}
-          onPress={showTimePicker}>
-          {customSelectedTime
-            ? customSelectedTime.toLocaleTimeString(undefined, {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            : "Pick"}
-        </Button>
+        <View style={{ rowGap: 10 }}>
+          <Button
+            contentStyle={{ flexDirection: "row-reverse" }}
+            mode='outlined'
+            style={{
+              borderRadius: 10,
+            }}
+            textColor='black'
+            icon={"clock-time-eight"}
+            onPress={showTimePicker}>
+            {isPassenger ? "From " : "At "}&nbsp;
+            {customSelectedFromTime && timeTo24Format(customSelectedFromTime)}
+          </Button>
+          {isPassenger && customSelectedFromTime && (
+            <Button
+              contentStyle={{
+                flexDirection: "row-reverse",
+                paddingLeft: 10,
+                paddingRight: 15,
+              }}
+              mode='outlined'
+              style={{
+                borderRadius: 10,
+              }}
+              textColor='black'
+              icon={"clock-time-eight"}
+              onPress={() => {
+                setToTimePickerVisible(true);
+              }}>
+              To &nbsp;&nbsp;
+              {customSelectedToTime && timeTo24Format(customSelectedToTime)}
+            </Button>
+          )}
+        </View>
       </View>
-      {/* date picker */}
+      {/* date picker for passenger and driver */}
       {isDatePickerVisible && (
         <DateTimePicker
           value={customSelectedDate || new Date()}
           mode='date'
           display={Platform.OS === "ios" ? "spinner" : "default"}
           onChange={handleDateTimeChange}
+          maximumDate={new Date().setDate(new Date().getDate() + 7)}
+          minimumDate={new Date()}
         />
       )}
-      {/* time Picker */}
-      {isTimePickerVisible && (
+      {/* from time Picker for passenger and driver */}
+      {isFromTimePickrVisible && (
         <DateTimePicker
-          value={customSelectedTime || new Date()}
+          is24Hour
+          value={
+            customSelectedFromTime ||
+            new Date(new Date().getTime() + 60 * 60 * 1000)
+          }
           mode='time'
           display={Platform.OS === "ios" ? "spinner" : "default"}
           onChange={handleDateTimeChange}
         />
       )}
+
+      {/*to time Picker  , only for passenger */}
+      {isToTimePickrVisible && (
+        <DateTimePicker
+          is24Hour
+          value={
+            customSelectedToTime ||
+            new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
+          }
+          mode='time'
+          display={Platform.OS === "ios" ? "spinner" : "default"}
+          onChange={handleToTimeChange}
+        />
+      )}
     </Surface>
   );
 };
-const commonStyles = StyleSheet.create({
-  //inner container for slider content , the one with white background
-  innerSliderContainer: {
-    borderRadius: 7,
-    padding: 15,
-    backgroundColor: "#F4F4FB",
-    borderWidth: 1,
-    borderColor: "black",
-    flex: 1,
-    rowGap: 50,
-    margin: 20,
-    width:'90%'
-  },
-});
+
 export default OptionsFirstSlide;

@@ -13,8 +13,8 @@ const Preferences = ({ navigation }) => {
   const [foodchecked, setFoodChecked] = useState(null);
   const [musicchecked, setMusicChecked] = useState(null);
   const [talkativechecked, setTalkativeChecked] = useState(null);
-  const [boysOnly, setBoysOnly] = useState(false);
-  const [girlsOnly, setGirlsOnly] = useState(false);
+  const [boysOnly, setBoysOnly] = useState(null);
+  const [girlsOnly, setGirlsOnly] = useState(null);
   const { user } = useAuth();
   const submitPreferences = async isYesClick => {
     
@@ -32,7 +32,7 @@ const Preferences = ({ navigation }) => {
       });
       isYesClick
         ? navigation.navigate("Car")
-        : navigation.navigate("OnBoarding");
+        : navigation.navigate("SplashScreen");
     } catch (err) {
       console.error(err);
       Alert.alert("there was a problem setting up preferences");
@@ -70,7 +70,7 @@ const Preferences = ({ navigation }) => {
           buttonColor='#00f0dc'
           textColor='white'
           icon='chevron-right'
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => navigation.navigate("SplashScreen")}
           contentStyle={{ flexDirection: "row-reverse" }}>
           Skip
         </Button>

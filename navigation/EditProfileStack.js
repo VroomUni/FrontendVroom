@@ -5,7 +5,7 @@ import EditProfile from '../components/EditProfile';
 
 const ProfileStack = createStackNavigator();
 
-function EditNav() {
+function EditProfileStack() {
   return (
     <ProfileStack.Navigator>
         <ProfileStack.Screen name='Profile' component={Profile} />
@@ -15,6 +15,6 @@ function EditNav() {
   );
 }
 
-export default EditNav;
+export default EditProfileStack;
 
 

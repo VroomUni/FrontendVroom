@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Alert } from "react-native";
-import React, { useRef, useEffect, useState } from "react";
+import { StyleSheet,Alert } from "react-native";
+import React, { useRef, useEffect, } from "react";
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
@@ -10,30 +10,27 @@ import { decode } from "@googlemaps/polyline-codec";
 import GeoJSONReader from "jsts/org/locationtech/jts/io/GeoJSONReader";
 import GeoJSONWriter from "jsts/org/locationtech/jts/io/GeoJSONWriter";
 import { BufferOp } from "jsts/org/locationtech/jts/operation/buffer";
-import { useRideContext } from "../context/UserRideContext";
 import axios from "axios";
-
+import{GOOGLE_MAPS_KEY} from "@env"
 //current region is passed as prop , because the custom marker in parent component needs it
-const Map = ({ currentRegion }) => {
-  //using context/global store for driver state
-  const {
-    destinationOrOrigin,
-    setPolygonCods,
-    setPolylineCods,
-    polygonCods,
-    polylineCods,
-    isToSmu,
-  } = useRideContext();
-  //to be moved in env file
+const Map = ({
+  currentRegion,
+  showPolygon,
+  destinationOrOrigin,
+  setPolygonCods,
+  setPolylineCods,
+  polygonCods,
+  polylineCods,
+  isToSmu,
+}) => {
 
-  const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
 
   const SMUCOORDS = {
     latitude: 36.84598089012623,
     longitude: 10.268806957645351,
   };
 
-  const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${apiKey}`;
+  const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${GOOGLE_MAPS_KEY}`;
   const mapViewRef = useRef();
 
   //if  destinationOrOrigin !==null this is the logic to draw the route(polyline) & area(polygon)
@@ -64,7 +61,7 @@ const Map = ({ currentRegion }) => {
 
             setPolygonCods(resultPolygonCods.coordinates[0]);
           };
-          computePolygon();
+          showPolygon && computePolygon();
           setPolylineCods(decodedPolylineCods);
         })
         .catch(error => {
@@ -73,7 +70,6 @@ const Map = ({ currentRegion }) => {
           Alert.alert("we encountered a problem");
         });
   }, [destinationOrOrigin]);
-
   // when area , route or destination/origin change , then recenter the camera view on the route
   useEffect(() => {
     if (mapViewRef.current && polylineCods) {
