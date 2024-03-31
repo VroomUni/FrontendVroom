@@ -4,7 +4,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import { Button, TextInput } from "react-native-paper";
 import * as Location from "expo-location";
 import { useRideContext } from "../../context/UserRideContext";
-
+import { GOOGLE_MAPS_KEY } from "@env";
 
 const DriverRideLocationInput = ({
   setOnLocationInputPage,
@@ -30,7 +30,7 @@ const DriverRideLocationInput = ({
             InputComp: TextInput,
           }}
           query={{
-            key: "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M",
+            key: GOOGLE_MAPS_KEY,
             language: "en",
             components: "country:tn",
           }}

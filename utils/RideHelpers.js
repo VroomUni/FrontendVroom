@@ -46,7 +46,14 @@ const timeObjBuilder = preFormattedTime => {
   const time24h = `${hours}:${minutes}:${seconds}`;
   return time24h;
 };
-
+const timeTo24Format = time => {
+  const dateTime = new Date(time);
+  return (
+    dateTime.getHours().toString().padStart(2, "0") +
+    ":" +
+    dateTime.getMinutes().toString().padStart(2, "0")
+  );
+};
 const encodeUrlQuery = dataToEncode => {
   // Function to stringify an object and encode it
   const stringifyAndEncode = (key, value) => {
@@ -73,4 +80,5 @@ module.exports = {
   daysRecurrenceObjBuilder,
   timeObjBuilder,
   encodeUrlQuery,
+  timeTo24Format,
 };

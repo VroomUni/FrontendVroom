@@ -4,6 +4,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Surface, Text, SegmentedButtons, Button } from "react-native-paper";
 import { useRideContext } from "../../context/UserRideContext";
 import { useAuth } from "../../context/AuthContext";
+import { timeTo24Format } from "../../utils/RideHelpers";
 const OptionsFirstSlide = ({ goToSlide }) => {
   const {
     btnGrpDateValue,
@@ -137,10 +138,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       </SafeAreaView>
     );
   };
-  const timeTo24Format = time =>
-    time.getHours().toString().padStart(2, "0") +
-    ":" +
-    time.getMinutes().toString().padStart(2, "0");
+  
   const commonStyles = StyleSheet.create({
     //inner container for slider content , the one with white background
     innerSliderContainer: {

@@ -11,7 +11,7 @@ import GeoJSONReader from "jsts/org/locationtech/jts/io/GeoJSONReader";
 import GeoJSONWriter from "jsts/org/locationtech/jts/io/GeoJSONWriter";
 import { BufferOp } from "jsts/org/locationtech/jts/operation/buffer";
 import axios from "axios";
-
+import{GOOGLE_MAPS_KEY} from "@env"
 //current region is passed as prop , because the custom marker in parent component needs it
 const Map = ({
   currentRegion,
@@ -24,15 +24,13 @@ const Map = ({
   isToSmu,
 }) => {
 
-  //to be moved in env file
-  const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
 
   const SMUCOORDS = {
     latitude: 36.84598089012623,
     longitude: 10.268806957645351,
   };
 
-  const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${apiKey}`;
+  const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${GOOGLE_MAPS_KEY}`;
   const mapViewRef = useRef();
 
   //if  destinationOrOrigin !==null this is the logic to draw the route(polyline) & area(polygon)

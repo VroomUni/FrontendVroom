@@ -17,7 +17,11 @@ const PreferenceItem = ({ attribute, value, matched }) => {
             <FontAwesome name={iconName} size={16} color={iconColor} />
           </Text>
         ) : (
-          <Text style={styles.chipText}>{` ${value}`}</Text>
+          <Text style={styles.chipText}>
+            {" "}
+            <FontAwesome name={iconName} size={16} color={iconColor} />
+            {`no ${attribute}`}
+          </Text>
         )}
       </Chip>
     </View>

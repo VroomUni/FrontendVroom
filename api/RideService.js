@@ -51,7 +51,7 @@ const searchForRides = async rideFilters => {
   const finalUrl = `${url}?${queryString}`;
   try {
     const response = await axios.get(finalUrl);
-    // console.log(response.data);
+    console.log(response.data );
     return response.data;
   } catch (err) {
     console.error("error ferching filtered rides IDS", err);

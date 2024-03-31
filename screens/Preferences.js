@@ -13,8 +13,8 @@ const Preferences = ({ navigation }) => {
   const [foodchecked, setFoodChecked] = useState(null);
   const [musicchecked, setMusicChecked] = useState(null);
   const [talkativechecked, setTalkativeChecked] = useState(null);
-  const [boysOnly, setBoysOnly] = useState(false);
-  const [girlsOnly, setGirlsOnly] = useState(false);
+  const [boysOnly, setBoysOnly] = useState(null);
+  const [girlsOnly, setGirlsOnly] = useState(null);
   const { user } = useAuth();
   const submitPreferences = async isYesClick => {
     

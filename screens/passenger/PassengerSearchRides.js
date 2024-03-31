@@ -1,80 +1,38 @@
 import React, { useState, useRef, useEffect } from "react";
 import DriverCard from "../../components/DriverCard";
-import { StyleSheet, View, Text, Animated } from "react-native";
+import { StyleSheet, View, Text, Animated, Alert } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import LottieView from "lottie-react-native";
 import { Snackbar, Provider as PaperProvider } from "react-native-paper";
 import { fetchRidesData } from "../../api/RideService";
 
 const passengersPreferences = {
-  smoking: "no",
-  Talkative: "light chitchat",
-  eating: "no",
-  musicGenre: "loud music",
+  smoking: false,
+  talkative: false,
+  foodFriendly: false,
+  loudMusic: true,
+  girlsOnly: true,
+  boysOnly: null,
 };
-
-const driversData = [
-  {
-    id: 1,
-    firstName: "Ahmed",
-    lastName: "Jouni",
-    rating: 4,
-    smoking: "no",
-    Talkative: "light chitchat",
-    eating: "no",
-    musicGenre: "loud music",
-    time: "17:30",
-    departure: "Mannouba",
-    destination: "SMU",
-    imageUri: "https://bootdey.com/img/Content/avatar/avatar1.png",
-  },
-  {
-    id: 2,
-    firstName: "Laila",
-    lastName: "Mahmoud",
-    rating: 5,
-    smoking: "yes",
-    Talkative: "quiet",
-    eating: "yes",
-    musicGenre: "calm music",
-    time: "18:00",
-    departure: "Carthage",
-    destination: "SMU",
-    imageUri: "https://bootdey.com/img/Content/avatar/avatar2.png",
-  },
-  {
-    id: 3,
-    firstName: "Sami",
-    lastName: "Rayan",
-    rating: 3,
-    smoking: "yes",
-    Talkative: "chatty",
-    eating: "no",
-    musicGenre: "Pop Music",
-    time: "19:45",
-    departure: "SMU",
-    destination: "Marsa",
-    imageUri: "https://bootdey.com/img/Content/avatar/avatar3.png",
-    route: {
-      encodedPath: "encodedPolylineStringForAhmed",
-    },
-  },
-];
 
 function PassengerSearchRides({ navigation, route }) {
   const [requestSentVisible, setSentVisible] = useState(false);
-  const [ridesData, setRidesData] = useState([]);
+  const [ridesData, setRidesData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const rideIds = route.params;
   //investigate with response data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const rides = await fetchRidesData(route.params);
-        setRidesData(rides);
+        console.log("IDS ", rideIds);
+        if (rideIds) {
+          const rides = await fetchRidesData(rideIds);
+          setRidesData(rides);
+        }
         setLoading(false);
-
       } catch (err) {
         console.error(err);
+        Alert.alert("There was an error displaying suggested rides");
       }
     };
 
@@ -92,51 +50,57 @@ function PassengerSearchRides({ navigation, route }) {
   };
   const onDismissSnackBar = () => setSentVisible(false);
   console.log("IS LOADING", loading);
+  console.log("RIDE DATA", ridesData);
+
   return (
     <View style={styles.pageContainer}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Swipe Your Way</Text>
       </View>
       {!loading ? (
-        <>
-          <Swiper
-            cards={ridesData}
-            renderCard={data => (
-              <DriverCard
-                data={data}
-                passengerPreferences={passengersPreferences}
-                navigation={navigation}
-              />
-            )}
-            onSwipedLeft={onSwipedLeft}
-            onSwipedRight={onSwipedRight}
-            cardIndex={0}
-            backgroundColor={"transparent"}
-            stackSize={2}
-            cardVerticalMargin={50}
-            containerStyle={styles.swiperContainer}
-            animateOverlayLabelsOpacity
-            animateCardOpacity
-            swipeBackCard
-          />
-
-          <Snackbar
-            visible={requestSentVisible}
-            onDismiss={onDismissSnackBar}
-            duration={400}
-            style={styles.snackbarstyle}>
-            request sent !
-          </Snackbar>
-
-          <View style={styles.animationContainer}>
-            <LottieView
-              style={styles.animation}
-              source={require("../../assets/SwipeAnimation.json")}
-              autoPlay
-              loop
+        ridesData ? (
+          <>
+            <Swiper
+              cards={ridesData}
+              renderCard={data => (
+                <DriverCard
+                  data={data}
+                  passengerPreferences={passengersPreferences}
+                  navigation={navigation}
+                />
+              )}
+              onSwipedLeft={onSwipedLeft}
+              onSwipedRight={onSwipedRight}
+              cardIndex={0}
+              backgroundColor={"transparent"}
+              stackSize={2}
+              cardVerticalMargin={50}
+              containerStyle={styles.swiperContainer}
+              animateOverlayLabelsOpacity
+              animateCardOpacity
+              swipeBackCard
             />
-          </View>
-        </>
+
+            <Snackbar
+              visible={requestSentVisible}
+              onDismiss={onDismissSnackBar}
+              duration={400}
+              style={styles.snackbarstyle}>
+              request sent !
+            </Snackbar>
+
+            <View style={styles.animationContainer}>
+              <LottieView
+                style={styles.animation}
+                source={require("../../assets/SwipeAnimation.json")}
+                autoPlay
+                loop
+              />
+            </View>
+          </>
+        ) : (
+          <Text>Nothing To Show</Text>
+        )
       ) : (
         <Text>LOADING...</Text>
       )}

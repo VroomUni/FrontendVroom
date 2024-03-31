@@ -16,6 +16,8 @@ import { postRide, searchForRides } from "../api/RideService";
 import { fromToObjBuilder } from "../utils/RideHelpers";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
+import { GOOGLE_MAPS_KEY } from "@env";
+
 const RideInfo = ({ navigation }) => {
   const {
     destinationOrOrigin,
@@ -66,8 +68,7 @@ const RideInfo = ({ navigation }) => {
   };
 
   const reverseGeoCodeCustomLocation = async customLocation => {
-    const apiKey = "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M";
-    const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${customLocation.latitude},${customLocation.longitude}&result_type=political&region=tn&key=${apiKey}`;
+    const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${customLocation.latitude},${customLocation.longitude}&result_type=political&region=tn&key=${GOOGLE_MAPS_KEY}`;
 
     try {
       const response = await axios.get(apiUrl);
@@ -115,8 +116,9 @@ const RideInfo = ({ navigation }) => {
       toTime: customSelectedToTime,
     };
     try {
-      const data = await searchForRides(ridefiltersPayload);
-      navigation.navigate("Rides", data.rides);
+      let data = await searchForRides(ridefiltersPayload);
+      data = data.rides.length === 0 ? null : data.rides;
+      navigation.navigate("Rides", data);
     } catch (err) {
       console.error(err);
       Alert.alert("An error occured while searching for a ride");

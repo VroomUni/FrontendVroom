@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    
+
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -34,9 +34,6 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ],
-    "extra": {
-      "apiKey": "AIzaSyAzrdoZnMVbD3CXIjmhFfTWbsiejAM-H5M"
-    }
+    ]
   }
 }

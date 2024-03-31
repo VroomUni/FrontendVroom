@@ -21,115 +21,133 @@ export default function DriverCard({ data, passengerPreferences, navigation }) {
     }
     return stars;
   };
-  console.log("DATA", JSON.stringify(data));
 
   const { driver } = data?.Ride;
   const fullName = driver?.firstName + " " + driver?.lastName;
-
+  const renderPreferenceItems = () => {
+    return Object.keys(driver.Preference).map(attribute => {
+      if (driver.Preference[attribute] === null) {
+        return null;
+      }
+      return (
+        <PreferenceItem
+          key={attribute}
+          attribute={attribute}
+          value={driver?.Preference[attribute]}
+          matched={isPreferenceAttrMatch(
+            attribute,
+            driver.Preference,
+            passengerPreferences
+          )}
+        />
+      );
+    });
+  };
+  const isPreferenceAttrMatch = (attribute, driverPref, passengerPref) => {
+    //if passenger pref on the given attr is null , then he doesnt care => match
+    if (passengerPref[attribute] === null) {
+      return true;
+    }
+    return driverPref[attribute] === passengerPreferences[attribute];
+  };
   return (
     <PaperProvider>
       <View style={styles.card}>
-        {data ? (
-          <>
-            <>
-              <View>
-                <Image
-                  style={styles.image}
-                  source={{
-                    uri: "https://bootdey.com/img/Content/avatar/avatar1.png",
-                  }}
-                />
-                <View>
-                  <Text style={styles.name}>{fullName}</Text>
-                  {/* // to fix rating  */}
-                  <View style={styles.stars}>{renderStars(3)}</View>
-                </View>
-              </View>
-              <View style={styles.preferences}>
-                <PreferenceItem
-                  attribute='Smoking'
-                  value={driver.Preference.smoking}
-                  matched={
-                    driver?.Preference.smoking === passengerPreferences.smoking
-                  }
-                />
-                <PreferenceItem
-                  attribute='Talkative'
-                  value={driver?.Preference.talkative}
-                  matched={
-                    driver?.Preference.talkative ===
-                    passengerPreferences.Talkative
-                  }
-                />
-                <PreferenceItem
-                  attribute='Eating'
-                  value={driver?.Preference.foodFriendly}
-                  matched={
-                    driver?.Preference.foodFriendly ===
-                    passengerPreferences.eating
-                  }
-                />
-                <PreferenceItem
-                  attribute='Music Genre'
-                  value={driver?.Preference.loudMusic}
-                  matched={
-                    driver?.Preference.loudMusic ===
-                    passengerPreferences.musicGenre
-                  }
-                />
-              </View>
-              <View style={styles.departureInfo}>
-                <View style={styles.infoRow}>
-                  <FontAwesome
-                    name='clock-o'
-                    size={20}
-                    color='#333'
-                    style={styles.icon}
-                  />
-                  <Text style={styles.time}>{data?.Ride.startTime}</Text>
-                </View>
-                <View style={styles.departureInfo}>
-                  <View style={styles.infoRow}>
-                    <FontAwesome
-                      name='circle'
-                      size={16}
-                      color='#00669B'
-                      style={styles.icon}
-                    />
-                    <Text style={styles.addressText}>{data?.Ride.from}</Text>
-                  </View>
-                  <Text style={styles.dots}>
-                    <FontAwesome name='ellipsis-v' size={16} color='#333' />
-                  </Text>
-                  <View style={styles.infoRow}>
-                    <FontAwesome
-                      name='map-marker'
-                      size={16}
-                      color='#00669B'
-                      style={styles.icon}
-                    />
-                    <Text style={styles.addressText}>{data?.Ride.to}</Text>
-                  </View>
-                </View>
-              </View>
-            </>
-            <View style={styles.footer}>
-              <Button
-                mode='contained'
-                onPress={() => {
-                  navigation.navigate("Map");
-                }}
-                style={styles.mapButton}
-                contentStyle={{ flexDirection: "row-reverse" }}
-                labelStyle={styles.buttonText}
-                icon={"map-marker"}>
-                Show Map
-              </Button>
+        <>
+          <View>
+            <Image
+              style={styles.image}
+              source={{
+                uri: "https://bootdey.com/img/Content/avatar/avatar1.png",
+              }}
+            />
+            <View>
+              <Text style={styles.name}>{fullName}</Text>
+              {/* // to fix rating  */}
+              <View style={styles.stars}>{renderStars(3)}</View>
             </View>
-          </>
-        ) : (
-          "loading"
-        )}
+          </View>
+          <View style={styles.preferences}>
+            {renderPreferenceItems()}
+            {/* <PreferenceItem
+              attribute='Smoking'
+              value={driver.Preference.smoking}
+              matched={
+                driver?.Preference.smoking === passengerPreferences.smoking
+              }
+            />
+            <PreferenceItem
+              attribute='Talkative'
+              value={driver?.Preference.talkative}
+              matched={
+                driver?.Preference.talkative === passengerPreferences.Talkative
+              }
+            />
+            <PreferenceItem
+              attribute='Eating'
+              value={driver?.Preference.foodFriendly}
+              matched={
+                driver?.Preference.foodFriendly === passengerPreferences.eating
+              }
+            />
+            <PreferenceItem
+              attribute='Music Genre'
+              value={driver?.Preference.loudMusic}
+              matched={
+                driver?.Preference.loudMusic === passengerPreferences.musicGenre
+              }
+            /> */}
+          </View>
+          <View style={styles.departureInfo}>
+            <View style={styles.infoRow}>
+              <FontAwesome
+                name='clock-o'
+                size={20}
+                color='#333'
+                style={styles.icon}
+              />
+              <Text style={styles.time}>
+                {data?.Ride.startTime.split(":").slice(0, 2).join(":")}
+              </Text>
+            </View>
+            <View style={styles.departureInfo}>
+              <View style={styles.infoRow}>
+                <FontAwesome
+                  name='circle'
+                  size={16}
+                  color='#00669B'
+                  style={styles.icon}
+                />
+                <Text style={styles.addressText}>{data?.Ride.from}</Text>
+              </View>
+              <Text style={styles.dots}>
+                <FontAwesome name='ellipsis-v' size={16} color='#333' />
+              </Text>
+              <View style={styles.infoRow}>
+                <FontAwesome
+                  name='map-marker'
+                  size={16}
+                  color='#00669B'
+                  style={styles.icon}
+                />
+                <Text style={styles.addressText}>{data?.Ride.to}</Text>
+              </View>
+            </View>
+          </View>
+        </>
+        <View style={styles.footer}>
+          <Button
+            mode='contained'
+            onPress={() => {
+              navigation.navigate("Map");
+            }}
+            style={styles.mapButton}
+            contentStyle={{ flexDirection: "row-reverse" }}
+            labelStyle={styles.buttonText}
+            icon={"map-marker"}>
+            Show Map
+          </Button>
+        </View>
       </View>
     </PaperProvider>
   );
