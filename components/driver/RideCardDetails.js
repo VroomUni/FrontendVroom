@@ -9,6 +9,7 @@ import {
   Alert,
   FlatList,
   TouchableOpacity,
+  Animated,
 } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 import SwipeContent from "./SwipeContent";
@@ -61,35 +62,43 @@ function RideCardDetails() {
       rating: 2,
     },
   ]);
+  const swipeAnimatedValue = new Animated.Value(0);
+  
+
+ 
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
       rowMap[rowKey].closeRow();
     }
   };
   const deleteRow = (rowMap, rowKey) => {
-    Alert.alert(
-      "Decline Request",
-      "Are you sure you want to decline this request ?",
-      [
-        {
-          text: "No",
-          onPress: () => {
-            console.log("Cancel Pressed");
-            closeRow(rowMap, rowKey);
-          },
-          style: "cancel",
-        },
-        {
-          text: "Yes",
-          onPress: () =>
-            setRideRequests(rideRequests.filter((item) => item.id !== rowKey)),
-        },
-      ]
-    );
+    // Alert.alert(
+    //   "Decline Request",
+    //   "Are you sure you want to decline this request ?",
+    //   [
+    //     {
+    //       text: "No",
+    //       onPress: () => {
+    //         console.log("Cancel Pressed");
+    //         closeRow(rowMap, rowKey);
+    //       },
+    //       style: "cancel",
+    //     },
+    //     {
+    //       text: "Yes",
+    //       onPress: () =>
+    //         setRideRequests(rideRequests.filter((item) => item.id !== rowKey)),
+    //     },
+    //   ]
+    // );
+
+    setRideRequests(rideRequests.filter((item) => item.id !== rowKey));
   };
 
-  const renderItem = ({ item }) => (
-    <PassengerRequestCard
+  const renderItem = ({ item, rowMap }) => {
+    const rowHeightAnimatedValue = new Animated.Value(60);
+    console.log('height', rowHeightAnimatedValue)
+    return <PassengerRequestCard
       key={item.id}
       id={item.id}
       FName={item.FName}
@@ -97,16 +106,25 @@ function RideCardDetails() {
       location={item.location}
       time={item.time}
       rating={item.rating}
-    />
-  );
+      rowHeightAnimatedValue={rowHeightAnimatedValue}
+      removeRow={()=>deleteRow(rowMap, item.id)}
+    />;
+  };
 
-  const renderHiddenItem = (data, rowMap) => (
-    <SwipeContent
+  const renderHiddenItem = (data, rowMap) => {
+    const rowActionAnimatedValue  = new Animated.Value(75);
+    console.log(rowActionAnimatedValue )
+    const rowHeightAnimatedValue = new Animated.Value(60);
+  
+    return <SwipeContent
       onClose={() => closeRow(rowMap, data.item.id)}
       rowMap={rowMap}
       onDelete={() => deleteRow(rowMap, data.item.id)}
+      swipeAnimatedValue={swipeAnimatedValue}
+      rowActionAnimatedValue ={rowActionAnimatedValue }
+      rowHeightAnimatedValue={rowHeightAnimatedValue}
     />
-  );
+  }
 
   return (
     <View style={styles.container}>
@@ -127,6 +145,10 @@ function RideCardDetails() {
         leftOpenValue={75}
         keyExtractor={(item) => item.id}
         style={styles.rideList}
+        leftActivationValue={100}
+        rightActivationValue={-200}
+        leftActionValue={0}
+        rightActionValue={-500}
       />
     </View>
   );

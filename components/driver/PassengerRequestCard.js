@@ -1,11 +1,23 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import React,{useEffect} from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Animated } from 'react-native';
 import { AntDesign } from "@expo/vector-icons";
 import { TouchableHighlight } from 'react-native-gesture-handler';
 
 
 
-function PassengerRequestCard({ id, FName, LName, rating, }) {
+function PassengerRequestCard({ id, FName, LName, rating, rowHeightAnimatedValue, removeRow, leftActionState, rightActionState}) {
+  console.log('in passenger',rowHeightAnimatedValue)
+  useEffect(() => {
+    if (rightActionState) {
+      Animated.timing(rowHeightAnimatedValue, {
+        toValue: 0,
+        duration: 50,
+        useNativeDriver: false,
+      }).start(() => removeRow());
+    }
+  }, [rightActionState, rowHeightAnimatedValue, removeRow]);
+  
+  
   const renderStars = rating => {
     let stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -34,7 +46,7 @@ function PassengerRequestCard({ id, FName, LName, rating, }) {
   };
 
   return (
-    <View style={styles.outerCard}>
+    <Animated.View style={[styles.outerCard, {height:rowHeightAnimatedValue}]}>
     <TouchableOpacity onPress={showDetails} style={styles.card}  underlayColor={'#aaa'}>
       
       
@@ -55,7 +67,7 @@ function PassengerRequestCard({ id, FName, LName, rating, }) {
       
       
     </TouchableOpacity>
-    </View>
+    </Animated.View>
     
   );
 }
