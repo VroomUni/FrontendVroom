@@ -30,6 +30,7 @@
     "react-native-calendar-strip": "^2.2.6",
     "react-native-config": "^1.5.1",
     "react-native-deck-swiper": "^2.0.17",
+    "react-native-dotenv": "^3.4.11",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-google-places-autocomplete": "^2.5.6",
     "react-native-incall-manager": "^4.2.0",
