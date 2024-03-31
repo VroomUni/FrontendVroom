@@ -149,6 +149,7 @@ function RideCardDetails() {
         rightActivationValue={-200}
         leftActionValue={0}
         rightActionValue={-500}
+        
       />
     </View>
   );

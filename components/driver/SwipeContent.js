@@ -4,6 +4,8 @@ import { StyleSheet, View, TouchableOpacity, Text, Animated } from "react-native
 function SwipeContent({ onClose, onDelete, swipeAnimatedValue, leftActionActivated, rightActionActivated, rowActionAnimatedValue , rowHeightAnimatedValue}) {
  console.log('row action',rowActionAnimatedValue )
  console.log('row height',rowHeightAnimatedValue)
+
+ 
   useEffect(() => {
     let animation;
     if (rightActionActivated) {
@@ -26,15 +28,15 @@ function SwipeContent({ onClose, onDelete, swipeAnimatedValue, leftActionActivat
   return (
     <Animated.View style={[styles.backContainer,{height:rowHeightAnimatedValue}]}>
       <Text>Accept</Text>
-      {!leftActionActivated && (
+    
       <TouchableOpacity style={[styles.Btn, styles.BtnClose]} onPress={onClose}>
         <Text style={styles.Btntext}>close</Text>
       </TouchableOpacity>
-       )}
-        {!leftActionActivated && (
+      
+    
       <Animated.View style={[styles.Btn, styles.BtnReject, {
         flex:1,
-        width:50 
+        width:rowActionAnimatedValue
       }]}>
       <TouchableOpacity style={[styles.Btn, styles.BtnReject]} onPress={onDelete}>
         <Animated.View  style={{
@@ -53,7 +55,7 @@ function SwipeContent({ onClose, onDelete, swipeAnimatedValue, leftActionActivat
       </TouchableOpacity>
       
       </Animated.View>
-       )}
+     
 
     </Animated.View>
   );
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
     paddingRight: 17,
   },
   BtnClose: {
-    backgroundColor: "#1f65ff",
+    backgroundColor: "#808080",
     right: 75,
     borderTopLeftRadius: 2,
     borderBottomLeftRadius: 2,
