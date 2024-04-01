@@ -11,7 +11,7 @@ import GeoJSONReader from "jsts/org/locationtech/jts/io/GeoJSONReader";
 import GeoJSONWriter from "jsts/org/locationtech/jts/io/GeoJSONWriter";
 import { BufferOp } from "jsts/org/locationtech/jts/operation/buffer";
 import axios from "axios";
-import{GOOGLE_MAPS_KEY} from "@env"
+import { GOOGLE_MAPS_KEY } from "@env";
 //current region is passed as prop , because the custom marker in parent component needs it
 const Map = ({
   currentRegion,
