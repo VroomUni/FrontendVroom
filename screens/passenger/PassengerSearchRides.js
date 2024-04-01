@@ -50,7 +50,7 @@ function PassengerSearchRides({ navigation, route }) {
   };
   const onDismissSnackBar = () => setSentVisible(false);
   console.log("IS LOADING", loading);
-  console.log("RIDE DATA", ridesData);
+  // console.log("RIDE DATA", ridesData);
 
   return (
     <View style={styles.pageContainer}>
@@ -122,12 +122,10 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   headerText: {
-    marginTop: 50,
+    margin: 30,
     fontSize: 28,
     color: "#e8f4f8",
-
     textAlign: "center",
-    marginBottom: 30,
   },
   subHeaderText: {
     fontSize: 18,
