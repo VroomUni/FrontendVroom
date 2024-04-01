@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   Animated,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import Modal from "react-native-modal";
-import { Snackbar } from "react-native-paper";
-
-
 
 function PassengerRequestCard({
   id,
@@ -22,19 +18,22 @@ function PassengerRequestCard({
   removeRow,
   leftActionState,
   rightActionState,
+  onAccept,
+  isAccepted,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
-
   const [accepted, setAccepted] = useState(false);
 
-  // console.log('in passenger',rowHeightAnimatedValue)
+  useEffect(() => {
+    if (rightActionState || leftActionState) {
+      Animated.timing(rowHeightAnimatedValue, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: false,
+      }).start(() => (rightActionState ? removeRow(id) : handleAccept()));
+    }
+  }, [rightActionState, leftActionState]);
 
- if(rightActionState){
-  Animated.timing(rowHeightAnimatedValue,{
-    toValue:0,
-    duration:200
-  }).start(()=>removeRow());
- }
   const renderStars = (rating) => {
     let stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -51,34 +50,24 @@ function PassengerRequestCard({
   };
 
   const handleAccept = () => {
-    console.log('accepted');
-    setAccepted(true);
-    
+    onAccept()
     setModalVisible(false);
   };
 
   const handleReject = () => {
     setModalVisible(false);
     removeRow(id);
-   
-  };
-
-  const showDetails = () => {
-    setModalVisible(true);
   };
 
   return (
-    
     <Animated.View
       style={[styles.outerCard, { height: rowHeightAnimatedValue }]}
     >
       <TouchableOpacity
-        onPress={showDetails}
+        onPress={() => setModalVisible(true)}
         style={styles.card}
-        underlayColor={"#aaa"}
       >
- 
-        {accepted && (
+        {isAccepted && (
           <View style={styles.acceptedContainer}>
             <Text style={styles.acceptedText}>Accepted</Text>
           </View>
@@ -87,39 +76,35 @@ function PassengerRequestCard({
           <Text style={styles.userName}>{`${FName} ${LName}`}</Text>
           <View style={styles.stars}>{renderStars(rating)}</View>
         </View>
-       
         <Modal
           isVisible={modalVisible}
           onBackdropPress={() => setModalVisible(false)}
         >
           <View style={styles.modalView}>
-          <Text style={styles.modalName}>{`${FName} ${LName}`}</Text>
             <Text style={styles.detailsText}>Age: 22</Text>
             <Text style={styles.detailsText}>Non Smoker</Text>
             <Text style={styles.detailsText}>Loud Music</Text>
             <Text style={styles.detailsText}>Food Friendly</Text>
             <View style={styles.stars}>{renderStars(rating)}</View>
-            <View style={styles.ButtonContainer}>
+
+            <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={[styles.button, styles.acceptButton]}
-                
+                onPress={handleAccept}
               >
-                <Text style={styles.buttonText} onPress={handleAccept}>Accept</Text>
+                <Text style={styles.buttonText}>Accept</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.rejectButton]}
-                
+                onPress={handleReject}
               >
-                <Text style={styles.buttonText} onPress={handleReject} >Reject</Text>
+                <Text style={styles.buttonText}>Reject</Text>
               </TouchableOpacity>
             </View>
           </View>
         </Modal>
       </TouchableOpacity>
     </Animated.View>
-    
-
-
   );
 }
 
@@ -127,7 +112,6 @@ const styles = StyleSheet.create({
   outerCard: {
     backgroundColor: "#FFF",
     borderRadius: 5,
-    height: 65,
     margin: 5,
     marginBottom: 15,
     shadowColor: "#000",
@@ -139,7 +123,6 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#FFF",
     borderRadius: 5,
-    height: 60,
     padding: 10,
     marginBottom: 15,
   },
@@ -162,9 +145,10 @@ const styles = StyleSheet.create({
   emptyStar: {
     color: "#CCCCCC",
   },
-  rightContainer: {
+  buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
+    marginTop: 20,
   },
   button: {
     marginLeft: 5,
@@ -172,7 +156,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 10,
     borderRadius: 20,
-    marginVertical: 4,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -192,41 +175,27 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
     borderRadius: 5,
-    width: "80%", // Adjust this to control the modal width
-    maxWidth: 400, // You might want to limit the maximum width
-    alignSelf: "center", // Center the modal in the screen
-    elevation: 5, // Shadow for Android
-    shadowColor: "#000", // Shadow for iOS
-    shadowOffset: { width: 0, height: 2 }, // Shadow for iOS
-    shadowOpacity: 0.25, // Shadow for iOS
-    shadowRadius: 3.84, // Shadow for iOS
-  },
-  modalName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10, // Add some margin below the name
-  },
-  detailsText: {
-    fontSize: 16,
-    marginBottom: 5, // Add some space between details
-  },
-  ButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 20, // Add space between the buttons and the text above
+    width: "80%",
+    maxWidth: 400,
+    alignSelf: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   acceptedContainer: {
-    position: 'absolute',
+    position: "absolute",
     right: 10,
     top: 10,
-    backgroundColor: '#4CAF50', // Background color for the accepted status
+    backgroundColor: "#4CAF50",
     borderRadius: 20,
     paddingVertical: 5,
     paddingHorizontal: 10,
   },
   acceptedText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
+    color: "#FFFFFF",
+    fontWeight: "bold",
   },
 });
 

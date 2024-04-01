@@ -14,11 +14,12 @@ function DriverCalendar({onDateSelected}) {
       dateNumberStyle={{ color: 'white' }}
       dateNameStyle={{ color: 'white' }}
       iconContainer={{ flex: 0.1 }}
+      
       highlightDateNumberStyle={{ color: 'red' }}
       highlightDateNameStyle={{ color: 'red' }}
       selectedDate={currentDate}
       onDateSelected={date=>onDateSelected(date)}
-      
+    
     />
     
   </View>
