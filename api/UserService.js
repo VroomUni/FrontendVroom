@@ -48,18 +48,18 @@ const setPreferences = async userPreferences => {
   }
 };
 const signIn = async (email, password) => {
-  signInWithEmailAndPassword(auth, email, password)
-    .then(userCredential => {
-      // Signed in
-      const user = userCredential.user;
-      // ...
-    })
-    .catch(error => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode);
-      console.log(errorMessage);
-    });
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    // Signed in
+    const user = userCredential.user;
+    // ...
+  } catch (error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorCode);
+    console.log(errorMessage);
+    throw error; // Re-throw the error to be caught by the calling function
+  }
 };
 
 module.exports = { signIn, createUser, setPreferences };

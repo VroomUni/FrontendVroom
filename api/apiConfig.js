@@ -1,6 +1,6 @@
 // run this cmd to determine your ip adress
 //Get-NetIPAddress | Where-Object {$_.AddressFamily -eq "IPv4" -and $_.PrefixOrigin -eq "Dhcp"} | Select-Object IPAddress
-import {LOCALHOST}  from '@env';
+import { LOCALHOST } from "@env";
 //replace here
 
 const apiConfig = {

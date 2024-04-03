@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useRef} from "react";
 import {
   View,
   Text,
@@ -14,25 +14,22 @@ function PassengerRequestCard({
   FName,
   LName,
   rating,
-  rowHeightAnimatedValue,
-  removeRow,
-  leftActionState,
-  rightActionState,
-  onAccept,
-  isAccepted,
+  swipeAnimation,
+  isFirst
+  // rowHeightAnimatedValue,
+  // removeRow,
+  // // leftActionState,
+  // // rightActionState,
+  // onAccept,
+  // isAccepted,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [accepted, setAccepted] = useState(false);
-
-  useEffect(() => {
-    if (rightActionState || leftActionState) {
-      Animated.timing(rowHeightAnimatedValue, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: false,
-      }).start(() => (rightActionState ? removeRow(id) : handleAccept()));
-    }
-  }, [rightActionState, leftActionState]);
+  const swipeTranslateX = swipeAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, isFirst ? 50 : 0],
+  });
+  
 
   const renderStars = (rating) => {
     let stars = [];
@@ -49,29 +46,29 @@ function PassengerRequestCard({
     return stars;
   };
 
-  const handleAccept = () => {
-    onAccept()
-    setModalVisible(false);
-  };
+  // const handleAccept = () => {
+  //   onAccept()
+  //   setModalVisible(false);
+  // };
 
-  const handleReject = () => {
-    setModalVisible(false);
-    removeRow(id);
-  };
+  // const handleReject = () => {
+  //   setModalVisible(false);
+  //   removeRow(id);
+  // };
 
   return (
     <Animated.View
-      style={[styles.outerCard, { height: rowHeightAnimatedValue }]}
+  style={[styles.outerCard, {transform:[{translateX:swipeTranslateX}]}]}
     >
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
         style={styles.card}
       >
-        {isAccepted && (
+        {/* {isAccepted && (
           <View style={styles.acceptedContainer}>
             <Text style={styles.acceptedText}>Accepted</Text>
           </View>
-        )}
+        )} */}
         <View style={styles.userInfo}>
           <Text style={styles.userName}>{`${FName} ${LName}`}</Text>
           <View style={styles.stars}>{renderStars(rating)}</View>
@@ -90,13 +87,13 @@ function PassengerRequestCard({
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={[styles.button, styles.acceptButton]}
-                onPress={handleAccept}
+                // onPress={handleAccept}
               >
                 <Text style={styles.buttonText}>Accept</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.rejectButton]}
-                onPress={handleReject}
+                // onPress={handleReject}
               >
                 <Text style={styles.buttonText}>Reject</Text>
               </TouchableOpacity>
@@ -113,18 +110,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     borderRadius: 5,
     margin: 5,
-    marginBottom: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 5,
+    // shadowColor: "#000",
+    // shadowOffset: { width: 0, height: 12 },
+    // shadowOpacity: 0.08,
+    // shadowRadius: 10,
+    elevation: 1,
   },
   card: {
     backgroundColor: "#FFF",
     borderRadius: 5,
     padding: 10,
-    marginBottom: 15,
+    marginBottom: 5,
   },
   userInfo: {
     flexDirection: "column",
