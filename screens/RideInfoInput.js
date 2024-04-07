@@ -68,6 +68,7 @@ const RideInfo = ({ navigation }) => {
   };
 
   const reverseGeoCodeCustomLocation = async customLocation => {
+    console.log(GOOGLE_MAPS_KEY);
     const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${customLocation.latitude},${customLocation.longitude}&result_type=political&region=tn&key=${GOOGLE_MAPS_KEY}`;
 
     try {
@@ -118,7 +119,10 @@ const RideInfo = ({ navigation }) => {
     try {
       let data = await searchForRides(ridefiltersPayload);
       data = data.rides.length === 0 ? null : data.rides;
-      navigation.navigate("Rides", data);
+      navigation.navigate("Rides", {
+        rideIds: data,
+        passengerLocation: destinationOrOrigin,
+      });
     } catch (err) {
       console.error(err);
       Alert.alert("An error occured while searching for a ride");
@@ -206,7 +210,7 @@ const RideInfo = ({ navigation }) => {
               setRideSucessCreation(false);
             }}
             icon={"check"}
-            duration={3000}
+            duration={2000}
             style={{ backgroundColor: "green" }} // Set the background color to green
           >
             Your ride was created successfully

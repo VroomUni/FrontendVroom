@@ -11,7 +11,7 @@ const DriverRideLocationInput = ({
   setCustomLocationMarker,
 }) => {
   const { isToSmu, setDestinationOrOrigin } = useRideContext();
-
+  console.log(GOOGLE_MAPS_KEY);
   return (
     <>
       <View style={{ flex: 1, backgroundColor: "#F4F4FB" }}>

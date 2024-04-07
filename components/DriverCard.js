@@ -6,7 +6,12 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { PaperProvider, Button } from "react-native-paper";
 import PreferenceItem from "./preferenceItem";
 
-export default function DriverCard({ data, passengerPreferences, navigation }) {
+export default function DriverCard({
+  data,
+  passengerPreferences,
+  navigation,
+  passengerLocation,
+}) {
   const renderStars = rating => {
     let stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -86,7 +91,7 @@ export default function DriverCard({ data, passengerPreferences, navigation }) {
           </View>
           <View style={styles.preferences}>{renderPreferenceItems()}</View>
           <View style={styles.departureInfo}>
-            <View style={[styles.infoRow,{marginBottom:10}]}>
+            <View style={[styles.infoRow, { marginBottom: 10 }]}>
               <FontAwesome
                 name='clock-o'
                 size={20}
@@ -115,7 +120,7 @@ export default function DriverCard({ data, passengerPreferences, navigation }) {
                   name='map-marker'
                   size={16}
                   color='#00669B'
-                  style={[styles.icon,{marginLeft:1}]}
+                  style={[styles.icon, { marginLeft: 1 }]}
                 />
                 <Text style={styles.addressText}>{data?.Ride.to}</Text>
               </View>
@@ -126,7 +131,12 @@ export default function DriverCard({ data, passengerPreferences, navigation }) {
           <Button
             mode='contained'
             onPress={() => {
-              navigation.navigate("Map");
+              navigation.navigate("Map", {
+                passengerLocation: passengerLocation,
+                routePolyLine: data.Ride.encodedPath,
+                from: data.Ride.from,
+                to: data.Ride.to,
+              });
             }}
             style={styles.mapButton}
             contentStyle={{ flexDirection: "row-reverse" }}
