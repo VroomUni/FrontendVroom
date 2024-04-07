@@ -51,7 +51,7 @@ const searchForRides = async rideFilters => {
   const finalUrl = `${url}?${queryString}`;
   try {
     const response = await axios.get(finalUrl);
-    console.log(response.data );
+    console.log(response.data);
     return response.data;
   } catch (err) {
     console.error("error ferching filtered rides IDS", err);
@@ -75,4 +75,22 @@ const fetchRidesData = async ridesIds => {
     throw err;
   }
 };
-module.exports = { postRide, searchForRides, fetchRidesData };
+
+const fetchAllUnrequestedRides = async (passengerId, filterDate) => {
+  const finalUrl = `${url}/all`;
+  console.log("fetch pressed");
+  try {
+    const response = await axios.post(finalUrl, { passengerId, filterDate });
+    console.log(response.data.rides);
+    return response.data.rides;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+module.exports = {
+  postRide,
+  searchForRides,
+  fetchRidesData,
+  fetchAllUnrequestedRides,
+};

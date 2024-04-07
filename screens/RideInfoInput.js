@@ -13,7 +13,7 @@ import {
 import Map from "../components/Map";
 import axios from "axios";
 import { postRide, searchForRides } from "../api/RideService";
-import { fromToObjBuilder } from "../utils/RideHelpers";
+import { dateObjBuilder, fromToObjBuilder } from "../utils/RideHelpers";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
 import { GOOGLE_MAPS_KEY } from "@env";
@@ -115,6 +115,7 @@ const RideInfo = ({ navigation }) => {
       initialDate: { customSelectedDate, selectedDateType },
       fromTime: customSelectedFromTime,
       toTime: customSelectedToTime,
+      passengerId: user.uid,
     };
     try {
       let data = await searchForRides(ridefiltersPayload);
@@ -122,6 +123,10 @@ const RideInfo = ({ navigation }) => {
       navigation.navigate("Rides", {
         rideIds: data,
         passengerLocation: destinationOrOrigin,
+        date: dateObjBuilder(
+          selectedDateType,
+          customSelectedDate
+        ).toISOString(),
       });
     } catch (err) {
       console.error(err);
