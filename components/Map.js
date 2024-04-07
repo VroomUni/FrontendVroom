@@ -1,5 +1,5 @@
-import { StyleSheet,Alert } from "react-native";
-import React, { useRef, useEffect, } from "react";
+import { StyleSheet, Alert } from "react-native";
+import React, { useRef, useEffect } from "react";
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
@@ -23,8 +23,6 @@ const Map = ({
   polylineCods,
   isToSmu,
 }) => {
-
-
   const SMUCOORDS = {
     latitude: 36.84598089012623,
     longitude: 10.268806957645351,

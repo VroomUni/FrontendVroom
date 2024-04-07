@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { StyleSheet, Text, View, Image, Animated, Easing } from "react-native";
+import { StyleSheet, Dimensions, View, Image, Animated, Easing } from "react-native";
 import { Surface, Button, IconButton } from "react-native-paper";
 import { useRideContext } from "../../context/UserRideContext";
+
+const { width, height } = Dimensions.get('window');
 
 const DriverRideFromTo = ({ setOnLocationInputPage }) => {
   const {
@@ -104,11 +106,17 @@ const styles = StyleSheet.create({
   itineraryComponentContainer: {
     flexDirection: "row",
     alignItems: "center",
-    flex: 1.7,
+    flex: 1.8,
     backgroundColor: "#E2EAF4",
+    width: width , // 90% of screen width
+    alignSelf: 'center', // center horizontally
+    paddingHorizontal: width * 0.01, // 5% padding on left and right
   },
-  itineraryImg: { height: 65, width: 50, resizeMode: "contain" },
-
+  itineraryImg: { 
+    height: height * 0.085, // 10% of screen height
+    width: width * 0.12, // 15% of screen width
+    resizeMode: "contain" 
+  },
   innerFromToBtnsContainer: {
     width: "60%",
   },
@@ -121,8 +129,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   iconContainer: {
-    alignItems: "center", // Center the IconButton horizontally
-    justifyContent: "center", // Center the IconButton vertically
-    marginLeft: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: width * 0.04, // 5% margin on the left
   },
 });
