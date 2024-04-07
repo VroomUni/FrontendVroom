@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, SafeAreaView, StyleSheet, Platform, Alert } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Surface, Text, SegmentedButtons, Button } from "react-native-paper";
 import { useRideContext } from "../../context/UserRideContext";
 import { useAuth } from "../../context/AuthContext";
@@ -30,30 +30,20 @@ const OptionsFirstSlide = ({ goToSlide }) => {
     setFromTimePickerVisible(true);
   };
   //used for both From time and Date
-  const handleDateTimeChange = (event, selectedDateOrTime) => {
+  const handleDateTimeChange = selectedDateOrTime => {
     setFromTimePickerVisible(false);
-
-    if (!selectedDateOrTime) return;
 
     if (isDatePickerVisible) {
       setDatePickerVisibility(false);
-      if (event.type === "set") {
-        setCustomSelectedDate(selectedDateOrTime);
-      }
-      //if date picking is canceled then set it back to today
-      if (event.type !== "set"&&!customSelectedDate) {
-        setDateValue("today");
-      }
+      setCustomSelectedDate(selectedDateOrTime);
+
       if (!customSelectedFromTime) setFromTimePickerVisible(true);
       return;
     }
-//MUST FIX ONE HOUR DIFFERENCE IN DATETIMEPICKER
+    //MUST FIX ONE HOUR DIFFERENCE IN DATETIMEPICKER
     if (isFromTimePickrVisible) {
       const currentTime = new Date();
-      // console.log("Changed",selectedDateOrTime);
-      // console.log("CURRENT" ,currentTime);
-
-      if (selectedDateOrTime < currentTime&&btnGrpDateValue==="today") {
+      if (selectedDateOrTime < currentTime && btnGrpDateValue === "today") {
         Alert.alert(
           "Please pick a valid time after",
           timeTo24Format(currentTime)
@@ -61,21 +51,17 @@ const OptionsFirstSlide = ({ goToSlide }) => {
         return;
       }
 
-      if (event.type === "set") {
-        setCustomSelectedTime(selectedDateOrTime);
-        goToSlide &&
-          setTimeout(() => {
-            goToSlide(1);
-          }, 200);
-      }
+      setCustomSelectedTime(selectedDateOrTime);
+      goToSlide &&
+        setTimeout(() => {
+          goToSlide(1);
+        }, 200);
     }
   };
 
   //handles only ToTime for passenger searching ride with time interval
-  const handleToTimeChange = (event, toTime) => {
+  const handleToTimeChange = toTime => {
     setToTimePickerVisible(false);
-
-    if (!toTime) return;
 
     if (toTime < customSelectedFromTime) {
       Alert.alert(
@@ -85,9 +71,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       return;
     }
 
-    if (event.type === "set") {
-      setCustomToTime(toTime);
-    }
+    setCustomToTime(toTime);
   };
 
   //today , tmrw  , date btn grp
@@ -138,7 +122,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       </SafeAreaView>
     );
   };
-  
+
   const commonStyles = StyleSheet.create({
     //inner container for slider content , the one with white background
     innerSliderContainer: {
@@ -205,43 +189,47 @@ const OptionsFirstSlide = ({ goToSlide }) => {
         </View>
       </View>
       {/* date picker for passenger and driver */}
-      {isDatePickerVisible && (
-        <DateTimePicker
-          value={customSelectedDate || new Date()}
-          mode='date'
-          display={Platform.OS === "ios" ? "spinner" : "default"}
-          onChange={handleDateTimeChange}
-          maximumDate={new Date().setDate(new Date().getDate() + 7)}
-          minimumDate={new Date()}
-        />
-      )}
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode='date'
+        date={customSelectedDate || new Date()}
+        maximumDate={new Date().setDate(new Date().getDate() + 7)}
+        minimumDate={new Date()}
+        onConfirm={handleDateTimeChange}
+        onCancel={() => {
+          setDatePickerVisibility(false);
+          setDateValue("today");
+        }}
+      />
       {/* from time Picker for passenger and driver */}
-      {isFromTimePickrVisible && (
-        <DateTimePicker
-          is24Hour
-          value={
-            customSelectedFromTime ||
-            new Date(new Date().getTime() + 60 * 60 * 1000)
-          }
-          mode='time'
-          display={Platform.OS === "ios" ? "spinner" : "default"}
-          onChange={handleDateTimeChange}
-        />
-      )}
+      <DateTimePickerModal
+        isVisible={isFromTimePickrVisible}
+        mode='time'
+        is24Hour
+        date={
+          customSelectedFromTime ||
+          new Date(new Date().getTime() + 60 * 60 * 1000)
+        }
+        onConfirm={handleDateTimeChange}
+        onCancel={() => {
+          setFromTimePickerVisible(false);
+        }}
+      />
 
-      {/*to time Picker  , only for passenger */}
-      {isToTimePickrVisible && (
-        <DateTimePicker
-          is24Hour
-          value={
-            customSelectedToTime ||
-            new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
-          }
-          mode='time'
-          display={Platform.OS === "ios" ? "spinner" : "default"}
-          onChange={handleToTimeChange}
-        />
-      )}
+      {/* {/*to time Picker  , only for passenger */}
+      <DateTimePickerModal
+        isVisible={isToTimePickrVisible}
+        mode='time'
+        is24Hour
+        date={
+          customSelectedToTime ||
+          new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
+        }
+        onConfirm={handleToTimeChange}
+        onCancel={() => {
+          setToTimePickerVisible(false);
+        }}
+      />
     </Surface>
   );
 };
