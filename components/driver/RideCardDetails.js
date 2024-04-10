@@ -5,36 +5,8 @@ import PassengerRequestCard from "./PassengerRequestCard";
 import { Swipeable } from "react-native-gesture-handler";
 import LottieView from "lottie-react-native";
 import decline from "../../assets/decine.json";
-import approve from "../../assets/approve.json";
 
 function RideCardDetails() {
-
-//   const [acceptedRequests, setAcceptedRequests] = useState([]);
-
-//   const deleteRow = (rowMap, rowKey) => {
-//     setRideRequests(rideRequests.filter((item) => item.id !== rowKey));
-//   };
-
-
-//   const acceptRow = (rowMap, rowKey) => {
-
-// setAcceptedRequests([...acceptedRequests, rowKey]);
-
-// const renderHiddenItem = (data, rowMap) => {
-//   const rowActionAnimatedValue = new Animated.Value(75);
-//   const rowHeightAnimatedValue = new Animated.Value(60);
-//   return (
-//       <SwipeContent
-//           onClose={() => rowMap[data.item.id].closeRow()}
-//           onDelete={() => deleteRow(rowMap, data.item.id)}
-//           swipeAnimatedValue={swipeAnimatedValue}
-//           rowActionAnimatedValue={rowActionAnimatedValue}
-//           rowHeightAnimatedValue={rowHeightAnimatedValue}
-//           onAccept={()=>acceptRow(rowMap,data.item.id)}
-//       />
-//   );
-// };
-
 
 const [rideRequests, setRideRequests] = useState([
   {
@@ -83,10 +55,18 @@ const [rideRequests, setRideRequests] = useState([
     rating: 2,
   },
 ]);
+
+
+  const deleteCard = (id) => {
+    setRideRequests(rideRequests.filter((item) => item.id !== id));
+  };
+
 //for initial swipe bounce
 const swipeAnimation = useRef(new Animated.Value(0)).current;
+
 //counts how many time the initial requests has bounced , currently stops after 2 bounces
 const animationCount = useRef(0);
+
 // animation for request bounce on component mount (indicator to swipe)
 useEffect(() => {
   const animate = () => {
@@ -99,7 +79,7 @@ useEffect(() => {
       }),
       // Initial jump
       Animated.timing(swipeAnimation, {
-        toValue: 0.5,
+        toValue: -0.5,
         duration: 250,
         useNativeDriver: true,
       }),
@@ -111,7 +91,7 @@ useEffect(() => {
       }),
       // Second bounce
       Animated.timing(swipeAnimation, {
-        toValue: 0.4,
+        toValue: -0.2,
         duration: 200,
         useNativeDriver: true,
       }),
@@ -123,7 +103,7 @@ useEffect(() => {
       }),
       // Fourth bounce
       Animated.timing(swipeAnimation, {
-        toValue: 0.1,
+        toValue: -0.1,
         duration: 50,
         useNativeDriver: true,
       }),
@@ -149,16 +129,20 @@ useEffect(() => {
 }, []);
 
   const renderRightActions = (progress, dragX) => {
-    //for the degrading green / red colors on swipe
+
+    //for the degrading  red colors on swipe
     const backgroundColor = dragX.interpolate({
       inputRange: [-301, -300, 0], // Define the input range based on dragX values
       outputRange: [
         "rgba(255, 0, 0, 1)",
         "rgba(255, 0, 0, 1)",
         "rgba(255, 0, 0, 0.2)",
-      ], // Define the output range for the background colors with varying alpha values
+      ], 
       extrapolate: "clamp", // Clamp values that fall outside of the input range
     });
+
+    
+
 
     return (
       <Animated.View style={[styles.leftAction, { backgroundColor }]}>
@@ -173,35 +157,22 @@ useEffect(() => {
     );
   };
 
-  const renderLeftActions = (progress, dragX) => {
-    //for the degrading green / red colors on swipe
-    const backgroundColor = dragX.interpolate({
-      inputRange: [0, 300, 301], // Define the input range based on dragX values
-      outputRange: [
-        "rgba(52, 168, 83, 0.2)",
-        "rgba(52, 168, 83, 1)",
-        "rgba(52, 168, 83, 1)",
-      ],
-      extrapolate: "clamp",
-    });
 
-    return (
-      //to add maybe the accept lottie icon - work not complete
-      <Animated.View
-        style={[styles.rightAction, { backgroundColor }]}></Animated.View>
-    );
-  };
 
   const renderItems = () => {
     return rideRequests.map((item, index) => (
       <Swipeable
         key={item.id}
-        renderLeftActions={(progress, dragX) =>
-          renderLeftActions(progress, dragX)
-        }
         renderRightActions={(progress, dragX) =>
           renderRightActions(progress, dragX)
-        }>
+        }
+        onSwipeableOpen={(direction) => {
+          
+          if (direction === 'right') {
+            deleteCard(item.id);
+          }
+        }}
+        >
         <PassengerRequestCard
           key={item.id}
           id={item.id}
@@ -212,10 +183,7 @@ useEffect(() => {
           rating={item.rating}
           swipeAnimation={swipeAnimation}
           isFirst={index === 0}
-          // rowHeightAnimatedValue={rowHeightAnimatedValue}
-          // removeRow={() => deleteRow(rowMap, item.id)}
-          // onAccept={() => acceptRow(rowMap, item.id)}
-          // isAccepted={acceptedRequests.includes(item.id)}
+          onDelete={deleteCard}
         />
       </Swipeable>
     ));
@@ -241,6 +209,7 @@ useEffect(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    
   },
   map: {
     height: "50%",

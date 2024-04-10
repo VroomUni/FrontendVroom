@@ -15,16 +15,14 @@ function PassengerRequestCard({
   LName,
   rating,
   swipeAnimation,
-  isFirst
-  // rowHeightAnimatedValue,
-  // removeRow,
-  // // leftActionState,
-  // // rightActionState,
-  // onAccept,
-  // isAccepted,
+  isFirst,
+  onDelete
+
 }) {
   const [modalVisible, setModalVisible] = useState(false);
+
   const [accepted, setAccepted] = useState(false);
+
   const swipeTranslateX = swipeAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: [0, isFirst ? 50 : 0],
@@ -46,15 +44,16 @@ function PassengerRequestCard({
     return stars;
   };
 
-  // const handleAccept = () => {
-  //   onAccept()
-  //   setModalVisible(false);
-  // };
+  const handleAccept = () => {
+    
+    setModalVisible(false);
+       setAccepted(true)
+  };
 
-  // const handleReject = () => {
-  //   setModalVisible(false);
-  //   removeRow(id);
-  // };
+  const handleReject = () => {
+    setModalVisible(false);
+   onDelete(id)
+  };
 
   return (
     <Animated.View
@@ -64,11 +63,11 @@ function PassengerRequestCard({
         onPress={() => setModalVisible(true)}
         style={styles.card}
       >
-        {/* {isAccepted && (
+        {accepted && (
           <View style={styles.acceptedContainer}>
             <Text style={styles.acceptedText}>Accepted</Text>
           </View>
-        )} */}
+        )}
         <View style={styles.userInfo}>
           <Text style={styles.userName}>{`${FName} ${LName}`}</Text>
           <View style={styles.stars}>{renderStars(rating)}</View>
@@ -78,6 +77,7 @@ function PassengerRequestCard({
           onBackdropPress={() => setModalVisible(false)}
         >
           <View style={styles.modalView}>
+          <Text style={[styles.detailsText,{fontWeight:'bold'}]}>{`${FName} ${LName}`}</Text>
             <Text style={styles.detailsText}>Age: 22</Text>
             <Text style={styles.detailsText}>Non Smoker</Text>
             <Text style={styles.detailsText}>Loud Music</Text>
@@ -87,13 +87,13 @@ function PassengerRequestCard({
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={[styles.button, styles.acceptButton]}
-                // onPress={handleAccept}
+                onPress={handleAccept}
               >
                 <Text style={styles.buttonText}>Accept</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, styles.rejectButton]}
-                // onPress={handleReject}
+                onPress={handleReject}
               >
                 <Text style={styles.buttonText}>Reject</Text>
               </TouchableOpacity>
@@ -110,15 +110,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     borderRadius: 5,
     margin: 5,
-    // shadowColor: "#000",
-    // shadowOffset: { width: 0, height: 12 },
-    // shadowOpacity: 0.08,
-    // shadowRadius: 10,
+    shadowOffset: { width: 10, height: 12 },
+    shadowOpacity: 0.03,
+    shadowRadius: 10,
     elevation: 1,
   },
   card: {
-    backgroundColor: "#FFF",
-    borderRadius: 5,
     padding: 10,
     marginBottom: 5,
   },
@@ -183,7 +180,7 @@ const styles = StyleSheet.create({
   acceptedContainer: {
     position: "absolute",
     right: 10,
-    top: 10,
+    top: 20,
     backgroundColor: "#4CAF50",
     borderRadius: 20,
     paddingVertical: 5,
