@@ -1,9 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import DriverCard from "../../components/Passenger/DriverCard";
-import { StyleSheet, View, Text, Animated, Alert } from "react-native";
+import { StyleSheet, View, Text, Image, Alert } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import LottieView from "lottie-react-native";
-import { Snackbar, Provider as PaperProvider } from "react-native-paper";
+import {
+  Snackbar,
+  Button,
+  Portal,
+  Provider as PaperProvider,
+} from "react-native-paper";
 import { fetchRidesData } from "../../api/RideService";
 
 const passengersPreferences = {
@@ -19,7 +24,8 @@ function PassengerSearchRides({ navigation, route }) {
   const [requestSentVisible, setSentVisible] = useState(false);
   const [ridesData, setRidesData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const rideIds = route.params;
+  const [swipedAll, setSwipedAll] = useState(false);
+  const {passengerLocation , rideIds} = route.params;
   //investigate with response data
   useEffect(() => {
     const fetchData = async () => {
@@ -28,6 +34,7 @@ function PassengerSearchRides({ navigation, route }) {
         if (rideIds) {
           const rides = await fetchRidesData(rideIds);
           setRidesData(rides);
+          rides.length === 0 && setSwipedAll(true);
         }
         setLoading(false);
       } catch (err) {
@@ -41,24 +48,30 @@ function PassengerSearchRides({ navigation, route }) {
 
   const onSwipedLeft = cardIndex => {
     console.log("Swiped left, no request sent for: ", ridesData[cardIndex]);
-    // Handle the 'no request' logic here
   };
 
   const onSwipedRight = cardIndex => {
+    // Handle the 'no request' logic here
     console.log("Swiped right, request sent for: ", ridesData[cardIndex]);
-    setSentVisible(!requestSentVisible);
+    setSentVisible(true); 
+    //send to backend
   };
   const onDismissSnackBar = () => setSentVisible(false);
   console.log("IS LOADING", loading);
-  console.log("RIDE DATA", ridesData);
+  // console.log("RIDE DATA", ridesData);
 
+  const onSwipedAll = () => {
+    setSwipedAll(true);
+    setRidesData(null);
+  };
   return (
+    <PaperProvider>
     <View style={styles.pageContainer}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Swipe Your Way</Text>
       </View>
       {!loading ? (
-        ridesData ? (
+        ridesData && (
           <>
             <Swiper
               cards={ridesData}
@@ -67,6 +80,7 @@ function PassengerSearchRides({ navigation, route }) {
                   data={data}
                   passengerPreferences={passengersPreferences}
                   navigation={navigation}
+                  passengerLocation={passengerLocation}
                 />
               )}
               onSwipedLeft={onSwipedLeft}
@@ -79,32 +93,52 @@ function PassengerSearchRides({ navigation, route }) {
               animateOverlayLabelsOpacity
               animateCardOpacity
               swipeBackCard
+              onSwipedAll={onSwipedAll}
             />
 
-            <Snackbar
-              visible={requestSentVisible}
-              onDismiss={onDismissSnackBar}
-              duration={400}
-              style={styles.snackbarstyle}>
-              request sent !
-            </Snackbar>
-
-            <View style={styles.animationContainer}>
+            {/* <View style={styles.animationContainer}>
               <LottieView
                 style={styles.animation}
                 source={require("../../assets/SwipeAnimation.json")}
                 autoPlay
                 loop
               />
-            </View>
+            </View> */}
           </>
-        ) : (
-          <Text>Nothing To Show</Text>
         )
       ) : (
         <Text>LOADING...</Text>
       )}
+      {swipedAll && (
+        <View style={styles.allCardsSwipedContainer}>
+          <Image
+            style={styles.NoSuggestionImage}
+            source={require("../../assets/noMoreFilter.png")}
+          />
+          <Text style={styles.allCardsSwipedText}>
+            No more filtered suggestions
+          </Text>
+          <Button
+            style={styles.showAllButton}
+            mode='contained'
+            onPress={() => {
+              //send request show all to backend
+            }}>
+            Show All
+          </Button>
+        </View>
+      )}
+      <Portal>
+      <Snackbar
+        visible={requestSentVisible}
+        onDismiss={onDismissSnackBar}
+        duration={800}
+        style={{ backgroundColor: "green" }}        >
+        request sent !
+      </Snackbar>
+      </Portal>
     </View>
+    </PaperProvider>
   );
 }
 
@@ -116,6 +150,26 @@ const styles = StyleSheet.create({
 
     paddingTop: 0,
   },
+  allCardsSwipedContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+  },
+  NoSuggestionImage: {
+    width: "150%",
+    height: "50%",
+    resizeMode: "contain",
+    marginBottom: 5,
+  },
+  showAllButton: {
+    marginTop: 20,
+    backgroundColor: "#162447",
+    borderRadius: 15,
+  },
+  allCardsSwipedText: {
+    fontSize: 20,
+  },
   headerContainer: {
     marginBottom: 20,
     backgroundColor: "#2c3e50",
@@ -123,12 +177,10 @@ const styles = StyleSheet.create({
   },
 
   headerText: {
-    marginTop: 50,
+    margin: 30,
     fontSize: 28,
     color: "#e8f4f8",
-
     textAlign: "center",
-    marginBottom: 30,
   },
   subHeaderText: {
     fontSize: 18,
@@ -152,15 +204,5 @@ const styles = StyleSheet.create({
   animation: {
     width: "50%",
     height: "50%",
-  },
-
-  snackbarstyle: {
-    backgroundColor: "green",
-    position: "absolute",
-    bottom: 20,
-
-    right: 0,
-
-    width: "70%",
   },
 });

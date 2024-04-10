@@ -6,7 +6,12 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { PaperProvider, Button } from "react-native-paper";
 import PreferenceItem from "./preferenceItem";
 
-export default function DriverCard({ data, passengerPreferences, navigation }) {
+export default function DriverCard({
+  data,
+  passengerPreferences,
+  navigation,
+  passengerLocation,
+}) {
   const renderStars = rating => {
     let stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -25,23 +30,40 @@ export default function DriverCard({ data, passengerPreferences, navigation }) {
   const { driver } = data?.Ride;
   const fullName = driver?.firstName + " " + driver?.lastName;
   const renderPreferenceItems = () => {
-    return Object.keys(driver.Preference).map(attribute => {
-      if (driver.Preference[attribute] === null) {
-        return null;
-      }
-      return (
-        <PreferenceItem
-          key={attribute}
-          attribute={attribute}
-          value={driver?.Preference[attribute]}
-          matched={isPreferenceAttrMatch(
-            attribute,
-            driver.Preference,
-            passengerPreferences
-          )}
-        />
-      );
-    });
+    return (
+      Object.keys(driver.Preference)
+        .map(attribute => {
+          if (driver.Preference[attribute] === null) {
+            return null;
+          }
+          return (
+            <PreferenceItem
+              key={attribute}
+              attribute={attribute}
+              value={driver?.Preference[attribute]}
+              matched={isPreferenceAttrMatch(
+                attribute,
+                driver.Preference,
+                passengerPreferences
+              )}
+            />
+          );
+        })
+        //to get the matched prefs at the start
+        .sort((a, b) => {
+          // Extract the 'matched' prop from the JSX elements
+          const matchedA = a?.props?.matched || false;
+          const matchedB = b?.props?.matched || false;
+
+          if (matchedA === matchedB) {
+            return 0;
+          }
+          if (matchedA === true) {
+            return -1;
+          }
+          return 1;
+        })
+    );
   };
   const isPreferenceAttrMatch = (attribute, driverPref, passengerPref) => {
     //if passenger pref on the given attr is null , then he doesnt care => match
@@ -67,39 +89,9 @@ export default function DriverCard({ data, passengerPreferences, navigation }) {
               <View style={styles.stars}>{renderStars(3)}</View>
             </View>
           </View>
-          <View style={styles.preferences}>
-            {renderPreferenceItems()}
-            {/* <PreferenceItem
-              attribute='Smoking'
-              value={driver.Preference.smoking}
-              matched={
-                driver?.Preference.smoking === passengerPreferences.smoking
-              }
-            />
-            <PreferenceItem
-              attribute='Talkative'
-              value={driver?.Preference.talkative}
-              matched={
-                driver?.Preference.talkative === passengerPreferences.Talkative
-              }
-            />
-            <PreferenceItem
-              attribute='Eating'
-              value={driver?.Preference.foodFriendly}
-              matched={
-                driver?.Preference.foodFriendly === passengerPreferences.eating
-              }
-            />
-            <PreferenceItem
-              attribute='Music Genre'
-              value={driver?.Preference.loudMusic}
-              matched={
-                driver?.Preference.loudMusic === passengerPreferences.musicGenre
-              }
-            /> */}
-          </View>
+          <View style={styles.preferences}>{renderPreferenceItems()}</View>
           <View style={styles.departureInfo}>
-            <View style={styles.infoRow}>
+            <View style={[styles.infoRow, { marginBottom: 10 }]}>
               <FontAwesome
                 name='clock-o'
                 size={20}
@@ -128,7 +120,7 @@ export default function DriverCard({ data, passengerPreferences, navigation }) {
                   name='map-marker'
                   size={16}
                   color='#00669B'
-                  style={styles.icon}
+                  style={[styles.icon, { marginLeft: 1 }]}
                 />
                 <Text style={styles.addressText}>{data?.Ride.to}</Text>
               </View>
@@ -139,7 +131,12 @@ export default function DriverCard({ data, passengerPreferences, navigation }) {
           <Button
             mode='contained'
             onPress={() => {
-              navigation.navigate("Map");
+              navigation.navigate("Map", {
+                passengerLocation: passengerLocation,
+                routePolyLine: data.Ride.encodedPath,
+                from: data.Ride.from,
+                to: data.Ride.to,
+              });
             }}
             style={styles.mapButton}
             contentStyle={{ flexDirection: "row-reverse" }}
@@ -210,7 +207,7 @@ const styles = StyleSheet.create({
   infoRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 6,
+    // marginBottom: 6,
   },
   icon: {
     marginRight: 8,
@@ -226,7 +223,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#162447",
     paddingVertical: 2,
-    paddingHorizontal: 3,
+    paddingHorizontal: 4,
   },
 
   addressText: {

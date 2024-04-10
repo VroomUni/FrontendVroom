@@ -49,16 +49,19 @@ const setPreferences = async userPreferences => {
 };
 const signIn = async (email, password) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    // Signed in
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
     const user = userCredential.user;
-    // ...
+    return user;
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
     console.log(errorCode);
     console.log(errorMessage);
-    throw error; // Re-throw the error to be caught by the calling function
+    throw error;
   }
 };
 
