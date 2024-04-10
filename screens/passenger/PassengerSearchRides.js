@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import DriverCard from "../../components/DriverCard";
+import DriverCard from "../../components/Passenger/DriverCard";
 import { StyleSheet, View, Text, Image, Alert } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import LottieView from "lottie-react-native";
@@ -175,6 +175,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#2c3e50",
     width: "100%",
   },
+
   headerText: {
     margin: 30,
     fontSize: 28,
@@ -191,6 +192,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
   },
+
   animationContainer: {
     flex: 1,
     width: "100%",
@@ -198,6 +200,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     marginTop: "100%",
   },
+ 
   animation: {
     width: "50%",
     height: "50%",

@@ -205,6 +205,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-middle',
     width: '80%',
     alignContent: 'center',
+    
   },
   new: {
     margin: 12,
@@ -216,7 +217,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginTop:5,
     backgroundColor: '#152544',
-    borderRadius: 30,
+    borderRadius: 40,
     color: 'white',
   },
   bottomContainer: {

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 
-function DriverDate({onDateSelected}) {
+function DriverCalendar({onDateSelected}) {
   const currentDate = new Date();
   console.log("from driver date ", currentDate)
   return (
@@ -14,11 +14,12 @@ function DriverDate({onDateSelected}) {
       dateNumberStyle={{ color: 'white' }}
       dateNameStyle={{ color: 'white' }}
       iconContainer={{ flex: 0.1 }}
+      
       highlightDateNumberStyle={{ color: 'red' }}
       highlightDateNameStyle={{ color: 'red' }}
       selectedDate={currentDate}
       onDateSelected={date=>onDateSelected(date)}
-      
+    
     />
     
   </View>
@@ -37,4 +38,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default DriverDate
+export default DriverCalendar;
