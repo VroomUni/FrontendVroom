@@ -1,11 +1,18 @@
 import { useState, useRef, useEffect } from "react";
-import { StyleSheet, Dimensions, View, Image, Animated, Easing } from "react-native";
+import {
+  StyleSheet,
+  Dimensions,
+  View,
+  Image,
+  Animated,
+  Easing,
+} from "react-native";
 import { Surface, Button, IconButton } from "react-native-paper";
 import { useRideContext } from "../../context/UserRideContext";
 
-const { width, height } = Dimensions.get('window');
-
-const DriverRideFromTo = ({ setOnLocationInputPage }) => {
+const { width, height } = Dimensions.get("window");
+let isOptionsTabOn ;
+const DriverRideFromTo = ({ setOnLocationInputPage, isOptionShown }) => {
   const {
     setPolygonCods,
     setPolylineCods,
@@ -14,6 +21,7 @@ const DriverRideFromTo = ({ setOnLocationInputPage }) => {
     destinationOrOrigin,
   } = useRideContext();
   const swapAnimation = useRef(new Animated.Value(0)).current;
+  isOptionsTabOn=isOptionShown;
 
   const translateY1 = swapAnimation.interpolate({
     inputRange: [0, 1],
@@ -48,6 +56,40 @@ const DriverRideFromTo = ({ setOnLocationInputPage }) => {
     outputRange: ["0deg", "180deg"],
   });
 
+  const styles = StyleSheet.create({
+    itineraryComponentContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      flex: isOptionShown ? 2 : 1.5,
+      backgroundColor: "#E2EAF4",
+      width: width, // 90% of screen width
+      alignSelf: "center", // center horizontally
+      paddingHorizontal: width * 0.01, // 5% padding on left and right
+      borderBottomWidth: 1,
+      borderBottomColor: "blue",
+    },
+    itineraryImg: {
+      height: height * 0.085, // 10% of screen height
+      width: width * 0.12, // 15% of screen width
+      resizeMode: "contain",
+    },
+    innerFromToBtnsContainer: {
+      width: "60%",
+    },
+    buttons: {
+      borderRadius: 10,
+      margin: 5,
+      justifyContent: "center",
+      backgroundColor: "#F4F4FB",
+      borderColor: "black",
+      borderWidth: 1,
+    },
+    iconContainer: {
+      alignItems: "center",
+      justifyContent: "center",
+      marginLeft: width * 0.04, // 5% margin on the left
+    },
+  });
   return (
     <Surface mode='flat' style={styles.itineraryComponentContainer}>
       <View>
@@ -62,7 +104,7 @@ const DriverRideFromTo = ({ setOnLocationInputPage }) => {
           <Button
             style={styles.buttons}
             mode='outlined'
-            labelStyle={{ alignSelf: "center",color: '#162447' }}
+            labelStyle={{ alignSelf: "center", color: "#162447" }}
             onPress={() => {
               setOnLocationInputPage();
               setPolygonCods(null);
@@ -102,35 +144,3 @@ const DriverRideFromTo = ({ setOnLocationInputPage }) => {
 
 export default DriverRideFromTo;
 
-const styles = StyleSheet.create({
-  itineraryComponentContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1.8,
-    backgroundColor: "#E2EAF4",
-    width: width , // 90% of screen width
-    alignSelf: 'center', // center horizontally
-    paddingHorizontal: width * 0.01, // 5% padding on left and right
-  },
-  itineraryImg: { 
-    height: height * 0.085, // 10% of screen height
-    width: width * 0.12, // 15% of screen width
-    resizeMode: "contain" 
-  },
-  innerFromToBtnsContainer: {
-    width: "60%",
-  },
-  buttons: {
-    borderRadius: 10,
-    margin: 5,
-    justifyContent: "center",
-    backgroundColor: "#F4F4FB",
-    borderColor: "black",
-    borderWidth: 1,
-  },
-  iconContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: width * 0.04, // 5% margin on the left
-  },
-});

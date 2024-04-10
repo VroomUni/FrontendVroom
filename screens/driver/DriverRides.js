@@ -10,7 +10,7 @@ function DriverRides() {
 
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
   
-console.log("from driverRides", selectedDate)
+console.log("from driverRides selected Date", selectedDate)
   return (
     <View style={styles.container}>
       <DriverDate onDateSelected={(date) => setSelectedDate(date.format('YYYY-MM-DD'))} />

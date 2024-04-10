@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { View, SafeAreaView, StyleSheet, Platform, Alert } from "react-native";
+import { View, SafeAreaView, StyleSheet, Dimensions, Alert } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Surface, Text, SegmentedButtons, Button } from "react-native-paper";
 import { useRideContext } from "../../context/UserRideContext";
 import { useAuth } from "../../context/AuthContext";
 import { timeTo24Format } from "../../utils/RideHelpers";
+const { width, height } = Dimensions.get("window");
+
+
 const OptionsFirstSlide = ({ goToSlide }) => {
   const {
     btnGrpDateValue,
@@ -87,7 +90,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
 
             setDateValue(val);
           }}
-          style={{ width: "90%" }}
+          style={{ width: "97%" }}
           density='small
         '
           buttons={[
@@ -132,9 +135,10 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       borderWidth: 1,
       borderColor: "black",
       flex: 1,
-      rowGap: isPassenger && customSelectedFromTime ? 30 : 50,
-      margin: 20,
+      rowGap: isPassenger && customSelectedFromTime ? height*0.035 : height*0.075,
+      margin: 10,
       width: "90%",
+      alignSelf:"center",
     },
   });
 
@@ -148,7 +152,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          marginLeft: 20,
+          // marginLeft: width*0.01,
           justifyContent: "space-around",
         }}>
         <Text variant='titleMedium'> Time:</Text>

@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Modal } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Modal,
+} from "react-native";
 import {
   Text,
   Button,
@@ -9,6 +15,7 @@ import {
   Checkbox,
 } from "react-native-paper";
 import { useRideContext } from "../../context/UserRideContext";
+const { width, height } = Dimensions.get("window");
 
 const OptionsSecondSlide = () => {
   const { spotsCount, setSpotsCount, recurrentDays, setRecurrentDays } =
@@ -23,15 +30,17 @@ const OptionsSecondSlide = () => {
   const renderCounter = () => (
     <View style={slide2Style.spotsCounterContainer}>
       <IconButton
+        size={18}
         icon='minus'
         style={slide2Style.sptCounterIconBtn}
         onPress={() => handleSpotsCountChange(-1)}
       />
 
-      <Text style={{ fontSize: 18 }}>{spotsCount}</Text>
+      <Text style={{ fontSize: 16 }}>{spotsCount}</Text>
 
       <IconButton
         icon='plus'
+        size={18}
         style={slide2Style.sptCounterIconBtn}
         onPress={() => handleSpotsCountChange(1)}
       />
@@ -97,15 +106,13 @@ const OptionsSecondSlide = () => {
   };
   return (
     <>
-      <View style={[commonStyles.innerSliderContainer, { rowGap: 10 }]}>
+      <View style={commonStyles.innerSliderContainer}>
         {/* spots and counter view*/}
         <View
           style={{
             flexDirection: "row",
             alignItems: "center",
-            marginLeft: 20,
-            justifyContent: "space-around",
-            columnGap: 30,
+            columnGap: width*0.1,
           }}>
           <Chip
             mode='outlined'
@@ -123,8 +130,7 @@ const OptionsSecondSlide = () => {
           style={{
             flexDirection: "row",
             alignItems: "center",
-            justifyContent: "space-around",
-            columnGap: 25,
+            columnGap: width*0.1,
           }}>
           <Chip mode='outlined' icon={"repeat"}>
             Repeat
@@ -135,9 +141,9 @@ const OptionsSecondSlide = () => {
             contentStyle={{
               flexDirection: "row-reverse",
               borderColor: "black",
-              width: 140,
+              width: width*0.37,
             }}
-            style={{ borderRadius: 5, marginRight: 15 }}
+            style={{ borderRadius: 5 }}
             icon={"chevron-right"}
             onPress={() => {
               setRecurrenceModalVisible(true);
@@ -162,8 +168,8 @@ const slide2Style = StyleSheet.create({
 
   sptCounterIconBtn: {
     backgroundColor: "#fff",
-    width: 50,
-    height: 50,
+    width: 45,
+    height: 45,
     margin: 20,
     borderWidth: 1,
     borderColor: "#96DDF4",
@@ -219,13 +225,13 @@ const commonStyles = StyleSheet.create({
   //inner container for slider content , the one with white background
   innerSliderContainer: {
     borderRadius: 7,
-    padding: 15,
+    paddingHorizontal: 30,
     backgroundColor: "#F4F4FB",
     borderWidth: 1,
     borderColor: "black",
     flex: 1,
-    rowGap: 50,
-    margin: 20,
+    rowGap: height*0.035,
+    margin: 10,
   },
 });
 

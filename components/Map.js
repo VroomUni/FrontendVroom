@@ -1,4 +1,4 @@
-import { StyleSheet, Alert } from "react-native";
+import { StyleSheet, Alert ,Dimensions} from "react-native";
 import React, { useRef, useEffect } from "react";
 import MapView, {
   Marker,
@@ -12,6 +12,8 @@ import GeoJSONWriter from "jsts/org/locationtech/jts/io/GeoJSONWriter";
 import { BufferOp } from "jsts/org/locationtech/jts/operation/buffer";
 import axios from "axios";
 import { GOOGLE_MAPS_KEY } from "@env";
+const { width, height } = Dimensions.get("window");
+
 //current region is passed as prop , because the custom marker in parent component needs it
 const Map = ({
   currentRegion,
@@ -148,7 +150,7 @@ const styles = StyleSheet.create({
   map: {
     // width: "100%",
     // height: "70%",
-    flex: 6,
+    flex: 5,
   },
   customMarkerFixed: {
     position: "absolute",

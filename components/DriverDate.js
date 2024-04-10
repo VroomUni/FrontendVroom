@@ -4,7 +4,6 @@ import CalendarStrip from 'react-native-calendar-strip';
 
 function DriverDate({onDateSelected}) {
   const currentDate = new Date();
-  console.log("from driver date ", currentDate)
   return (
     <View style={styles.container}>
     <CalendarStrip
@@ -18,6 +17,12 @@ function DriverDate({onDateSelected}) {
       highlightDateNameStyle={{ color: 'red' }}
       selectedDate={currentDate}
       onDateSelected={date=>onDateSelected(date)}
+      startingDate={currentDate}
+      minDate={currentDate}
+      maxDate={new Date(currentDate).setDate(currentDate.getDate()+7)}
+      datesBlacklist={(date)=>new Date(date).getDate()<currentDate.getDate()}
+      scrollable={true}
+      scrollerPaging={true}
       
     />
     
