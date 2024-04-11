@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import DriverCalendar from "../../components/driver/DriverCalendar";
-import RideCard from "../../components/driver/RideCard";
-import RideCardDetails from "../../components/driver/RideCardDetails";
 import RideCardList from "../../components/driver/RideCardList";
 
 function DriverRides({navigation}) {

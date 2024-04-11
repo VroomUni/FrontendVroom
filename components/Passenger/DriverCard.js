@@ -1,10 +1,9 @@
 import React, { useState, useRef } from "react";
-import { Image, StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, View, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-
 import { PaperProvider, Button } from "react-native-paper";
 import PreferenceItem from "./preferenceItem";
+import RideInfo from "../RideInfo";
 
 export default function DriverCard({
   data,
@@ -90,42 +89,11 @@ export default function DriverCard({
             </View>
           </View>
           <View style={styles.preferences}>{renderPreferenceItems()}</View>
-          <View style={styles.departureInfo}>
-            <View style={[styles.infoRow, { marginBottom: 10 }]}>
-              <FontAwesome
-                name='clock-o'
-                size={20}
-                color='#333'
-                style={styles.icon}
-              />
-              <Text style={styles.time}>
-                {data?.Ride.startTime.split(":").slice(0, 2).join(":")}
-              </Text>
-            </View>
-            <View style={styles.departureInfo}>
-              <View style={styles.infoRow}>
-                <FontAwesome
-                  name='circle'
-                  size={16}
-                  color='#00669B'
-                  style={styles.icon}
-                />
-                <Text style={styles.addressText}>{data?.Ride.from}</Text>
-              </View>
-              <Text style={styles.dots}>
-                <FontAwesome name='ellipsis-v' size={16} color='#333' />
-              </Text>
-              <View style={styles.infoRow}>
-                <FontAwesome
-                  name='map-marker'
-                  size={16}
-                  color='#00669B'
-                  style={[styles.icon, { marginLeft: 1 }]}
-                />
-                <Text style={styles.addressText}>{data?.Ride.to}</Text>
-              </View>
-            </View>
-          </View>
+          <RideInfo
+            from={data.Ride.from}
+            to={data.Ride.to}
+            startTime={data.Ride.startTime}
+          />
         </>
         <View style={styles.footer}>
           <Button
@@ -152,7 +120,7 @@ export default function DriverCard({
 
 const styles = StyleSheet.create({
   card: {
-    marginTop: "30%",
+    marginTop: "20%",
     width: "95%",
     height: "70%",
     alignSelf: "center",
@@ -194,40 +162,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    marginVertical: 20,
+    marginVertical: 10,
   },
 
   preferenceText: {
-    color: "#333",
-  },
-
-  departureInfo: {
-    width: "100%",
-  },
-  infoRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    // marginBottom: 6,
-  },
-  icon: {
-    marginRight: 8,
-    color: "#162447",
-  },
-
-  time: {
-    color: "#333",
-    fontSize: 16,
-  },
-
-  dots: {
-    fontSize: 16,
-    color: "#162447",
-    paddingVertical: 2,
-    paddingHorizontal: 4,
-  },
-
-  addressText: {
-    fontSize: 16,
     color: "#333",
   },
   footer: {

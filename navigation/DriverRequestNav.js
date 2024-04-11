@@ -10,10 +10,12 @@ function DriverRequestNav() {
   return (
  <DriverStack.Navigator>
     <DriverStack.Screen name='requests' component={DriverRides}  options={{ headerShown: false }}/>
-    <DriverStack.Screen name='requestDetails' component={RideCardDetails} options={{ 
-      headerTransparent: true, // make header transparent
-      headerTitle: '',
-    }}  />
+    <DriverStack.Screen name='Request details' component={RideCardDetails} 
+    // options={{ 
+    //   headerTransparent: true, // make header transparent
+    //   headerTitle: '',
+    // }}  
+    />
  </DriverStack.Navigator>
   )
 }

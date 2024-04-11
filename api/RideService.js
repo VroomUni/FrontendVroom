@@ -9,6 +9,7 @@ import {
 } from "../utils/RideHelpers";
 
 const url = `${apiConfig.baseURL}/ride`;
+//for driver posting a ride
 const postRide = async ridePayload => {
   //validate payload types to match with backend
   const validatedRidePayload = {
@@ -33,7 +34,7 @@ const postRide = async ridePayload => {
     throw err;
   }
 };
-
+//for passenger searching for rides after filling the filters
 const searchForRides = async rideFilters => {
   //extra validation processing
   const validatedRidePayload = {
@@ -59,8 +60,8 @@ const searchForRides = async rideFilters => {
   }
 };
 
-//REDO HERE
-const fetchRidesData = async ridesIds => {
+//dummy rides fetcher by ids 
+const fetchRidesDataByIds = async ridesIds => {
   const queryString = `ids=${ridesIds
     .map(ride => encodeURIComponent(ride))
     .join(",")}`;
@@ -78,7 +79,6 @@ const fetchRidesData = async ridesIds => {
 
 const fetchAllUnrequestedRides = async (passengerId, filterDate) => {
   const finalUrl = `${url}/all`;
-  console.log("fetch pressed");
   try {
     const response = await axios.post(finalUrl, { passengerId, filterDate });
     console.log(response.data.rides);
@@ -88,9 +88,21 @@ const fetchAllUnrequestedRides = async (passengerId, filterDate) => {
     throw err;
   }
 };
+//fetches driver rides + requests made on them + ppl who requested
+const fetchDriverActiveRides = async (driverId) =>{
+  const finalUrl = `${url}/driver?id=${driverId}`
+  try {
+    const response = await axios.get(finalUrl);
+    return response.data.rides;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
 module.exports = {
   postRide,
   searchForRides,
-  fetchRidesData,
+  fetchRidesData: fetchRidesDataByIds,
   fetchAllUnrequestedRides,
+  fetchDriverActiveRides
 };

@@ -1,135 +1,133 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Animated, ScrollView } from "react-native";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Marker, Polyline } from "react-native-maps";
 import PassengerRequestCard from "./PassengerRequestCard";
 import { Swipeable } from "react-native-gesture-handler";
 import LottieView from "lottie-react-native";
 import decline from "../../assets/decine.json";
+import { decode } from "@googlemaps/polyline-codec";
 
-function RideCardDetails() {
+function RideCardDetails({ route }) {
+  const [rideRequests, setRideRequests] = useState([
+    {
+      id: "1",
+      FName: "Emma",
+      LName: "Smith",
+      location: "Central Park",
+      time: "10:00 AM",
+      requests: "2",
+      rating: 4,
+    },
+    {
+      id: "2",
+      FName: "Liam",
+      LName: "Johnson",
+      location: "Madison Square",
+      time: "11:00 AM",
+      requests: "1",
+      rating: 3,
+    },
+    {
+      id: "3",
+      FName: "Olivia",
+      LName: "Williams",
+      location: "Union Square",
+      time: "12:00 PM",
+      requests: "3",
+      rating: 5,
+    },
+    {
+      id: "4",
+      FName: "Noah",
+      LName: "Brown",
+      location: "Times Square",
+      time: "01:00 PM",
+      requests: "2",
+      rating: 4,
+    },
+    {
+      id: "5",
+      FName: "Ava",
+      LName: "Jones",
+      location: "Columbus Circle",
+      time: "02:00 PM",
+      requests: "1",
+      rating: 2,
+    },
+  ]);
 
-const [rideRequests, setRideRequests] = useState([
-  {
-    id: "1",
-    FName: "Emma",
-    LName: "Smith",
-    location: "Central Park",
-    time: "10:00 AM",
-    requests: "2",
-    rating: 4,
-  },
-  {
-    id: "2",
-    FName: "Liam",
-    LName: "Johnson",
-    location: "Madison Square",
-    time: "11:00 AM",
-    requests: "1",
-    rating: 3,
-  },
-  {
-    id: "3",
-    FName: "Olivia",
-    LName: "Williams",
-    location: "Union Square",
-    time: "12:00 PM",
-    requests: "3",
-    rating: 5,
-  },
-  {
-    id: "4",
-    FName: "Noah",
-    LName: "Brown",
-    location: "Times Square",
-    time: "01:00 PM",
-    requests: "2",
-    rating: 4,
-  },
-  {
-    id: "5",
-    FName: "Ava",
-    LName: "Jones",
-    location: "Columbus Circle",
-    time: "02:00 PM",
-    requests: "1",
-    rating: 2,
-  },
-]);
-
-
-  const deleteCard = (id) => {
-    setRideRequests(rideRequests.filter((item) => item.id !== id));
+  const deleteCard = id => {
+    setRideRequests(rideRequests.filter(item => item.id !== id));
   };
 
-//for initial swipe bounce
-const swipeAnimation = useRef(new Animated.Value(0)).current;
+  //for initial swipe bounce
+  const swipeAnimation = useRef(new Animated.Value(0)).current;
 
-//counts how many time the initial requests has bounced , currently stops after 2 bounces
-const animationCount = useRef(0);
+  //counts how many time the initial requests has bounced , currently stops after 2 bounces
+  const animationCount = useRef(0);
 
-// animation for request bounce on component mount (indicator to swipe)
-useEffect(() => {
-  const animate = () => {
-    Animated.sequence([
-      // Trigger initial swipe animation
-      Animated.timing(swipeAnimation, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }),
-      // Initial jump
-      Animated.timing(swipeAnimation, {
-        toValue: -0.5,
-        duration: 250,
-        useNativeDriver: true,
-      }),
-      // First bounce
-      Animated.timing(swipeAnimation, {
-        toValue: 0,
-        duration: 250,
-        useNativeDriver: true,
-      }),
-      // Second bounce
-      Animated.timing(swipeAnimation, {
-        toValue: -0.2,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-      // Third bounce
-      Animated.timing(swipeAnimation, {
-        toValue: 0,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      // Fourth bounce
-      Animated.timing(swipeAnimation, {
-        toValue: -0.1,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-      // Final position
-      Animated.timing(swipeAnimation, {
-        toValue: 0,
-        duration: 20,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      animationCount.current = animationCount.current + 1;
-      // Wait for 5 seconds and then repeat the animation
-      if (animationCount.current < 3) {
-        setTimeout(() => {
-          animate();
-        }, 4000);
-      }
-    });
-  };
+  // animation for request bounce on component mount (indicator to swipe)
+  useEffect(() => {
+    const animate = () => {
+      Animated.sequence([
+        // Trigger initial swipe animation
+        Animated.timing(swipeAnimation, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        // Initial jump
+        Animated.timing(swipeAnimation, {
+          toValue: -0.5,
+          duration: 250,
+          useNativeDriver: true,
+        }),
+        // First bounce
+        Animated.timing(swipeAnimation, {
+          toValue: 0,
+          duration: 250,
+          useNativeDriver: true,
+        }),
+        // Second bounce
+        Animated.timing(swipeAnimation, {
+          toValue: -0.2,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        // Third bounce
+        Animated.timing(swipeAnimation, {
+          toValue: 0,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+        // Fourth bounce
+        Animated.timing(swipeAnimation, {
+          toValue: -0.1,
+          duration: 50,
+          useNativeDriver: true,
+        }),
+        // Final position
+        Animated.timing(swipeAnimation, {
+          toValue: 0,
+          duration: 20,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        animationCount.current = animationCount.current + 1;
+        // Wait for 5 seconds and then repeat the animation
+        if (animationCount.current < 3) {
+          setTimeout(() => {
+            animate();
+          }, 4000);
+        }
+      });
+    };
 
-  // Start the animation loop
-  animate();
-}, []);
+    // Start the animation loop
+    animate();
+  }, []);
 
   const renderRightActions = (progress, dragX) => {
-
     //for the degrading  red colors on swipe
     const backgroundColor = dragX.interpolate({
       inputRange: [-301, -300, 0], // Define the input range based on dragX values
@@ -137,12 +135,9 @@ useEffect(() => {
         "rgba(255, 0, 0, 1)",
         "rgba(255, 0, 0, 1)",
         "rgba(255, 0, 0, 0.2)",
-      ], 
+      ],
       extrapolate: "clamp", // Clamp values that fall outside of the input range
     });
-
-    
-
 
     return (
       <Animated.View style={[styles.leftAction, { backgroundColor }]}>
@@ -157,8 +152,6 @@ useEffect(() => {
     );
   };
 
-
-
   const renderItems = () => {
     return rideRequests.map((item, index) => (
       <Swipeable
@@ -166,13 +159,11 @@ useEffect(() => {
         renderRightActions={(progress, dragX) =>
           renderRightActions(progress, dragX)
         }
-        onSwipeableOpen={(direction) => {
-          
-          if (direction === 'right') {
+        onSwipeableOpen={direction => {
+          if (direction === "right") {
             deleteCard(item.id);
           }
-        }}
-        >
+        }}>
         <PassengerRequestCard
           key={item.id}
           id={item.id}
@@ -188,19 +179,54 @@ useEffect(() => {
       </Swipeable>
     ));
   };
-
+  const mapRef = useRef();
+  const polylineCods = decode(route.params.routePolyline);
   return (
     <View style={styles.container}>
+      {/* must reuse map compoennt  */}
       <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+        ref={mapRef}
+        onMapLoaded={() => {
+          mapRef.current.fitToCoordinates(
+            polylineCods.map(coord => ({
+              latitude: coord[0],
+              longitude: coord[1],
+            })),
+            {
+              edgePadding: {
+                top: 40,
+                bottom: 40,
+                right: 10,
+                left: 10,
+              },
+              animated: true,
+            }
+          );
         }}
         provider={PROVIDER_GOOGLE}
-      />
+        style={{ height: "50%" }}
+        initialRegion={{
+          latitude: 36.7277622657912, // Latitude of Tunisia
+          longitude: 10.203072895008471, // Longitude of Tunisia
+          latitudeDelta: 1, // Zoom level
+          longitudeDelta: 1, // Zoom level
+        }}>
+        <Polyline
+          coordinates={polylineCods.map(coord => ({
+            latitude: coord[0],
+            longitude: coord[1],
+          }))}
+          strokeWidth={3}
+          strokeColor='blue'
+        />
+        {/* <Marker
+          coordinate={{
+            longitude: passengerLocation.coords.longitude,
+            latitude: passengerLocation.coords.latitude,
+          }}
+          title='YOU'
+        /> */}
+      </MapView>
       <ScrollView>{renderItems()}</ScrollView>
     </View>
   );
@@ -209,10 +235,7 @@ useEffect(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
-  },
-  map: {
-    height: "50%",
+    rowGap: 10,
   },
   leftAction: {
     borderRadius: 5,
