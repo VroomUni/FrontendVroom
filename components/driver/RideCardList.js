@@ -3,7 +3,7 @@ import RideCard from './RideCard';
 import { View, StyleSheet,Text,Alert } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
-function RideCardList({selectedDate}) {
+function RideCardList({selectedDate, navigation}) {
     const [rideData, setRideData] =useState ([
         { id: "1", title: "Ride 1", location: "SMU to Aouina", time: "5:00PM", date:'2024-03-20', requests: 5 },
         { id: "2", title: "Ride 2", location: "Aouina to SMU", time: "8:30AM",  date: '2024-03-20', requests: 3 },
@@ -45,6 +45,7 @@ function RideCardList({selectedDate}) {
         time={item.time}
         requests={item.requests}
         onDelete={handleDelete}
+        navigation={navigation}
         />
       );
 

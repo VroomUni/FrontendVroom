@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 
-function DriverDate({onDateSelected}) {
+function DriverCalendar({onDateSelected}) {
   const currentDate = new Date();
   return (
     <View style={styles.container}>
@@ -42,4 +42,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default DriverDate
+export default DriverCalendar;
