@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState } from "react";
 
 // import { isPointInPolygon } from "geolib";
 import DriverRideFromTo from "../components/driver/DriverRideFromTo";
-import RideLocationInput from "../components/driver/DriverRideLocationInput";
+import DriverRideLocationInput from "../components/driver/DriverRideLocationInput";
 import { Button, Icon, Portal, Snackbar } from "react-native-paper";
 import DriverRideExtraOptions from "../components/driver/DriverRideExtraOptions";
 import {
@@ -139,7 +139,7 @@ const RideInfo = ({ navigation }) => {
     <View style={{ flex: 1, paddingTop: 50, backgroundColor: "#E2EAF4" }}>
       {onLocationInputPage ? (
         //Destination/origin places autocomplete page
-        <RideLocationInput
+        <DriverRideLocationInput
           isToSmu={isToSmu}
           setOnLocationInputPage={setOnLocationInputPage}
           setCustomLocationMarker={setCustomLocationMarker}
