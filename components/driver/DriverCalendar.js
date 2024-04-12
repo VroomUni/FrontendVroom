@@ -18,11 +18,11 @@ function DriverCalendar({onDateSelected}) {
       selectedDate={currentDate}
       onDateSelected={date=>onDateSelected(date)}
       startingDate={currentDate}
-      // minDate={currentDate}
-      // maxDate={new Date(currentDate).setDate(currentDate.getDate()+7)}
-      // datesBlacklist={(date)=>new Date(date).getDate()<currentDate.getDate()}
-      // scrollable={true}
-      // scrollerPaging={true}
+      minDate={currentDate}
+      maxDate={new Date(currentDate).setDate(currentDate.getDate()+7)}
+      datesBlacklist={(date)=>new Date(date).getDate()<currentDate.getDate()}
+      scrollable={true}
+      scrollerPaging={true}
       //verify these with others 
       
     />

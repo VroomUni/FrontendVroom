@@ -7,11 +7,10 @@ import {
   Animated,
   Easing,
 } from "react-native";
-import { Surface, Button, IconButton } from "react-native-paper";
+import { Button, IconButton } from "react-native-paper";
 import { useRideContext } from "../../context/UserRideContext";
 
 const { width, height } = Dimensions.get("window");
-let isOptionsTabOn ;
 const DriverRideFromTo = ({ setOnLocationInputPage, isOptionShown }) => {
   const {
     setPolygonCods,
@@ -21,7 +20,6 @@ const DriverRideFromTo = ({ setOnLocationInputPage, isOptionShown }) => {
     destinationOrOrigin,
   } = useRideContext();
   const swapAnimation = useRef(new Animated.Value(0)).current;
-  isOptionsTabOn=isOptionShown;
 
   const translateY1 = swapAnimation.interpolate({
     inputRange: [0, 1],
@@ -91,7 +89,7 @@ const DriverRideFromTo = ({ setOnLocationInputPage, isOptionShown }) => {
     },
   });
   return (
-    <Surface mode='flat' style={styles.itineraryComponentContainer}>
+    <View style={styles.itineraryComponentContainer}>
       <View>
         <Image
           style={styles.itineraryImg}
@@ -138,9 +136,8 @@ const DriverRideFromTo = ({ setOnLocationInputPage, isOptionShown }) => {
           onPress={swapBtns}
         />
       </Animated.View>
-    </Surface>
+    </View>
   );
 };
 
 export default DriverRideFromTo;
-

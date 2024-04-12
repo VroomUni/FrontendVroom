@@ -1,12 +1,17 @@
 import React, { useState } from "react";
-import { View, SafeAreaView, StyleSheet, Dimensions, Alert } from "react-native";
+import {
+  View,
+  SafeAreaView,
+  StyleSheet,
+  Dimensions,
+  Alert,
+} from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { Surface, Text, SegmentedButtons, Button } from "react-native-paper";
+import { Text, SegmentedButtons, Button } from "react-native-paper";
 import { useRideContext } from "../../context/UserRideContext";
 import { useAuth } from "../../context/AuthContext";
 import { timeTo24Format } from "../../utils/RideHelpers";
 const { width, height } = Dimensions.get("window");
-
 
 const OptionsFirstSlide = ({ goToSlide }) => {
   const {
@@ -55,6 +60,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       }
 
       setCustomSelectedTime(selectedDateOrTime);
+      isPassenger&&setToTimePickerVisible(true);
       goToSlide &&
         setTimeout(() => {
           goToSlide(1);
@@ -135,15 +141,16 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       borderWidth: 1,
       borderColor: "black",
       flex: 1,
-      rowGap: isPassenger && customSelectedFromTime ? height*0.035 : height*0.075,
+      rowGap:
+        isPassenger && customSelectedFromTime ? height * 0.035 : height * 0.075,
       margin: 10,
       width: "90%",
-      alignSelf:"center",
+      alignSelf: "center",
     },
   });
 
   return (
-    <Surface style={commonStyles.innerSliderContainer}>
+    <View style={commonStyles.innerSliderContainer}>
       {/* tday , tmrw , data Bttn group */}
       {renderBtnGrp()}
 
@@ -193,21 +200,21 @@ const OptionsFirstSlide = ({ goToSlide }) => {
         </View>
       </View>
       {/* date picker for passenger and driver */}
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
+      {isDatePickerVisible&&<DateTimePickerModal
+        isVisible={true}
         mode='date'
         date={customSelectedDate || new Date()}
-        maximumDate={new Date().setDate(new Date().getDate() + 7)}
+        maximumDate={new Date(new Date().setDate(new Date().getDate() + 7))}
         minimumDate={new Date()}
         onConfirm={handleDateTimeChange}
         onCancel={() => {
           setDatePickerVisibility(false);
           setDateValue("today");
         }}
-      />
+      />}
       {/* from time Picker for passenger and driver */}
-      <DateTimePickerModal
-        isVisible={isFromTimePickrVisible}
+      {isFromTimePickrVisible&&<DateTimePickerModal
+        isVisible={true}
         mode='time'
         is24Hour
         date={
@@ -218,11 +225,11 @@ const OptionsFirstSlide = ({ goToSlide }) => {
         onCancel={() => {
           setFromTimePickerVisible(false);
         }}
-      />
+      />}
 
       {/* {/*to time Picker  , only for passenger */}
-      <DateTimePickerModal
-        isVisible={isToTimePickrVisible}
+      {isToTimePickrVisible&&<DateTimePickerModal
+        isVisible={true}
         mode='time'
         is24Hour
         date={
@@ -233,8 +240,8 @@ const OptionsFirstSlide = ({ goToSlide }) => {
         onCancel={() => {
           setToTimePickerVisible(false);
         }}
-      />
-    </Surface>
+      />}
+    </View>
   );
 };
 

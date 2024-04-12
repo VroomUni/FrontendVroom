@@ -40,7 +40,7 @@ const searchForRides = async rideFilters => {
   const validatedRidePayload = {
     ...rideFilters,
     fromTime: timeObjBuilder(rideFilters.fromTime),
-    toTime: timeObjBuilder(rideFilters.toTime),
+    toTime:rideFilters.toTime? timeObjBuilder(rideFilters.toTime):null,
     initialDate: dateObjBuilder(
       rideFilters.initialDate.selectedDateType,
       rideFilters.initialDate.customSelectedDate

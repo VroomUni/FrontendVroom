@@ -13,7 +13,11 @@ function PassengerSearchRidesStack() {
         component={RideInfoInput}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name='Rides' component={PassengerSearchRides} />
+      <Stack.Screen
+        name='Rides'
+        component={PassengerSearchRides}
+        options={{ title: null }}
+      />
       <Stack.Screen name='Map' component={RideOnMap} />
     </Stack.Navigator>
   );
