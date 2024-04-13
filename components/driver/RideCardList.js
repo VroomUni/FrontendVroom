@@ -31,7 +31,7 @@ function RideCardList({ selectedDate, navigation }) {
   //cancel all rides in the series: for automatically scheduled rides => no more auto creation of those rides + cancel all existing  ,
   const handleDelete = id => {
     Alert.alert(
-      "Cancel Ride",
+      "Cancel Rides",
       "Would you like to cancel all rides in this series?",
       [
         {
