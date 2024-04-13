@@ -1,4 +1,4 @@
-import { StyleSheet, Image, View, Alert } from "react-native";
+import { StyleSheet, Image, View, Alert , Dimensions } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
 
 // import { isPointInPolygon } from "geolib";
@@ -13,10 +13,12 @@ import {
 import Map from "../components/Map";
 import axios from "axios";
 import { postRide, searchForRides } from "../api/RideService";
-import { fromToObjBuilder } from "../utils/RideHelpers";
+import { dateObjBuilder, fromToObjBuilder } from "../utils/RideHelpers";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
 import { GOOGLE_MAPS_KEY } from "@env";
+const { width, height } = Dimensions.get("window");
+
 
 const RideInfo = ({ navigation }) => {
   const {
@@ -115,6 +117,7 @@ const RideInfo = ({ navigation }) => {
       initialDate: { customSelectedDate, selectedDateType },
       fromTime: customSelectedFromTime,
       toTime: customSelectedToTime,
+      passengerId: user.uid,
     };
     try {
       let data = await searchForRides(ridefiltersPayload);
@@ -122,6 +125,10 @@ const RideInfo = ({ navigation }) => {
       navigation.navigate("Rides", {
         rideIds: data,
         passengerLocation: destinationOrOrigin,
+        date: dateObjBuilder(
+          selectedDateType,
+          customSelectedDate
+        ).toISOString(),
       });
     } catch (err) {
       console.error(err);
@@ -140,7 +147,7 @@ const RideInfo = ({ navigation }) => {
       ) : (
         //Map + from to inputs
         <>
-          <DriverRideFromTo setOnLocationInputPage={goToLocationInputPage} />
+          <DriverRideFromTo setOnLocationInputPage={goToLocationInputPage} isOptionShown={isOptionShown}/>
 
           <Map
             currentRegion={currentRegion}
@@ -243,18 +250,18 @@ const styles = StyleSheet.create({
   },
   PlaceMarkerBtn: {
     position: "absolute",
-    top: 250,
+    top: height*0.3,
     right: 10,
-    width: 180,
+    width: width*0.35,
     height: 50,
     borderRadius: 10,
     justifyContent: "center",
   },
   PostRideBtn: {
     position: "absolute",
-    top: 195,
+    top: height*0.25,
     right: 10,
-    width: 160,
+    width: width*0.35,
     height: 50,
     borderRadius: 10,
     justifyContent: "center",

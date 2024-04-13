@@ -1,9 +1,11 @@
 import React, { useRef, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import OptionsFirstSlide from "./OptionsFirstSlide";
 import OptionsSecondSlide from "./OptionsSecondSlide";
 import { useAuth } from "../../context/AuthContext";
+
+const { width, height } = Dimensions.get("window");
 
 //carousel of the 2 pages / slides
 //  This final component is only responsible for swiping between them
@@ -44,8 +46,8 @@ const DriverRideExtraOptions = () => {
                 <OptionsSecondSlide />
               )
             }
-            sliderWidth={420}
-            itemWidth={420}
+            sliderWidth={width*0.95}
+            itemWidth={width*0.95}
             onSnapToItem={index => setActiveIndex(index)}
           />
           {renderPagination()}
@@ -62,16 +64,16 @@ const commonStyles = StyleSheet.create({
   //  this is the blue div in the scene  .
   carouselContainer: {
     backgroundColor: "#96DDF4",
-    overflow: "hidden",
     alignItems: "center",
-    flex: 3.5,
+    justifyContent:"center",
+    flex: 3.7,
     // paddingBottom:15
   },
 
   // related to the dots pagination ( that indicate which slider currently on) , no need to edit
   paginationContainer: {
     position: "absolute",
-    bottom: 15,
+    bottom: height * 0.01,
   },
   paginationDot: {
     width: 7,
