@@ -1,13 +1,16 @@
-import React, { useState, useEffect , useRef} from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   Animated,
+  Alert,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import Modal from "react-native-modal";
+import { handleRequestRespone } from "../../api/RequestService";
+import { enumeratePreferences } from "../../utils/UserHelpers";
 
 function PassengerRequestCard({
   id,
@@ -16,26 +19,26 @@ function PassengerRequestCard({
   rating,
   swipeAnimation,
   isFirst,
-  onDelete
-
+  onDelete,
+  isAccepted,
+  age,
+  preferences: passengerPrefs,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
-
-  const [accepted, setAccepted] = useState(false);
+  const [accepted, setAccepted] = useState(isAccepted);
 
   const swipeTranslateX = swipeAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: [0, isFirst ? 50 : 0],
   });
-  
 
-  const renderStars = (rating) => {
+  const renderStars = rating => {
     let stars = [];
     for (let i = 1; i <= 5; i++) {
       stars.push(
         <AntDesign
           key={i}
-          name="star"
+          name='star'
           size={24}
           style={i <= rating ? styles.filledStar : styles.emptyStar}
         />
@@ -43,26 +46,46 @@ function PassengerRequestCard({
     }
     return stars;
   };
-
-  const handleAccept = () => {
-    
+  const handleAccept = async () => {
     setModalVisible(false);
-       setAccepted(true)
+    try {
+      // method handles both decline and accept , sepcify false or true to differ
+      await handleRequestRespone(id, true);
+      setAccepted(true);
+    } catch (err) {
+      Alert.alert("An error occured while attempting to accept the request");
+      console.error(err);
+    }
   };
 
-  const handleReject = () => {
+  const handleReject = async () => {
     setModalVisible(false);
-   onDelete(id)
+    await onDelete(id);
+  };
+
+  const renderPreferences = () => {
+    return Object.keys(passengerPrefs).map((attribute, i) => {
+      if (passengerPrefs[attribute] === null) {
+        return null;
+      }
+      const value = enumeratePreferences(attribute, passengerPrefs[attribute]);
+      return (
+        <Text key={i} style={styles.detailsText}>
+          {value}
+        </Text>
+      );
+    });
   };
 
   return (
     <Animated.View
-  style={[styles.outerCard, {transform:[{translateX:swipeTranslateX}]}]}
-    >
+      style={[
+        styles.outerCard,
+        { transform: [{ translateX: swipeTranslateX }] },
+      ]}>
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
-        style={styles.card}
-      >
+        style={styles.card}>
         {accepted && (
           <View style={styles.acceptedContainer}>
             <Text style={styles.acceptedText}>Accepted</Text>
@@ -74,27 +97,29 @@ function PassengerRequestCard({
         </View>
         <Modal
           isVisible={modalVisible}
-          onBackdropPress={() => setModalVisible(false)}
-        >
+          onBackdropPress={() => setModalVisible(false)}>
           <View style={styles.modalView}>
-          <Text style={[styles.detailsText,{fontWeight:'bold'}]}>{`${FName} ${LName}`}</Text>
+            <Text
+              style={[
+                styles.detailsText,
+                { fontWeight: "bold" },
+              ]}>{`${FName} ${LName}`}</Text>
+            {/* static for now */}
             <Text style={styles.detailsText}>Age: 22</Text>
-            <Text style={styles.detailsText}>Non Smoker</Text>
-            <Text style={styles.detailsText}>Loud Music</Text>
-            <Text style={styles.detailsText}>Food Friendly</Text>
+            {renderPreferences()}
             <View style={styles.stars}>{renderStars(rating)}</View>
 
             <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={[styles.button, styles.acceptButton]}
-                onPress={handleAccept}
-              >
-                <Text style={styles.buttonText}>Accept</Text>
-              </TouchableOpacity>
+              {!accepted && (
+                <TouchableOpacity
+                  style={[styles.button, styles.acceptButton]}
+                  onPress={handleAccept}>
+                  <Text style={styles.buttonText}>Accept</Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
                 style={[styles.button, styles.rejectButton]}
-                onPress={handleReject}
-              >
+                onPress={handleReject}>
                 <Text style={styles.buttonText}>Reject</Text>
               </TouchableOpacity>
             </View>

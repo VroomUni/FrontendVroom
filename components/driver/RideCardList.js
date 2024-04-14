@@ -1,34 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import RideCard from "./RideCard";
 import { View, StyleSheet, Text, Alert } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useAuth } from "../../context/AuthContext";
 import { fetchDriverActiveRides } from "../../api/RideService";
+import { useFocusEffect } from "@react-navigation/native";
 
 function RideCardList({ selectedDate, navigation }) {
   const { user } = useAuth();
   const driverId = user.uid;
   const [isLoading, setIsLoading] = useState(true);
   const [rideData, setRideData] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchDriverActiveRides(driverId);
-        setRideData(data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        Alert.alert("An error occured while fetchind your rides");
-      }
-    };
+// NEED TO TEST MORE
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const data = await fetchDriverActiveRides(driverId);
+          setRideData(data);
+          setIsLoading(false);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          Alert.alert("An error occured while fetching your rides");
+        }
+      };
 
-    fetchData();
-  }, []);
+      fetchData();
+    }, [driverId]) // Add driverId as a dependency
+  );
+
   console.log("selected date", selectedDate);
   const filteredData = rideData.filter(
     item => item.occurenceDate === selectedDate
   );
-  //cancel all rides in the series: for automatically scheduled rides => no more auto creation of those rides + cancel all existing  ,
+
   const handleDelete = id => {
     Alert.alert(
       "Cancel Rides",
@@ -83,6 +88,7 @@ function RideCardList({ selectedDate, navigation }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
