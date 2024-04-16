@@ -53,7 +53,7 @@ const Car = ({ navigation }) => {
         </Text>
       <Image
         style={styles.logo}
-        source={require('../assets/car/carScreen1.png')}
+        source={require('../assets/carScreen1.png')}
       />
       
       <SelectDropdown
