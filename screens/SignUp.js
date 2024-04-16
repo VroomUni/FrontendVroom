@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  ImageBackground,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -129,6 +130,16 @@ const Signup = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      {/* <ImageBackground
+          source={require("../assets/back-2.jpg")}
+          resizeMode="cover"
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            
+          }}
+          /> */}
       <ScrollView keyboardDismissMode='on-drag'>
         <View style={{ flex: 1, marginHorizontal: 22 }}>
           <View style={{ marginVertical: 22 }}>
