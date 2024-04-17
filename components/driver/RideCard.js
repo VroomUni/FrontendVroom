@@ -30,9 +30,9 @@ function RideCard({
             <Text variant='bodyMedium' style={{ fontWeight: "bold" }}>
               Requests:{" "}
             </Text>
-            <Badge size={23} style={{ backgroundColor: "red" }}>
+            <Badge size={20} style={{ backgroundColor: "red" }}>
               <Text style={{ fontWeight: "bold", color: "white" }}>
-                {requests.filter(req => req.ride_request.status === 0).length}
+                &nbsp;{requests.filter(req => req.ride_request.status === 0).length}
               </Text>
             </Badge>
           </View>

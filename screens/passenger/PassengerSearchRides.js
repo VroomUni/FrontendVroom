@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "flex-end",
     alignItems: "flex-end",
-    marginTop: "120%",
+    marginTop: "100%",
   },
 
   animation: {
