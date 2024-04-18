@@ -47,6 +47,19 @@ const setPreferences = async userPreferences => {
     throw err;
   }
 };
+
+const getUserPreferences = async userId => {
+  const url = `${apiConfig.baseURL}/user/preferences?userId=${userId}`;
+  try {
+    console.log(userId);
+    const response = await axios.get(url);
+    return response.data;
+  } catch (err) {
+    console.error("problem fetching preferences", err);
+    throw err;
+  }
+};
+
 const signIn = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
@@ -65,4 +78,4 @@ const signIn = async (email, password) => {
   }
 };
 
-module.exports = { signIn, createUser, setPreferences };
+module.exports = { signIn, createUser, setPreferences, getUserPreferences };

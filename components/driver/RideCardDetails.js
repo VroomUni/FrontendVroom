@@ -1,65 +1,36 @@
-import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Animated, ScrollView } from "react-native";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import {
+  View,
+  StyleSheet,
+  Animated,
+  ScrollView,
+  Text,
+  Image,
+  Alert,
+} from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker, Polyline } from "react-native-maps";
 import PassengerRequestCard from "./PassengerRequestCard";
 import { Swipeable } from "react-native-gesture-handler";
 import LottieView from "lottie-react-native";
 import decline from "../../assets/decine.json";
 import { decode } from "@googlemaps/polyline-codec";
+import { handleRequestRespone } from "../../api/RequestService";
 
 function RideCardDetails({ route }) {
-  const [rideRequests, setRideRequests] = useState([
-    {
-      id: "1",
-      FName: "Emma",
-      LName: "Smith",
-      location: "Central Park",
-      time: "10:00 AM",
-      requests: "2",
-      rating: 4,
-    },
-    {
-      id: "2",
-      FName: "Liam",
-      LName: "Johnson",
-      location: "Madison Square",
-      time: "11:00 AM",
-      requests: "1",
-      rating: 3,
-    },
-    {
-      id: "3",
-      FName: "Olivia",
-      LName: "Williams",
-      location: "Union Square",
-      time: "12:00 PM",
-      requests: "3",
-      rating: 5,
-    },
-    {
-      id: "4",
-      FName: "Noah",
-      LName: "Brown",
-      location: "Times Square",
-      time: "01:00 PM",
-      requests: "2",
-      rating: 4,
-    },
-    {
-      id: "5",
-      FName: "Ava",
-      LName: "Jones",
-      location: "Columbus Circle",
-      time: "02:00 PM",
-      requests: "1",
-      rating: 2,
-    },
-  ]);
+  const [rideRequests, setRideRequests] = useState(route.params.requests);
+  // console.log(route.params.requests);
 
-  const deleteCard = id => {
-    setRideRequests(rideRequests.filter(item => item.id !== id));
+  const declineRequest = async reqId => {
+    try {
+      await handleRequestRespone(reqId, false);
+      setRideRequests(
+        rideRequests.filter(item => item.ride_request.id !== reqId)
+      );
+    } catch (err) {
+      Alert.alert("There was an error while attempting to decline the request");
+      console.error(err);
+    }
   };
-
   //for initial swipe bounce
   const swipeAnimation = useRef(new Animated.Value(0)).current;
 
@@ -114,11 +85,11 @@ function RideCardDetails({ route }) {
         }),
       ]).start(() => {
         animationCount.current = animationCount.current + 1;
-        // Wait for 5 seconds and then repeat the animation
-        if (animationCount.current < 3) {
+        // Wait for 2 seconds and then repeat the animation
+        if (animationCount.current < 2) {
           setTimeout(() => {
             animate();
-          }, 4000);
+          }, 2000);
         }
       });
     };
@@ -155,32 +126,37 @@ function RideCardDetails({ route }) {
   const renderItems = () => {
     return rideRequests.map((item, index) => (
       <Swipeable
-        key={item.id}
+        key={item.ride_request.id}
         renderRightActions={(progress, dragX) =>
           renderRightActions(progress, dragX)
         }
         onSwipeableOpen={direction => {
           if (direction === "right") {
-            deleteCard(item.id);
+            declineRequest(item.ride_request.id);
           }
         }}>
         <PassengerRequestCard
-          key={item.id}
-          id={item.id}
-          FName={item.FName}
-          LName={item.LName}
-          location={item.location}
-          time={item.time}
-          rating={item.rating}
+          id={item.ride_request.id}
+          FName={item.firstName}
+          LName={item.lastName}
+          // location={item.ride_request.passengerLocation.coordinates}
+          //static for now
+          rating={3}
           swipeAnimation={swipeAnimation}
           isFirst={index === 0}
-          onDelete={deleteCard}
+          onDelete={declineRequest}
+          isAccepted={item.ride_request.status === 1 ? true : false}
+          age={item.age}
+          preferences={item.Preference}
         />
       </Swipeable>
     ));
   };
   const mapRef = useRef();
-  const polylineCods = decode(route.params.routePolyline);
+  const polylineCods = useRef();
+  useMemo(() => {
+    polylineCods.current = decode(route.params.routePolyline);
+  }, [route.params.routePolyline]);
   return (
     <View style={styles.container}>
       {/* must reuse map compoennt  */}
@@ -188,7 +164,7 @@ function RideCardDetails({ route }) {
         ref={mapRef}
         onMapLoaded={() => {
           mapRef.current.fitToCoordinates(
-            polylineCods.map(coord => ({
+            polylineCods.current.map(coord => ({
               latitude: coord[0],
               longitude: coord[1],
             })),
@@ -212,7 +188,7 @@ function RideCardDetails({ route }) {
           longitudeDelta: 1, // Zoom level
         }}>
         <Polyline
-          coordinates={polylineCods.map(coord => ({
+          coordinates={polylineCods.current.map(coord => ({
             latitude: coord[0],
             longitude: coord[1],
           }))}
@@ -227,7 +203,17 @@ function RideCardDetails({ route }) {
           title='YOU'
         /> */}
       </MapView>
-      <ScrollView>{renderItems()}</ScrollView>
+      {rideRequests.length > 0 ? (
+        <ScrollView>{renderItems()}</ScrollView>
+      ) : (
+        <View style={styles.noRequestsContainer}>
+          {/* <Image
+            style={styles.NoSuggestionImage}
+            source={require("../../assets/noMoreFilter.png")}
+          /> */}
+          <Text>It's quiet for now </Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -257,6 +243,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     padding: 10,
   },
+  noRequestsContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
+  // NoSuggestionImage: {
+  //   width: "150%",
+  //   height: "50%",
+  //   resizeMode: "contain",
+  //   marginBottom: 5,
+  // },
 });
 
 export default RideCardDetails;
