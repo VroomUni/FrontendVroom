@@ -2,7 +2,6 @@ import React, { useState, createContext } from "react";
 import { useContext , useEffect } from "react";
 import {
   signOut,
-  signInWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
 } from "firebase/auth";
@@ -22,16 +21,6 @@ export const AuthContextProvider = ({ children }) => {
     return () => unsubscribe(); // Unsubscribe from auth state changes when component unmounts
   }, []);
 
-  const login = async (email, password) => {
-    try {
-      const userCredential = await signInWithEmailAndPassword(email, password);
-      setUser(userCredential.user);
-    } catch (error) {
-      console.error("Login failed:", error);
-      throw error;
-    }
-  };
-
   const logout = async () => {
     try {
       await signOut();
@@ -46,7 +35,6 @@ export const AuthContextProvider = ({ children }) => {
       value={{
         user,
         isPassenger,
-        login,
         logout,
         setIsPassenger
       }}>

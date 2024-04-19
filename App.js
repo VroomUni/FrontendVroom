@@ -11,7 +11,6 @@ import Login from "./screens/Login";
 import Preferences from "./screens/Preferences";
 import Car from "./screens/Car";
 import { AuthContextProvider, useAuth } from "./context/AuthContext";
-import PassengerSearchRides from "./screens/passenger/PassengerSearchRides";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 function App() {
   const Stack = createStackNavigator();
@@ -21,8 +20,7 @@ function App() {
   return (
     // <PassengerSearchRides />
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} >
-
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name='LoadingScreen' component={LoadingScreen} />
         <Stack.Screen name='Home' component={Home} />
         <Stack.Screen name='Preferences' component={Preferences} />
