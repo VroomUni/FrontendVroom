@@ -90,7 +90,9 @@ const fetchAllUnrequestedRides = async (passengerId, filterDate) => {
 };
 //fetches driver rides + requests made on them + ppl who requested
 const fetchDriverActiveRides = async (driverId) =>{
+  
   const finalUrl = `${url}/driver?id=${driverId}`
+  console.log(finalUrl)
   try {
     const response = await axios.get(finalUrl);
     return response.data.rides;
