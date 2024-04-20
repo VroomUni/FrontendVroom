@@ -148,12 +148,12 @@ function Profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     borderRadius: 0,
     margin: 0,
   },
   header: {
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     paddingTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     fontSize: 8,
     padding: 15,
     marginTop:5,
-    backgroundColor: '#152544',
+    // backgroundColor: '#152544',
     borderRadius: 40,
     color: 'white',
   },

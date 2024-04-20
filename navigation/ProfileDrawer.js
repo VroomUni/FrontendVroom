@@ -5,6 +5,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import GeneralInfo from '../components/GeneralInfo';
 import PreferencesSettings from '../components/PreferencesSettings';
 import CarSettings from '../components/CarSettings';
+import PasswordUpdate from '../components/PasswordUpdate';
 
 const  CustomDrawer = (props)=>{
   return(
@@ -46,10 +47,12 @@ function ProfileDrawer() {
       drawerContent={(props)=><CustomDrawer {...props}/>}
       >
         <Drawer.Screen name="General Information" component={GeneralInfo} />
+        <Drawer.Screen name="Change Password" component={PasswordUpdate} />
         <Drawer.Screen name="Preferences" component={PreferencesSettings} />
         <Drawer.Screen name="Car Information" component={CarSettings} />
       </Drawer.Navigator>
     );
 }
+
 
 export default ProfileDrawer;
