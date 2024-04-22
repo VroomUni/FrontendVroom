@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, StyleSheet, Text, Alert } from "react-native";
-
+import { View, TextInput, StyleSheet, Text, Alert } from "react-native";
+import {Button} from "react-native-paper"
 function PasswordUpdate() {
   const [passwords, setPasswords] = useState({
     currentPassword: "",
@@ -49,7 +49,17 @@ function PasswordUpdate() {
         value={passwords.confirmPassword}
       />
 
-      <Button title="Update Password" onPress={handleUpdatePassword} />
+      {/* <Button title="Update Password" onPress={handleUpdatePassword} /> */}
+      <Button
+        title="Skip"
+        mode="contained-tonal"
+        buttonColor="#162447"
+        textColor="white"
+        style={styles.updateButton}
+        onPress={handleUpdatePassword}
+      >
+        Update Password
+      </Button>
     </View>
   );
 }
@@ -70,6 +80,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     paddingVertical: 15,
     marginBottom: 20,
+    paddingLeft:10,
   },
   label: {
     fontSize: 16,

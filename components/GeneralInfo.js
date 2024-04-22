@@ -16,7 +16,8 @@ function GeneralInfo() {
   const [isEditing, setIsEditing] = useState(false);
 
   const [userDetails, setUserDetails] = useState({
-    fullName: "John Doe",
+    firstName: "John",
+    lastName: "Doe",
     email: "john@example.com",
     phoneNo: "23567146",
   });
@@ -67,25 +68,25 @@ function GeneralInfo() {
 
   return (
     <View style={styles.container}>
-        <TouchableOpacity onPress={handleEditPress} style={styles.editIconContainer}>
-          <Icon name="pencil" size={35} color="#000" />
-        </TouchableOpacity>
+      <TouchableOpacity
+        onPress={handleEditPress}
+        style={styles.editIconContainer}
+      >
+        <Icon name="pencil" size={35} color="#000" />
+      </TouchableOpacity>
       <View style={styles.profilePicContainer}>
         <Image
           source={{ uri: "https://bootdey.com/img/Content/avatar/avatar7.png" }}
           style={styles.profilePic}
         />
-
-      
       </View>
-    
 
       {isEditing ? (
         <>
-          {renderField("fullName", "Full Name")}
+          {renderField("firstName", "First Name")}
+          {renderField("lastName", "Last Name")}
           {renderField("email", "Email")}
           {renderField("phoneNo", "Phone No")}
-         
         </>
       ) : (
         <>
@@ -93,7 +94,7 @@ function GeneralInfo() {
             <Card.Content>
               <Text style={styles.infoText}>
                 <Text style={{ fontWeight: "bold" }}>Full Name:</Text>{" "}
-                {userDetails.fullName}
+                {userDetails.firstName} {userDetails.lastName}
               </Text>
               <Text style={styles.infoText}>
                 <Text style={{ fontWeight: "bold" }}>Email:</Text>{" "}
@@ -129,9 +130,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    width:'100%'
+    width: "100%",
+    backgroundColor: "#fff",
   },
-  cardContainer:{
+  cardContainer: {
     backgroundColor: "white",
     borderRadius: 8,
     elevation: 1,
@@ -144,7 +146,7 @@ const styles = StyleSheet.create({
   profilePicContainer: {
     alignItems: "center",
     marginBottom: 20,
-    marginTop:"20%"
+    marginTop: "20%",
   },
   profilePic: {
     width: 100,
@@ -183,10 +185,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   editIconContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     right: 20,
-    marginTop:"20%"
+    marginTop: "20%",
   },
 });
 

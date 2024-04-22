@@ -136,7 +136,7 @@ const Signup = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <ImageBackground
+      {/* <ImageBackground
           source={require("../assets/background-4.png")}
           resizeMode="cover"
           style={{
@@ -145,7 +145,7 @@ const Signup = ({ navigation }) => {
             position: "absolute",
             
           }}
-          />
+          /> */}
       <ScrollView keyboardDismissMode='on-drag'>
         <View style={{ flex: 1, marginHorizontal: 22 }}>
           <View style={{ marginVertical: 22 }}>

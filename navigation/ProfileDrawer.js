@@ -38,11 +38,17 @@ function ProfileDrawer() {
       screenOptions={{
         statusBarColor:'#162447',
         headerStyle:{
-          backgroundColor:'#162447'
-        },
-        headerTintColor:'#fff',
-        headerTitleAlign:'center'
+          backgroundColor:'#fff',
+          shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
 
+        },
+        headerTintColor:'#162447',
+        headerTitleAlign:'center',
+        
+       
       }}
       drawerContent={(props)=><CustomDrawer {...props}/>}
       >
