@@ -21,7 +21,7 @@ function PreferencesSettings() {
       <View style={styles.radioContainer}>
         {options.map(option => (
           <View key={option} style={styles.radioOption}>
-            <RadioButton
+            <RadioButton.Android
               value={option}
               status={preferences[preferenceKey] === option ? 'checked' : 'unchecked'}
               onPress={() => setPreferences({...preferences, [preferenceKey]: option})}
