@@ -23,7 +23,7 @@ const DriverRideFromTo = ({ setOnLocationInputPage, isOptionShown }) => {
 
   const translateY1 = swapAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 51], // Adjust the value based on the width of your buttons
+    outputRange: [0, 50], // Adjust the value based on the width of your buttons
   });
 
   const translateY2 = swapAnimation.interpolate({
@@ -61,8 +61,7 @@ const DriverRideFromTo = ({ setOnLocationInputPage, isOptionShown }) => {
       flex: isOptionShown ? 2 : 1.5,
       backgroundColor: "#E2EAF4",
       width: width, // 90% of screen width
-      alignSelf: "center", // center horizontally
-      paddingHorizontal: width * 0.01, // 5% padding on left and right
+      paddingHorizontal: width * 0.03, // 5% padding on left and right
       borderBottomWidth: 1,
       borderBottomColor: "blue",
     },
@@ -72,7 +71,7 @@ const DriverRideFromTo = ({ setOnLocationInputPage, isOptionShown }) => {
       resizeMode: "contain",
     },
     innerFromToBtnsContainer: {
-      width: "60%",
+      width: "63%",
     },
     buttons: {
       borderRadius: 10,
@@ -83,9 +82,7 @@ const DriverRideFromTo = ({ setOnLocationInputPage, isOptionShown }) => {
       borderWidth: 1,
     },
     iconContainer: {
-      alignItems: "center",
-      justifyContent: "center",
-      marginLeft: width * 0.04, // 5% margin on the left
+      marginLeft: width * 0.05, // 5% margin on the left
     },
   });
   return (

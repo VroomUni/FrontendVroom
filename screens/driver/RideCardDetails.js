@@ -9,15 +9,17 @@ import {
   Alert,
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker, Polyline } from "react-native-maps";
-import PassengerRequestCard from "./PassengerRequestCard";
+import PassengerRequestCard from "../../components/driver/PassengerRequestCard";
 import { Swipeable } from "react-native-gesture-handler";
 import LottieView from "lottie-react-native";
 import decline from "../../assets/decine.json";
 import { decode } from "@googlemaps/polyline-codec";
 import { handleRequestRespone } from "../../api/RequestService";
+import passengerIcon from "../../assets/people.png";
 
 function RideCardDetails({ route }) {
   const [rideRequests, setRideRequests] = useState(route.params.requests);
+  const [selectedRequest, setSelectedRequest] = useState(null);
   // console.log(route.params.requests);
 
   const declineRequest = async reqId => {
@@ -35,7 +37,7 @@ function RideCardDetails({ route }) {
   const swipeAnimation = useRef(new Animated.Value(0)).current;
 
   //counts how many time the initial requests has bounced , currently stops after 2 bounces
-  const animationCount = useRef(0);
+  const bounceAnimationCount = useRef(0);
 
   // animation for request bounce on component mount (indicator to swipe)
   useEffect(() => {
@@ -84,9 +86,9 @@ function RideCardDetails({ route }) {
           useNativeDriver: true,
         }),
       ]).start(() => {
-        animationCount.current = animationCount.current + 1;
+        bounceAnimationCount.current = bounceAnimationCount.current + 1;
         // Wait for 2 seconds and then repeat the animation
-        if (animationCount.current < 2) {
+        if (bounceAnimationCount.current < 2) {
           setTimeout(() => {
             animate();
           }, 2000);
@@ -98,7 +100,7 @@ function RideCardDetails({ route }) {
     animate();
   }, []);
 
-  const renderRightActions = (progress, dragX) => {
+  const renderLeftSwapContent = (progress, dragX) => {
     //for the degrading  red colors on swipe
     const backgroundColor = dragX.interpolate({
       inputRange: [-301, -300, 0], // Define the input range based on dragX values
@@ -117,18 +119,18 @@ function RideCardDetails({ route }) {
           source={decline}
           autoPlay
           loop={false}
-          style={{ width: 40, height: 40, zIndex: 10 }}
+          style={{ width: 35, height: 35, zIndex: 10 }}
         />
       </Animated.View>
     );
   };
 
-  const renderItems = () => {
+  const renderRequestItems = () => {
     return rideRequests.map((item, index) => (
       <Swipeable
         key={item.ride_request.id}
         renderRightActions={(progress, dragX) =>
-          renderRightActions(progress, dragX)
+          renderLeftSwapContent(progress, dragX)
         }
         onSwipeableOpen={direction => {
           if (direction === "right") {
@@ -139,7 +141,6 @@ function RideCardDetails({ route }) {
           id={item.ride_request.id}
           FName={item.firstName}
           LName={item.lastName}
-          // location={item.ride_request.passengerLocation.coordinates}
           //static for now
           rating={3}
           swipeAnimation={swipeAnimation}
@@ -148,21 +149,59 @@ function RideCardDetails({ route }) {
           isAccepted={item.ride_request.status === 1 ? true : false}
           age={item.age}
           preferences={item.Preference}
+          isHighlighted={
+            // initially when no request is selected , consider them all as highlighed
+            selectedRequest === null
+              ? true
+              : selectedRequest === item.ride_request.id
+          }
         />
       </Swipeable>
     ));
   };
+
+  const selectMarker = requestId => {
+    setSelectedRequest(requestId);
+    // Scroll to the selected request
+    const index = rideRequests.findIndex(
+      item => item.ride_request.id === requestId
+    );
+    if (index !== -1) {
+      scrollRef.current.scrollTo({ y: index * 60, animated: true });
+    }
+  };
+
+  const renderPassengerMarkers = () =>
+    rideRequests.map(item => (
+      <Marker
+        key={item.ride_request.id}
+        coordinate={{
+          longitude: item.ride_request.passengerLocation.coordinates[1],
+          latitude: item.ride_request.passengerLocation.coordinates[0],
+        }}
+        title={item.firstName + " " + item.lastName}
+        anchor={{ y: 0.5, x: 0.5 }} // Center the anchor
+        onPress={() => selectMarker(item.ride_request.id)} // Track marker selection
+      >
+        <View style={styles.markerContainer}>
+          <Image source={passengerIcon} style={styles.passengerIcon} />
+        </View>
+      </Marker>
+    ));
   const mapRef = useRef();
   const polylineCods = useRef();
+  const scrollRef = useRef();
+
   useMemo(() => {
     polylineCods.current = decode(route.params.routePolyline);
   }, [route.params.routePolyline]);
+
   return (
     <View style={styles.container}>
       {/* must reuse map compoennt  */}
       <MapView
         ref={mapRef}
-        onMapLoaded={() => {
+        onMapReady={() => {
           mapRef.current.fitToCoordinates(
             polylineCods.current.map(coord => ({
               latitude: coord[0],
@@ -195,16 +234,12 @@ function RideCardDetails({ route }) {
           strokeWidth={3}
           strokeColor='blue'
         />
-        {/* <Marker
-          coordinate={{
-            longitude: passengerLocation.coords.longitude,
-            latitude: passengerLocation.coords.latitude,
-          }}
-          title='YOU'
-        /> */}
+        {rideRequests.length > 0 && renderPassengerMarkers()}
       </MapView>
       {rideRequests.length > 0 ? (
-        <ScrollView>{renderItems()}</ScrollView>
+        <>
+          <ScrollView ref={scrollRef}>{renderRequestItems()}</ScrollView>
+        </>
       ) : (
         <View style={styles.noRequestsContainer}>
           {/* <Image
@@ -247,6 +282,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
+  },
+  markerContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  passengerIcon: {
+    width: 30,
+    height: 30,
+    resizeMode: "contain",
+    // Any additional styling you want to apply
   },
   // NoSuggestionImage: {
   //   width: "150%",

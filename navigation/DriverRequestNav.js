@@ -1,8 +1,7 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import DriverRides from '../screens/driver/DriverRides';
-import RideCardDetails from '../components/driver/RideCardDetails';
-import PassengerRequestCard from '../components/driver/PassengerRequestCard';
+import RideCardDetails from '../screens/driver/RideCardDetails';
 
 const DriverStack = createStackNavigator();
 

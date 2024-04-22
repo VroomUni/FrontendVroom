@@ -23,10 +23,10 @@ function PassengerRequestCard({
   isAccepted,
   age,
   preferences: passengerPrefs,
+  isHighlighted,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [accepted, setAccepted] = useState(isAccepted);
-
   const swipeTranslateX = swipeAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: [0, isFirst ? 50 : 0],
@@ -83,6 +83,7 @@ function PassengerRequestCard({
         styles.outerCard,
         { transform: [{ translateX: swipeTranslateX }] },
       ]}>
+      {isHighlighted ? null : <View style={styles.overlay} />}
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
         style={styles.card}>
@@ -214,6 +215,11 @@ const styles = StyleSheet.create({
   acceptedText: {
     color: "#FFFFFF",
     fontWeight: "bold",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust opacity as needed
+    borderRadius: 5,
   },
 });
 
