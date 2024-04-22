@@ -7,6 +7,7 @@ import {
   Text,
   Image,
   Alert,
+  InteractionManager,
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker, Polyline } from "react-native-maps";
 import PassengerRequestCard from "../../components/driver/PassengerRequestCard";
@@ -20,7 +21,9 @@ import passengerIcon from "../../assets/people.png";
 function RideCardDetails({ route }) {
   const [rideRequests, setRideRequests] = useState(route.params.requests);
   const [selectedRequest, setSelectedRequest] = useState(null);
-  // console.log(route.params.requests);
+  const mapRef = useRef();
+  const polylineCods = useRef();
+  const scrollRef = useRef();
 
   const declineRequest = async reqId => {
     try {
@@ -125,8 +128,36 @@ function RideCardDetails({ route }) {
     );
   };
 
+  const highlightRequest = item => {
+    selectMarker(item.ride_request.id);
+    const markerRef = markerRefs.current[item.ride_request.id];
+    InteractionManager.runAfterInteractions(() => {
+      mapRef.current.animateToRegion(
+        {
+          ...markerRef.props.coordinate,
+          latitudeDelta: 0.1, // Zoom level
+          longitudeDelta: 0.1, // Zoom level}, {
+        },
+        1000
+      );
+      markerRef.showCallout();
+    });
+  };
+
   const renderRequestItems = () => {
-    return rideRequests.map((item, index) => (
+    // Reorder rideRequests array to move items with status = accepted to the end
+    const sortedRequests = rideRequests.sort((a, b) => {
+      // Move items with status = 1 to the end
+      if (a.ride_request.status === 1 && b.ride_request.status !== 1) {
+        return 1;
+      } else if (a.ride_request.status !== 1 && b.ride_request.status === 1) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+
+    return sortedRequests.map((item, index) => (
       <Swipeable
         key={item.ride_request.id}
         renderRightActions={(progress, dragX) =>
@@ -150,11 +181,18 @@ function RideCardDetails({ route }) {
           age={item.age}
           preferences={item.Preference}
           isHighlighted={
-            // initially when no request is selected , consider them all as highlighed
+            // null => initially when no request is selected
+            //request cards treat null as default styling
+            // true as highlighed custom styling
+            // false as non highlighted custom styling
             selectedRequest === null
-              ? true
+              ? null
               : selectedRequest === item.ride_request.id
           }
+          unhighlightRequest={() => {
+            selectMarker(null);
+          }}
+          highlightRequest={() => highlightRequest(item)}
         />
       </Swipeable>
     ));
@@ -168,13 +206,18 @@ function RideCardDetails({ route }) {
     );
     if (index !== -1) {
       scrollRef.current.scrollTo({ y: index * 60, animated: true });
+    } else {
+      scrollRef.current.scrollTo({ y: 0, animated: true });
     }
   };
+  const markerRefs = useRef({});
 
   const renderPassengerMarkers = () =>
     rideRequests.map(item => (
       <Marker
         key={item.ride_request.id}
+        ref={ref => (markerRefs.current[item.ride_request.id] = ref)} // Store marker reference
+        tracksViewChanges={false}
         coordinate={{
           longitude: item.ride_request.passengerLocation.coordinates[1],
           latitude: item.ride_request.passengerLocation.coordinates[0],
@@ -188,9 +231,6 @@ function RideCardDetails({ route }) {
         </View>
       </Marker>
     ));
-  const mapRef = useRef();
-  const polylineCods = useRef();
-  const scrollRef = useRef();
 
   useMemo(() => {
     polylineCods.current = decode(route.params.routePolyline);
@@ -199,43 +239,45 @@ function RideCardDetails({ route }) {
   return (
     <View style={styles.container}>
       {/* must reuse map compoennt  */}
-      <MapView
-        ref={mapRef}
-        onMapReady={() => {
-          mapRef.current.fitToCoordinates(
-            polylineCods.current.map(coord => ({
+      <View style={styles.mapContainer}>
+        <MapView
+          ref={mapRef}
+          onMapReady={() => {
+            mapRef.current.fitToCoordinates(
+              polylineCods.current.map(coord => ({
+                latitude: coord[0],
+                longitude: coord[1],
+              })),
+              {
+                edgePadding: {
+                  top: 40,
+                  bottom: 40,
+                  right: 10,
+                  left: 10,
+                },
+                animated: true,
+              }
+            );
+          }}
+          provider={PROVIDER_GOOGLE}
+          style={{ flex: 1 }}
+          initialRegion={{
+            latitude: 36.7277622657912, // Latitude of Tunisia
+            longitude: 10.203072895008471, // Longitude of Tunisia
+            latitudeDelta: 1, // Zoom level
+            longitudeDelta: 1, // Zoom level
+          }}>
+          <Polyline
+            coordinates={polylineCods.current.map(coord => ({
               latitude: coord[0],
               longitude: coord[1],
-            })),
-            {
-              edgePadding: {
-                top: 40,
-                bottom: 40,
-                right: 10,
-                left: 10,
-              },
-              animated: true,
-            }
-          );
-        }}
-        provider={PROVIDER_GOOGLE}
-        style={{ height: "50%" }}
-        initialRegion={{
-          latitude: 36.7277622657912, // Latitude of Tunisia
-          longitude: 10.203072895008471, // Longitude of Tunisia
-          latitudeDelta: 1, // Zoom level
-          longitudeDelta: 1, // Zoom level
-        }}>
-        <Polyline
-          coordinates={polylineCods.current.map(coord => ({
-            latitude: coord[0],
-            longitude: coord[1],
-          }))}
-          strokeWidth={3}
-          strokeColor='blue'
-        />
-        {rideRequests.length > 0 && renderPassengerMarkers()}
-      </MapView>
+            }))}
+            strokeWidth={3}
+            strokeColor='blue'
+          />
+          {rideRequests.length > 0 && renderPassengerMarkers()}
+        </MapView>
+      </View>
       {rideRequests.length > 0 ? (
         <>
           <ScrollView ref={scrollRef}>{renderRequestItems()}</ScrollView>
@@ -256,7 +298,12 @@ function RideCardDetails({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    rowGap: 10,
+  },
+  mapContainer: {
+    height: "55%",
+    margin: 3,
+    borderRadius: 10,
+    overflow: "hidden",
   },
   leftAction: {
     borderRadius: 5,
@@ -265,14 +312,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-end",
     paddingRight: 20,
-  },
-  rightAction: {
-    borderRadius: 5,
-    margin: 5,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "flex-start",
-    paddingLeft: 20,
   },
   actionText: {
     fontSize: 18,
@@ -291,7 +330,6 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     resizeMode: "contain",
-    // Any additional styling you want to apply
   },
   // NoSuggestionImage: {
   //   width: "150%",

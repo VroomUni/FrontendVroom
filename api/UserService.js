@@ -71,18 +71,6 @@ const signIn = async (email, password) => {
 
     const token = await registerForPushNotificationsAsync();
     console.log(token);
-    // notificationListener.current =
-    //   Notifications.addNotificationReceivedListener(notification => {
-    //     setNotification(notification);
-    //   });
-
-    // responseListener.current =
-    //   Notifications.addNotificationResponseReceivedListener(response => {
-    //     console.log(response);
-    //   });
-
-    // Notifications.removeNotificationSubscription(notificationListener.current);
-    //Notifications.removeNotificationSubscription(responseListener.current);
     return token;
   } catch (error) {
     const errorCode = error.code;
