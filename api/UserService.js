@@ -10,8 +10,7 @@ import {
 import apiConfig from "./apiConfig";
 import axios from "axios";
 const auth = getAuth();
-
-const createUser = async userValidatedPayload => {
+const createUser = async (userValidatedPayload) => {
   const url = `${apiConfig.baseURL}/user/signup`;
   let FbaseUser;
   try {
@@ -25,18 +24,20 @@ const createUser = async userValidatedPayload => {
       ...userValidatedPayload,
       firebaseId: FbaseUser.user.uid,
     });
-    console.log("SUCCESS , user created");
-
+    console.log("SUCCESS: User created successfully");
     return response;
   } catch (err) {
-    //to fix this , add more errors for users
-    deleteUser(FbaseUser.user);
-    console.error("Error creating user :", err);
+    console.error("Error creating user:", err);
+    // Handle Firebase errors
+    if (FbaseUser) {
+      await deleteUser(FbaseUser.user);
+    }
     throw err;
   }
 };
 
-const setPreferences = async userPreferences => {
+
+const setPreferences = async (userPreferences) => {
   const url = `${apiConfig.baseURL}/user/preferences`;
   console.log(userPreferences);
   try {

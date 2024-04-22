@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  ImageBackground,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -121,14 +122,30 @@ const Signup = ({ navigation }) => {
         });
         navigation.navigate("Preferences");
       } catch (err) {
-        console.log(err);
-        Alert.alert("We encountered a problem during sign up");
+        let msg="";
+        if (err.code === "auth/email-already-in-use") {
+          msg = "The email address is already in use.";
+        } 
+        else{
+          msg="We encountered an error during registration"
+        }
+        Alert.alert(msg);
       }
     }
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      <ImageBackground
+          source={require("../assets/background-4.png")}
+          resizeMode="cover"
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            
+          }}
+          />
       <ScrollView keyboardDismissMode='on-drag'>
         <View style={{ flex: 1, marginHorizontal: 22 }}>
           <View style={{ marginVertical: 22 }}>
