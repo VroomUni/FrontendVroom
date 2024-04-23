@@ -23,14 +23,14 @@ const DriverRideFromTo = ({ setOnLocationInputPage, isOptionShown }) => {
 
   const translateY1 = swapAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 50], // Adjust the value based on the width of your buttons
+    outputRange: [0, 54], // Adjust the value based on the width of your buttons
   });
 
   const translateY2 = swapAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, -50], // Adjust the value based on the width of your buttons
+    outputRange: [0, -52], // Adjust the value based on the width of your buttons
   });
-
+  console.log(height * 0.07);
   useEffect(() => {
     // Reset animation value when the component mounts to fix a bug
     swapAnimation.setValue(isToSmu ? 0 : 1);
@@ -58,7 +58,7 @@ const DriverRideFromTo = ({ setOnLocationInputPage, isOptionShown }) => {
     itineraryComponentContainer: {
       flexDirection: "row",
       alignItems: "center",
-      flex: isOptionShown ? 2 : 1.5,
+      flex: isOptionShown ? 2 : 1.4,
       backgroundColor: "#E2EAF4",
       width: width, // 90% of screen width
       paddingHorizontal: width * 0.03, // 5% padding on left and right

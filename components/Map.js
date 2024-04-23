@@ -1,4 +1,4 @@
-import { StyleSheet, Alert, View, Image } from "react-native";
+import { StyleSheet, Platform, Alert, View, Image } from "react-native";
 import React, { useRef, useEffect, useMemo } from "react";
 import MapView, {
   Marker,
@@ -99,10 +99,12 @@ const Map = ({
       provider={PROVIDER_GOOGLE}
       showsBuildings={false}
       region={currentRegion.current}
-      onRegionChangeComplete={region => (currentRegion.current = region)}>
+      onRegionChangeComplete={region => (currentRegion.current = region)}
+      key={destinationOrOrigin}>
       {/* destination red marker */}
       {destinationOrOrigin && (
         <Marker
+          key={isToSmu}
           coordinate={{
             longitude: destinationOrOrigin.coords.longitude,
             latitude: destinationOrOrigin.coords.latitude,
@@ -116,20 +118,30 @@ const Map = ({
           )}
         </Marker>
       )}
-      <Marker
-        // SMU Constant blue marker
-        coordinate={{
-          longitude: SMUCOORDS.longitude,
-          latitude: SMUCOORDS.latitude,
-        }}
-        title='SMU'
-        anchor={!isToSmu ? { x: 0.5, y: 0.5 } : undefined}>
-        {!isToSmu && (
+      {!isToSmu ? (
+        <Marker
+          key={destinationOrOrigin}
+          // SMU Constant blue marker
+          coordinate={{
+            longitude: SMUCOORDS.longitude,
+            latitude: SMUCOORDS.latitude,
+          }}
+          title='SMU'
+          anchor={{ x: 0.5, y: 0.5 }}>
           <View style={styles.markerContainer}>
             <Image source={dot} style={styles.markerImage} />
           </View>
-        )}
-      </Marker>
+        </Marker>
+      ) : (
+        <Marker
+          coordinate={{
+            longitude: SMUCOORDS.longitude,
+            latitude: SMUCOORDS.latitude,
+          }}
+          title='SMU'
+        />
+      )}
+
       {/* route (polyline) in blue */}
       {polylineCods && (
         <Polyline
