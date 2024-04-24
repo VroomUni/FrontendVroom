@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { Card, RadioButton, Button } from "react-native-paper";
 
 function PreferencesSettings() {
@@ -37,9 +37,11 @@ function PreferencesSettings() {
     );
   };
   return (
-    <View style={styles.container}>
+    <>
+   
       {isEditing ? (
         <>
+        <View style={styles.container}>
           <Card style={styles.cardContainer}>
             <Card.Content>
               <Text style={styles.infoText}>Smoker:</Text>
@@ -65,10 +67,14 @@ function PreferencesSettings() {
           >
             Save Changes
           </Button>
+          </View>
         </>
       ) : (
         <>
+         <View style={styles.container}>
+         <Image style={styles.logo} source={require("../assets/PreferencesSettings.png")} />
           <Card style={styles.cardContainer}>
+         
             <Card.Content>
               <Text style={styles.infoText}>
                 <Text style={styles.boldText}>Smoker:</Text>{" "}
@@ -102,9 +108,11 @@ function PreferencesSettings() {
           >
             Update
           </Button>
+          </View>
         </>
       )}
-    </View>
+    
+    </>
   );
 }
 const styles = StyleSheet.create({
@@ -145,6 +153,13 @@ const styles = StyleSheet.create({
   radioOption: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  logo: {
+   
+    width: 250,
+    height: 250,
+    marginLeft: "18%",
+    
   },
 });
 
