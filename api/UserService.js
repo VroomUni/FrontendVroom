@@ -6,10 +6,14 @@ import {
   sendEmailVerification,
   deleteUser,
   signInWithEmailAndPassword,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential
 } from "firebase/auth";
 import apiConfig from "./apiConfig";
 import axios from "axios";
 const auth = getAuth();
+
 const createUser = async (userValidatedPayload) => {
   const url = `${apiConfig.baseURL}/user/signup`;
   let FbaseUser;
@@ -78,5 +82,33 @@ const signIn = async (email, password) => {
     throw error;
   }
 };
+const updateUserPassword = async (currentPassword, newPassword)=>{
+  const user = auth.currentUser
+  if(!user){
+    throw new Error ("No user is currently signed in")
+  }
+  try{
+    console.log("error here")
+    await reauthenticateUser(currentPassword)
+    console.log("successfully reauthenticated ")
+    await updatePassword(user, newPassword)
+    console.log("password updated successfully")
+  }catch(error){
+    console.error("Failed to update password:",error.message)
+    throw error
+  }
 
-module.exports = { signIn, createUser, setPreferences, getUserPreferences };
+};
+
+const reauthenticateUser = async(currentPassword) =>{
+  const user = auth.currentUser
+  const credential = EmailAuthProvider.credential(user.email, currentPassword)
+  console.log("credential",credential)
+  try{
+    await reauthenticateWithCredential(user, credential)
+  }catch(error){
+    console.error("reauthentication failed", error.message)
+    throw error
+  }
+}
+module.exports = { signIn, createUser, setPreferences, getUserPreferences, updateUserPassword };
