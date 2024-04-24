@@ -12,6 +12,7 @@ import Preferences from "./screens/Preferences";
 import Car from "./screens/Car";
 import { AuthContextProvider, useAuth } from "./context/AuthContext";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import CarSettings from "./components/CarSettings";
 function App() {
   const Stack = createStackNavigator();
   const { user } = useAuth();
@@ -26,6 +27,7 @@ function App() {
         <Stack.Screen name='Preferences' component={Preferences} />
         <Stack.Screen name='TabNav' component={TabNav} />
         <Stack.Screen name='Car' component={Car} />
+        <Stack.Screen name="car Setting" component={CarSettings}/>
         <Stack.Screen name='OnBoarding' component={OnBoarding} />
         <Stack.Screen name='SplashScreen' component={SplashScreen} />
         <Stack.Screen name='Signup' component={Signup} />

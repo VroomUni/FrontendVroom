@@ -1,4 +1,4 @@
-import { View, Text, Alert } from "react-native";
+import { View, Text, Alert,StyleSheet,Dimensions } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
@@ -8,13 +8,16 @@ import { Button } from "react-native-paper";
 import { setPreferences } from "../api/UserService";
 import { useAuth } from "../context/AuthContext";
 
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
+
 const Preferences = ({ navigation }) => {
   const [smokerchecked, setSmokerChecked] = useState(null);
   const [foodchecked, setFoodChecked] = useState(null);
   const [musicchecked, setMusicChecked] = useState(null);
   const [talkativechecked, setTalkativeChecked] = useState(null);
-  const [boysOnly, setBoysOnly] = useState(null);
-  const [girlsOnly, setGirlsOnly] = useState(null);
+  const [boysOnly, setBoysOnly] = useState(false);
+  const [girlsOnly, setGirlsOnly] = useState(false);
   const { user } = useAuth();
   const submitPreferences = async isYesClick => {
     
@@ -94,7 +97,7 @@ const Preferences = ({ navigation }) => {
               alignItems: "center",
               paddingLeft: 20,
             }}>
-            <RadioButton
+            <RadioButton.Android
               value={true}
               status={smokerchecked === true ? "checked" : "unchecked"}
               onPress={() => setSmokerChecked(true)}
@@ -103,7 +106,7 @@ const Preferences = ({ navigation }) => {
           </View>
 
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <RadioButton
+            <RadioButton.Android
               value={false}
               status={smokerchecked === false ? "checked" : "unchecked"}
               onPress={() => setSmokerChecked(false)}
@@ -131,7 +134,7 @@ const Preferences = ({ navigation }) => {
               alignItems: "center",
               paddingLeft: 20,
             }}>
-            <RadioButton
+            <RadioButton.Android
               value={true}
               status={foodchecked === true ? "checked" : "unchecked"}
               onPress={() => setFoodChecked(true)}
@@ -140,7 +143,7 @@ const Preferences = ({ navigation }) => {
           </View>
 
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <RadioButton
+            <RadioButton.Android
               value={false}
               status={foodchecked === false ? "checked" : "unchecked"}
               onPress={() => setFoodChecked(false)}
@@ -168,7 +171,7 @@ const Preferences = ({ navigation }) => {
               alignItems: "center",
               paddingLeft: 20,
             }}>
-            <RadioButton
+            <RadioButton.Android
               value={true}
               status={musicchecked === true ? "checked" : "unchecked"}
               onPress={() => setMusicChecked(true)}
@@ -177,7 +180,7 @@ const Preferences = ({ navigation }) => {
           </View>
 
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <RadioButton
+            <RadioButton.Android
               value={false}
               status={musicchecked === false ? "checked" : "unchecked"}
               onPress={() => setMusicChecked(false)}
@@ -205,7 +208,7 @@ const Preferences = ({ navigation }) => {
               alignItems: "center",
               paddingLeft: 20,
             }}>
-            <RadioButton
+            <RadioButton.Android
               value={true}
               status={talkativechecked === true ? "checked" : "unchecked"}
               onPress={() => setTalkativeChecked(true)}
@@ -214,7 +217,7 @@ const Preferences = ({ navigation }) => {
           </View>
 
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <RadioButton
+            <RadioButton.Android
               value={false}
               status={talkativechecked === false ? "checked" : "unchecked"}
               onPress={() => setTalkativeChecked(false)}
@@ -313,6 +316,17 @@ const Preferences = ({ navigation }) => {
         </View>
       </View>
 
+      {/* <Button
+        title="Skip"
+        mode="contained-tonal"
+        icon="chevron-right"
+        buttonColor="#00f0dc"
+        textColor="white"
+        onPress={() => console.log("SKIP")}
+      >
+        Skip
+      </Button> */}
+
       <View
         style={{
           flexDirection: "row",
@@ -322,5 +336,27 @@ const Preferences = ({ navigation }) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+    paddingLeft: windowWidth * 0.05,
+    paddingRight: windowWidth * 0.1,
+  },
+  headingContainer: {
+    marginVertical: windowHeight * 0.02,
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  headingText: {
+    fontSize: windowWidth * 0.06,
+    fontWeight: "bold",
+    marginVertical: windowHeight * 0.03,
+    color: COLORS.blue,
+    marginRight: windowWidth * 0.05,
+  },
+  // Other styles for your components
+});
 
 export default Preferences;
