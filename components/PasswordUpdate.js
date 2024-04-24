@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet, Text, Alert, Image } from "react-native";
+import { View, TextInput, StyleSheet, Text, Alert, Image,KeyboardAvoidingView, Platform } from "react-native";
 import {Button} from "react-native-paper";
 import {updateUserPassword} from "../api/UserService"
 function PasswordUpdate() {
@@ -24,7 +24,7 @@ function PasswordUpdate() {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "position" : "height"} enabled>
       <Image style={styles.logo} source={require("../assets/PasswordUpdate.png")} />
       <Text style={styles.label}>Current Password:</Text>
       <TextInput
@@ -61,14 +61,14 @@ function PasswordUpdate() {
       >
         Update Password
       </Button>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "flex-start",
+    justifyContent: 'flex-start',
     backgroundColor: "white",
   },
   input: {
