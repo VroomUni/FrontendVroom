@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import apiConfig from "./apiConfig";
 import axios from "axios";
+import { registerForPushNotificationsAsync } from "../api/pushNotifService";
 const auth = getAuth();
 
 const createUser = async userValidatedPayload => {
@@ -67,13 +68,13 @@ const signIn = async (email, password) => {
       email,
       password
     );
-    const user = userCredential.user;
-    return user;
+
+    const token = await registerForPushNotificationsAsync();
+    console.log(token);
+    return token;
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
-    console.log(errorCode);
-    console.log(errorMessage);
     throw error;
   }
 };

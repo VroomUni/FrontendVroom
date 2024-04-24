@@ -7,18 +7,23 @@ import {
   Text,
   Image,
   Alert,
+  InteractionManager,
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker, Polyline } from "react-native-maps";
-import PassengerRequestCard from "./PassengerRequestCard";
+import PassengerRequestCard from "../../components/driver/PassengerRequestCard";
 import { Swipeable } from "react-native-gesture-handler";
 import LottieView from "lottie-react-native";
 import decline from "../../assets/decine.json";
 import { decode } from "@googlemaps/polyline-codec";
 import { handleRequestRespone } from "../../api/RequestService";
+import passengerIcon from "../../assets/people.png";
 
 function RideCardDetails({ route }) {
   const [rideRequests, setRideRequests] = useState(route.params.requests);
-  // console.log(route.params.requests);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const mapRef = useRef();
+  const polylineCods = useRef();
+  const scrollRef = useRef();
 
   const declineRequest = async reqId => {
     try {
@@ -35,7 +40,7 @@ function RideCardDetails({ route }) {
   const swipeAnimation = useRef(new Animated.Value(0)).current;
 
   //counts how many time the initial requests has bounced , currently stops after 2 bounces
-  const animationCount = useRef(0);
+  const bounceAnimationCount = useRef(0);
 
   // animation for request bounce on component mount (indicator to swipe)
   useEffect(() => {
@@ -84,9 +89,9 @@ function RideCardDetails({ route }) {
           useNativeDriver: true,
         }),
       ]).start(() => {
-        animationCount.current = animationCount.current + 1;
+        bounceAnimationCount.current = bounceAnimationCount.current + 1;
         // Wait for 2 seconds and then repeat the animation
-        if (animationCount.current < 2) {
+        if (bounceAnimationCount.current < 2) {
           setTimeout(() => {
             animate();
           }, 2000);
@@ -98,7 +103,7 @@ function RideCardDetails({ route }) {
     animate();
   }, []);
 
-  const renderRightActions = (progress, dragX) => {
+  const renderLeftSwapContent = (progress, dragX) => {
     //for the degrading  red colors on swipe
     const backgroundColor = dragX.interpolate({
       inputRange: [-301, -300, 0], // Define the input range based on dragX values
@@ -117,18 +122,46 @@ function RideCardDetails({ route }) {
           source={decline}
           autoPlay
           loop={false}
-          style={{ width: 40, height: 40, zIndex: 10 }}
+          style={{ width: 35, height: 35, zIndex: 10 }}
         />
       </Animated.View>
     );
   };
 
-  const renderItems = () => {
-    return rideRequests.map((item, index) => (
+  const highlightRequest = item => {
+    selectMarker(item.ride_request.id);
+    const markerRef = markerRefs.current[item.ride_request.id];
+    InteractionManager.runAfterInteractions(() => {
+      mapRef.current.animateToRegion(
+        {
+          ...markerRef.props.coordinate,
+          latitudeDelta: 0.1, // Zoom level
+          longitudeDelta: 0.1, // Zoom level}, {
+        },
+        1000
+      );
+      markerRef.showCallout();
+    });
+  };
+
+  const renderRequestItems = () => {
+    // Reorder rideRequests array to move items with status = accepted to the end
+    const sortedRequests = rideRequests.sort((a, b) => {
+      // Move items with status = 1 to the end
+      if (a.ride_request.status === 1 && b.ride_request.status !== 1) {
+        return 1;
+      } else if (a.ride_request.status !== 1 && b.ride_request.status === 1) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+
+    return sortedRequests.map((item, index) => (
       <Swipeable
         key={item.ride_request.id}
         renderRightActions={(progress, dragX) =>
-          renderRightActions(progress, dragX)
+          renderLeftSwapContent(progress, dragX)
         }
         onSwipeableOpen={direction => {
           if (direction === "right") {
@@ -139,7 +172,6 @@ function RideCardDetails({ route }) {
           id={item.ride_request.id}
           FName={item.firstName}
           LName={item.lastName}
-          // location={item.ride_request.passengerLocation.coordinates}
           //static for now
           rating={3}
           swipeAnimation={swipeAnimation}
@@ -148,63 +180,108 @@ function RideCardDetails({ route }) {
           isAccepted={item.ride_request.status === 1 ? true : false}
           age={item.age}
           preferences={item.Preference}
+          isHighlighted={
+            // null => initially when no request is selected
+            //request cards treat null as default styling
+            // true as highlighed custom styling
+            // false as non highlighted custom styling
+            selectedRequest === null
+              ? null
+              : selectedRequest === item.ride_request.id
+          }
+          unhighlightRequest={() => {
+            selectMarker(null);
+          }}
+          highlightRequest={() => highlightRequest(item)}
         />
       </Swipeable>
     ));
   };
-  const mapRef = useRef();
-  const polylineCods = useRef();
+
+  const selectMarker = requestId => {
+    setSelectedRequest(requestId);
+    // Scroll to the selected request
+    const index = rideRequests.findIndex(
+      item => item.ride_request.id === requestId
+    );
+    if (index !== -1) {
+      scrollRef.current.scrollTo({ y: index * 60, animated: true });
+    } else {
+      scrollRef.current.scrollTo({ y: 0, animated: true });
+    }
+  };
+  const markerRefs = useRef({});
+
+  const renderPassengerMarkers = () =>
+    rideRequests.map(item => (
+      <Marker
+        key={item.ride_request.id}
+        ref={ref => (markerRefs.current[item.ride_request.id] = ref)} // Store marker reference
+        tracksViewChanges={false}
+        coordinate={{
+          longitude: item.ride_request.passengerLocation.coordinates[1],
+          latitude: item.ride_request.passengerLocation.coordinates[0],
+        }}
+        title={item.firstName + " " + item.lastName}
+        anchor={{ y: 0.5, x: 0.5 }} // Center the anchor
+        onPress={() => selectMarker(item.ride_request.id)} // Track marker selection
+      >
+        <View style={styles.markerContainer}>
+          <Image source={passengerIcon} style={styles.passengerIcon} />
+        </View>
+      </Marker>
+    ));
+
   useMemo(() => {
     polylineCods.current = decode(route.params.routePolyline);
   }, [route.params.routePolyline]);
+
   return (
     <View style={styles.container}>
       {/* must reuse map compoennt  */}
-      <MapView
-        ref={mapRef}
-        onMapLoaded={() => {
-          mapRef.current.fitToCoordinates(
-            polylineCods.current.map(coord => ({
+      <View style={styles.mapContainer}>
+        <MapView
+          ref={mapRef}
+          onMapReady={() => {
+            mapRef.current.fitToCoordinates(
+              polylineCods.current.map(coord => ({
+                latitude: coord[0],
+                longitude: coord[1],
+              })),
+              {
+                edgePadding: {
+                  top: 40,
+                  bottom: 40,
+                  right: 10,
+                  left: 10,
+                },
+                animated: true,
+              }
+            );
+          }}
+          provider={PROVIDER_GOOGLE}
+          style={{ flex: 1 }}
+          initialRegion={{
+            latitude: 36.7277622657912, // Latitude of Tunisia
+            longitude: 10.203072895008471, // Longitude of Tunisia
+            latitudeDelta: 1, // Zoom level
+            longitudeDelta: 1, // Zoom level
+          }}>
+          <Polyline
+            coordinates={polylineCods.current.map(coord => ({
               latitude: coord[0],
               longitude: coord[1],
-            })),
-            {
-              edgePadding: {
-                top: 40,
-                bottom: 40,
-                right: 10,
-                left: 10,
-              },
-              animated: true,
-            }
-          );
-        }}
-        provider={PROVIDER_GOOGLE}
-        style={{ height: "50%" }}
-        initialRegion={{
-          latitude: 36.7277622657912, // Latitude of Tunisia
-          longitude: 10.203072895008471, // Longitude of Tunisia
-          latitudeDelta: 1, // Zoom level
-          longitudeDelta: 1, // Zoom level
-        }}>
-        <Polyline
-          coordinates={polylineCods.current.map(coord => ({
-            latitude: coord[0],
-            longitude: coord[1],
-          }))}
-          strokeWidth={3}
-          strokeColor='blue'
-        />
-        {/* <Marker
-          coordinate={{
-            longitude: passengerLocation.coords.longitude,
-            latitude: passengerLocation.coords.latitude,
-          }}
-          title='YOU'
-        /> */}
-      </MapView>
+            }))}
+            strokeWidth={3}
+            strokeColor='blue'
+          />
+          {rideRequests.length > 0 && renderPassengerMarkers()}
+        </MapView>
+      </View>
       {rideRequests.length > 0 ? (
-        <ScrollView>{renderItems()}</ScrollView>
+        <>
+          <ScrollView ref={scrollRef}>{renderRequestItems()}</ScrollView>
+        </>
       ) : (
         <View style={styles.noRequestsContainer}>
           {/* <Image
@@ -221,7 +298,12 @@ function RideCardDetails({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    rowGap: 10,
+  },
+  mapContainer: {
+    height: "55%",
+    margin: 3,
+    borderRadius: 10,
+    overflow: "hidden",
   },
   leftAction: {
     borderRadius: 5,
@@ -231,14 +313,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     paddingRight: 20,
   },
-  rightAction: {
-    borderRadius: 5,
-    margin: 5,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "flex-start",
-    paddingLeft: 20,
-  },
   actionText: {
     fontSize: 18,
     padding: 10,
@@ -247,6 +321,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
+  },
+  markerContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  passengerIcon: {
+    width: 30,
+    height: 30,
+    resizeMode: "contain",
   },
   // NoSuggestionImage: {
   //   width: "150%",

@@ -1,5 +1,5 @@
-import { StyleSheet, Alert ,Dimensions} from "react-native";
-import React, { useRef, useEffect } from "react";
+import { StyleSheet, Platform, Alert, View, Image } from "react-native";
+import React, { useRef, useEffect, useMemo } from "react";
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
@@ -12,7 +12,7 @@ import GeoJSONWriter from "jsts/org/locationtech/jts/io/GeoJSONWriter";
 import { BufferOp } from "jsts/org/locationtech/jts/operation/buffer";
 import axios from "axios";
 import { GOOGLE_MAPS_KEY } from "@env";
-const { width, height } = Dimensions.get("window");
+import dot from "../assets/rec.png";
 
 //current region is passed as prop , because the custom marker in parent component needs it
 const Map = ({
@@ -30,7 +30,9 @@ const Map = ({
     longitude: 10.268806957645351,
   };
 
-  const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${GOOGLE_MAPS_KEY}`;
+  const apiUrl = useMemo(() => {
+    return `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${GOOGLE_MAPS_KEY}`;
+  }, [destinationOrOrigin]);
   const mapViewRef = useRef();
 
   //if  destinationOrOrigin !==null this is the logic to draw the route(polyline) & area(polygon)
@@ -55,7 +57,7 @@ const Map = ({
 
             // Use BufferOp to buffer the geometry
             const bufferOp = new BufferOp(geometry);
-            const distance = 10 / 500.12;
+            const distance = 10 / 550.12;
             const bufferedGeometry = bufferOp.getResultGeometry(distance);
             const resultPolygonCods = geoWriter.write(bufferedGeometry);
 
@@ -97,27 +99,49 @@ const Map = ({
       provider={PROVIDER_GOOGLE}
       showsBuildings={false}
       region={currentRegion.current}
-      onRegionChangeComplete={region => (currentRegion.current = region)}>
+      onRegionChangeComplete={region => (currentRegion.current = region)}
+      key={destinationOrOrigin}>
       {/* destination red marker */}
       {destinationOrOrigin && (
         <Marker
+          key={isToSmu}
           coordinate={{
             longitude: destinationOrOrigin.coords.longitude,
             latitude: destinationOrOrigin.coords.latitude,
           }}
-          // destination marker is blue : origin is red
-          pinColor={!isToSmu && "blue"}
+          title='Destination'
+          anchor={isToSmu ? { x: 0.5, y: 0.5 } : undefined}>
+          {isToSmu && (
+            <View style={styles.markerContainer}>
+              <Image source={dot} style={styles.markerImage} />
+            </View>
+          )}
+        </Marker>
+      )}
+      {!isToSmu ? (
+        <Marker
+          key={destinationOrOrigin}
+          // SMU Constant blue marker
+          coordinate={{
+            longitude: SMUCOORDS.longitude,
+            latitude: SMUCOORDS.latitude,
+          }}
+          title='SMU'
+          anchor={{ x: 0.5, y: 0.5 }}>
+          <View style={styles.markerContainer}>
+            <Image source={dot} style={styles.markerImage} />
+          </View>
+        </Marker>
+      ) : (
+        <Marker
+          coordinate={{
+            longitude: SMUCOORDS.longitude,
+            latitude: SMUCOORDS.latitude,
+          }}
+          title='SMU'
         />
       )}
-      <Marker
-        // SMU Constant blue marker
-        coordinate={{
-          longitude: SMUCOORDS.longitude,
-          latitude: SMUCOORDS.latitude,
-        }}
-        pinColor={isToSmu && "blue"}
-        title='SMU'
-      />
+
       {/* route (polyline) in blue */}
       {polylineCods && (
         <Polyline
@@ -125,7 +149,7 @@ const Map = ({
             latitude: coord[0],
             longitude: coord[1],
           }))}
-          strokeWidth={3}
+          strokeWidth={2.5}
           strokeColor='blue'
         />
       )}
@@ -136,7 +160,7 @@ const Map = ({
             latitude: coord[0],
             longitude: coord[1],
           }))}
-          strokeWidth={3}
+          strokeWidth={1.5}
           fillColor='rgba(67, 247, 154,0.3)'
         />
       )}
@@ -148,28 +172,15 @@ export default Map;
 
 const styles = StyleSheet.create({
   map: {
-    // width: "100%",
-    // height: "70%",
     flex: 5,
   },
-  customMarkerFixed: {
-    position: "absolute",
-    top: "64.5%", // Center vertically
-    left: "50%", // Center horizontally
-    marginLeft: -24, // Adjust based on half of the marker width
-    marginTop: -24, // Adjust based on half of the marker height
-  },
-  marker: {
-    height: 48,
-    width: 48,
-  },
-  placeCustomMarkerBtn: {
-    position: "absolute",
-    top: 250,
-    right: 10,
-    width: 180,
-    height: 50,
-    borderRadius: 10,
+  markerContainer: {
+    alignItems: "center",
     justifyContent: "center",
+  },
+  markerImage: {
+    width: 25,
+    height: 25,
+    resizeMode: "contain",
   },
 });

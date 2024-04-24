@@ -8,7 +8,6 @@ function DriverRides({navigation}) {
 
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
   
-  console.log("from driverRides selected Date", selectedDate)
   return (
     <View style={styles.container}>
       {/* if selected date is before today then ask to redirect to history screen */}
