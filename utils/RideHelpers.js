@@ -74,6 +74,20 @@ const encodeUrlQuery = dataToEncode => {
     .join("&");
 };
 
+const filterCanceledRides = (rides, canceledId, allInseries) => {
+  const parentRideId = rides.find(rideOcc => rideOcc.id === canceledId)?.RideId;
+  console.log(parentRideId);
+
+  const filteredRides = rides.filter(ride => {
+    const isDifferentRideOcc = ride.id !== canceledId;
+    const isSiblingRideOcc = ride.RideId === parentRideId;
+    return allInseries
+      ? isDifferentRideOcc && !isSiblingRideOcc
+      : isDifferentRideOcc;
+  });
+  return filteredRides;
+};
+
 module.exports = {
   fromToObjBuilder,
   dateObjBuilder,
@@ -81,4 +95,5 @@ module.exports = {
   timeObjBuilder,
   encodeUrlQuery,
   timeTo24Format,
+  filterCanceledRides,
 };
