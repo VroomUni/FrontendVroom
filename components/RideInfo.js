@@ -23,7 +23,7 @@ const RideInfo = ({ from, to, startTime }) => {
             name='map-marker'
             size={16}
             color='#00669B'
-            style={[styles.icon, { marginLeft: 1 }]}
+            style={[styles.icon, { marginLeft: 2 }]}
           />
           <Text style={styles.addressText}>{to}</Text>
         </View>
@@ -31,7 +31,7 @@ const RideInfo = ({ from, to, startTime }) => {
       <View style={styles.infoRow}>
         <FontAwesome
           name='clock-o'
-          size={20}
+          size={18}
           color='#333'
           style={styles.icon}
         />
@@ -48,7 +48,7 @@ export default RideInfo;
 const styles = StyleSheet.create({
   departureInfo: {
     width: "100%",
-    marginBottom:10
+    marginBottom: 10,
   },
   infoRow: {
     flexDirection: "row",
@@ -63,16 +63,18 @@ const styles = StyleSheet.create({
   time: {
     color: "#333",
     fontSize: 16,
+    fontWeight: "bold",
   },
 
   dots: {
     fontSize: 16,
     color: "#162447",
     paddingVertical: 2,
-    paddingHorizontal: 4,
+    paddingHorizontal: 5,
   },
   addressText: {
     fontSize: 16,
     color: "#333",
+    fontWeight: "bold",
   },
 });

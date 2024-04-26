@@ -5,7 +5,6 @@ const url = `${apiConfig.baseURL}/request`;
 const createRequest = async requestPayload => {
   try {
     const response = await axios.post(url, requestPayload);
-    console.log("Request SUCCESS");
     return;
   } catch (err) {
     console.error("Error creating request :", err);
@@ -13,4 +12,17 @@ const createRequest = async requestPayload => {
   }
 };
 
-module.exports = { createRequest };
+const handleRequestRespone = async (requestId, isAccepted) => {
+  const finalUrl = `${url}/response`;
+  const requestPayload = { id: requestId , isAccepted };
+  try {
+    const response = await axios.post(finalUrl, requestPayload);
+    console.log(response.status);
+    return;
+  } catch (err) {
+    console.error("Error creating request :", err);
+    throw err;
+  }
+};
+
+module.exports = { createRequest , handleRequestRespone };

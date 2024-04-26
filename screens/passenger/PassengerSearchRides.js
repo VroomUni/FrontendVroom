@@ -15,21 +15,14 @@ import {
 } from "../../api/RideService";
 import { createRequest } from "../../api/RequestService";
 import { useAuth } from "../../context/AuthContext";
-
-const passengersPreferences = {
-  smoking: false,
-  talkative: false,
-  foodFriendly: false,
-  loudMusic: true,
-  girlsOnly: true,
-  boysOnly: null,
-};
+import { getUserPreferences } from "../../api/UserService";
 
 function PassengerSearchRides({ navigation, route }) {
   const [requestSentVisible, setSentVisible] = useState(false);
   const [ridesData, setRidesData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [swipedAll, setSwipedAll] = useState(false);
+  const [passengerPrefs, setPassengerPrefs] = useState(null);
   const { passengerLocation, rideIds, date: filterDate } = route.params;
   const { user } = useAuth();
   useEffect(() => {
@@ -38,6 +31,8 @@ function PassengerSearchRides({ navigation, route }) {
         if (rideIds) {
           const rides = await fetchRidesData(rideIds);
           setRidesData(rides);
+          const prefs = await getUserPreferences(user.uid);
+          setPassengerPrefs(prefs);
         } else {
           setSwipedAll(true);
         }
@@ -110,7 +105,7 @@ function PassengerSearchRides({ navigation, route }) {
                 renderCard={data => (
                   <DriverCard
                     data={data}
-                    passengerPreferences={passengersPreferences}
+                    passengerPreferences={passengerPrefs}
                     navigation={navigation}
                     passengerLocation={passengerLocation}
                   />
@@ -228,9 +223,9 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "flex-end",
     alignItems: "flex-end",
-    marginTop: "120%",
+    marginTop: "100%",
   },
- 
+
   animation: {
     width: "50%",
     height: "50%",
