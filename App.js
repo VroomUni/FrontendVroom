@@ -27,7 +27,6 @@ function App() {
         <Stack.Screen name='Preferences' component={Preferences} />
         <Stack.Screen name='TabNav' component={TabNav} />
         <Stack.Screen name='Car' component={Car} />
-        <Stack.Screen name="car Setting" component={CarSettings}/>
         <Stack.Screen name='OnBoarding' component={OnBoarding} />
         <Stack.Screen name='SplashScreen' component={SplashScreen} />
         <Stack.Screen name='Signup' component={Signup} />

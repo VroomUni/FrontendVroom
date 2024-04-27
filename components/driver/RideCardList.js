@@ -15,6 +15,7 @@ function RideCardList({ selectedDate, navigation }) {
   const [rideData, setRideData] = useState([]);
   // console.log(rideData);
   // NEED TO TEST MORE
+  
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
