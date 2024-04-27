@@ -7,10 +7,15 @@ import {
   sendEmailVerification,
   deleteUser,
   signInWithEmailAndPassword,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential
 } from "firebase/auth";
 import apiConfig from "./apiConfig";
 import axios from "axios";
+import { registerForPushNotificationsAsync } from "../api/pushNotifService";
 const auth = getAuth();
+
 
 const createUser = async (userValidatedPayload) => {
   const url = `${apiConfig.baseURL}/user/signup`;
@@ -76,17 +81,16 @@ const signIn = async (email, password) => {
       email,
       password
     );
-    const user = userCredential.user;
-    return user;
+
+    const token = await registerForPushNotificationsAsync();
+    console.log(token);
+    return token;
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
-    console.log(errorCode);
-    console.log(errorMessage);
     throw error;
   }
 };
-
 const saveImage = async (profileImage) => {
   const imgDir = FileSystem.documentDirectory;
 
@@ -126,4 +130,60 @@ const saveImage = async (profileImage) => {
   }
 };
 
-module.exports = { signIn, createUser, setPreferences , saveImage };
+const updateUserPassword = async (currentPassword, newPassword)=>{
+  const user = auth.currentUser
+  if(!user){
+    throw new Error ("No user is currently signed in")
+  }
+  try{
+    console.log("error here")
+    await reauthenticateUser(currentPassword)
+    console.log("successfully reauthenticated ")
+    await updatePassword(user, newPassword)
+    console.log("password updated successfully")
+  }catch(error){
+    console.error("Failed to update password:",error.message)
+    throw error
+  }
+
+};
+
+const reauthenticateUser = async(currentPassword) =>{
+  const user = auth.currentUser
+  const credential = EmailAuthProvider.credential(user.email, currentPassword)
+  console.log("credential",credential)
+  try{
+    await reauthenticateWithCredential(user, credential)
+  }catch(error){
+    console.error("reauthentication failed", error.message)
+    throw error
+  }
+}
+
+const createCar = async (createCar) => {
+  const url = `${apiConfig.baseURL}/user/car`;
+  console.log(createCar);
+  try {
+    const response = await axios.post(url, createCar);
+    return response;
+  } catch (err) {
+    console.error("problem creating car", err);
+    throw err;
+  }
+};
+
+const getUserCar = async userId => {
+  const url = `${apiConfig.baseURL}/user/car?userId=${userId}`;
+  try {
+    console.log(userId);
+    const response = await axios.get(url);
+    return response.data;
+  } catch (err) {
+    console.error("problem fetching car", err);
+    throw err;
+  }
+};
+
+module.exports = { signIn, createUser, setPreferences, getUserPreferences, updateUserPassword,saveImage, createCar, getUserCar };
+
+

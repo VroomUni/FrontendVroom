@@ -1,12 +1,11 @@
 {
   "expo": {
     "name": "frontendVroom",
-    "slug": "frontendVroom",
+    "slug": "vroom",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -17,12 +16,44 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.iss.vroom",
+      "versionCode": 1,
+      "googleServicesFile":".config/vroom-412215-firebase-adminsdk-6mwxs-7ef5080081.json" ,
+
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "permissions": "ACCESS_FINE_LOCATION"
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "android.permission.A",
+        "android.permission.C",
+        "android.permission.E",
+        "android.permission.S",
+        "android.permission._",
+        "android.permission.F",
+        "android.permission.I",
+        "android.permission.N",
+        "android.permission.L",
+        "android.permission.O",
+        "android.permission.T",
+        "android.permission.a",
+        "android.permission.n",
+        "android.permission.d",
+        "android.permission.r",
+        "android.permission.o",
+        "android.permission.i",
+        ".",
+        "android.permission.p",
+        "android.permission.e",
+        "android.permission.m",
+        "android.permission.s",
+        "android.permission.R",
+        "android.permission.D",
+        "android.permission.U",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,6 +65,12 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "942e1ae2-4bad-43a9-a68b-e10f27720254"
+      }
+    },
+    "owner": "prismal"
   }
 }

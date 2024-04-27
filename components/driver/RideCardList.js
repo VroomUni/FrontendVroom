@@ -5,13 +5,16 @@ import { FlatList } from "react-native-gesture-handler";
 import { useAuth } from "../../context/AuthContext";
 import { fetchDriverActiveRides } from "../../api/RideService";
 import { useFocusEffect } from "@react-navigation/native";
+import { cancelRide } from "../../api/RideService";
+import { filterCanceledRides } from "../../utils/RideHelpers";
 
 function RideCardList({ selectedDate, navigation }) {
   const { user } = useAuth();
   const driverId = user.uid;
   const [isLoading, setIsLoading] = useState(true);
   const [rideData, setRideData] = useState([]);
-// NEED TO TEST MORE
+  // console.log(rideData);
+  // NEED TO TEST MORE
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
@@ -29,28 +32,35 @@ function RideCardList({ selectedDate, navigation }) {
     }, [driverId]) // Add driverId as a dependency
   );
 
-  console.log("selected date", selectedDate);
   const filteredData = rideData.filter(
     item => item.occurenceDate === selectedDate
   );
 
-  const handleDelete = id => {
+  const handleDelete = async canceledId => {
+    const handleCancelRide = async allInseries => {
+      try {
+        await cancelRide(canceledId, allInseries);
+        setRideData(filterCanceledRides(rideData, canceledId, allInseries));
+      } catch (err) {
+        Alert.alert("An error occured while trying to cancel a ride");
+      }
+    };
+    //must add check based on whether ride is recurrent or not
     Alert.alert(
-      "Cancel Rides",
-      "Would you like to cancel all rides in this series?",
+      "Cancel Ride",
+      "This ride is repeating.\nWould you like to cancel this ride only ?",
       [
         {
           text: "No",
-          onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
         {
-          text: "Only this ride",
-          onPress: () => setRideData(rideData.filter(item => item.id !== id)),
+          text: "All related rides",
+          onPress: async () => await handleCancelRide(true),
         },
         {
           text: "Yes",
-          onPress: () => setRideData(rideData.filter(item => item.id !== id)),
+          onPress: async () => await handleCancelRide(false),
         },
       ]
     );

@@ -1,53 +1,53 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet, Text, Alert, Image } from "react-native";
-import {Button} from "react-native-paper"
+import { View, TextInput, StyleSheet, Text, Alert, Image,KeyboardAvoidingView, Platform } from "react-native";
+import {Button} from "react-native-paper";
+import {updateUserPassword} from "../api/UserService"
 function PasswordUpdate() {
-  const [passwords, setPasswords] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleChange = (name, value) => {
-    setPasswords((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
 
-  const handleUpdatePassword = () => {
-    if (passwords.newPassword !== passwords.confirmPassword) {
+
+  const handleUpdatePassword = async () => {
+    if (newPassword !== confirmPassword) {
       Alert.alert("Error", "New passwords do not match.");
       return;
     }
+    try{
+      console.log("password match")
+    await updateUserPassword(currentPassword, newPassword)
     Alert.alert("Success", "Password successfully updated.");
+    }catch(error){
+      Alert.alert("Error", "Error updating password ");
+    }
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "position" : "height"} enabled>
       <Image style={styles.logo} source={require("../assets/PasswordUpdate.png")} />
       <Text style={styles.label}>Current Password:</Text>
       <TextInput
         style={styles.input}
         secureTextEntry
-        onChangeText={(value) => handleChange("currentPassword", value)}
-        value={passwords.currentPassword}
+        onChangeText={setCurrentPassword}
+        value={currentPassword}
       />
 
       <Text style={styles.label}>New Password:</Text>
       <TextInput
         style={styles.input}
         secureTextEntry
-        onChangeText={(value) => handleChange("newPassword", value)}
-        value={passwords.newPassword}
+        onChangeText={setNewPassword}
+        value={newPassword}
       />
 
       <Text style={styles.label}>Confirm New Password:</Text>
       <TextInput
         style={styles.input}
         secureTextEntry
-        onChangeText={(value) => handleChange("confirmPassword", value)}
-        value={passwords.confirmPassword}
+        onChangeText={setConfirmPassword}
+        value={confirmPassword}
       />
 
       
@@ -61,14 +61,14 @@ function PasswordUpdate() {
       >
         Update Password
       </Button>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "flex-start",
+    justifyContent: 'flex-start',
     backgroundColor: "white",
   },
   input: {

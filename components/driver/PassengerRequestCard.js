@@ -23,10 +23,16 @@ function PassengerRequestCard({
   isAccepted,
   age,
   preferences: passengerPrefs,
+  isHighlighted,
+  unhighlightRequest,
+  highlightRequest,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [accepted, setAccepted] = useState(isAccepted);
-
+  //placed in timeout to fix the laggy map animation caused by the modal load
+  useEffect(() => {
+    setTimeout(() => setModalVisible(isHighlighted ? true : false), 800);
+  }, [isHighlighted]);
   const swipeTranslateX = swipeAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: [0, isFirst ? 50 : 0],
@@ -40,14 +46,19 @@ function PassengerRequestCard({
           key={i}
           name='star'
           size={24}
-          style={i <= rating ? styles.filledStar : styles.emptyStar}
+          style={
+            i <= rating
+              ? styles.filledStar(isHighlighted)
+              : styles.emptyStar(isHighlighted)
+          }
         />
       );
     }
     return stars;
   };
   const handleAccept = async () => {
-    setModalVisible(false);
+    // setModalVisible(false);
+    unhighlightRequest();
     try {
       // method handles both decline and accept , sepcify false or true to differ
       await handleRequestRespone(id, true);
@@ -59,7 +70,8 @@ function PassengerRequestCard({
   };
 
   const handleReject = async () => {
-    setModalVisible(false);
+    // setModalVisible(false);
+    unhighlightRequest();
     await onDelete(id);
   };
 
@@ -80,11 +92,14 @@ function PassengerRequestCard({
   return (
     <Animated.View
       style={[
-        styles.outerCard,
+        styles.outerCard(isHighlighted),
         { transform: [{ translateX: swipeTranslateX }] },
       ]}>
+      {isHighlighted === false ? <View style={styles.overlay} /> : null}
       <TouchableOpacity
-        onPress={() => setModalVisible(true)}
+        onPress={() => {
+          isHighlighted ? setModalVisible(true) : highlightRequest();
+        }}
         style={styles.card}>
         {accepted && (
           <View style={styles.acceptedContainer}>
@@ -92,7 +107,8 @@ function PassengerRequestCard({
           </View>
         )}
         <View style={styles.userInfo}>
-          <Text style={styles.userName}>{`${FName} ${LName}`}</Text>
+          <Text
+            style={styles.userName(isHighlighted)}>{`${FName} ${LName}`}</Text>
           <View style={styles.stars}>{renderStars(rating)}</View>
         </View>
         <Modal
@@ -131,7 +147,7 @@ function PassengerRequestCard({
 }
 
 const styles = StyleSheet.create({
-  outerCard: {
+  outerCard: isHighlighted => ({
     backgroundColor: "#FFF",
     borderRadius: 5,
     margin: 5,
@@ -139,7 +155,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.03,
     shadowRadius: 10,
     elevation: 1,
-  },
+    ...(isHighlighted && {
+      borderColor: "black",
+      borderWidth: 1,
+      borderStyle: "solid",
+    }),
+  }),
   card: {
     padding: 10,
     marginBottom: 5,
@@ -149,20 +170,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 10,
   },
-  userName: {
-    fontSize: 16,
+  userName: isHighlighted => ({
+    fontSize: isHighlighted ? 19 : 16,
     fontWeight: "bold",
-  },
+  }),
   stars: {
     flexDirection: "row",
     marginTop: 4,
   },
-  filledStar: {
-    color: "#FFD700",
-  },
-  emptyStar: {
-    color: "#CCCCCC",
-  },
+  filledStar: isHighlighted => ({
+    color: isHighlighted === false ? "#42413e" : "#FFD700",
+  }),
+  emptyStar: isHighlighted => ({
+    color: isHighlighted === false ? "white" : "#CCCCCC",
+  }),
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -201,6 +222,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    marginTop: "95%", // Add this line to lower the modal by 100 pixels
   },
   acceptedContainer: {
     position: "absolute",
@@ -214,6 +236,11 @@ const styles = StyleSheet.create({
   acceptedText: {
     color: "#FFFFFF",
     fontWeight: "bold",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.2)", // Adjust opacity as needed
+    borderRadius: 5,
   },
 });
 

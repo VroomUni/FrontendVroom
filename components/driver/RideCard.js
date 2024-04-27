@@ -21,6 +21,9 @@ function RideCard({
     navigation.navigate("Request details", { requests, routePolyline });
   };
   console.log(requests);
+
+  const getPendingRequestsCount = () =>
+    requests.filter(req => req.ride_request.status === 0).length;
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
@@ -31,8 +34,13 @@ function RideCard({
               Requests:{" "}
             </Text>
             <Badge size={20} style={{ backgroundColor: "red" }}>
-              <Text style={{ fontWeight: "bold", color: "white" }}>
-                &nbsp;{requests.filter(req => req.ride_request.status === 0).length}
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  color: "white",
+                  alignSelf: "center",
+                }}>
+                {getPendingRequestsCount()}
               </Text>
             </Badge>
           </View>
