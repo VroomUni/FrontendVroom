@@ -16,9 +16,27 @@ const Preferences = ({ navigation }) => {
   const [foodchecked, setFoodChecked] = useState(null);
   const [musicchecked, setMusicChecked] = useState(null);
   const [talkativechecked, setTalkativeChecked] = useState(null);
-  const [boysOnly, setBoysOnly] = useState(false);
-  const [girlsOnly, setGirlsOnly] = useState(false);
+  // const [boysOnly, setBoysOnly] = useState(false);
+  // const [girlsOnly, setGirlsOnly] = useState(false);
   const { user } = useAuth();
+
+  const [isBoysSelected, setBoysSelected] = useState(false);
+  const [isGirlsSelected, setGirlsSelected] = useState(false);
+
+  const handleBoysSelection = () => {
+    setBoysSelected(!isBoysSelected); 
+    if (isGirlsSelected) {
+      setGirlsSelected(false); 
+    }
+  };
+
+  const handleGirlsSelection = () => {
+    setGirlsSelected(!isGirlsSelected); 
+    if (isBoysSelected) {
+      setBoysSelected(false); 
+    }
+  };
+
   const submitPreferences = async isYesClick => {
     
   
@@ -29,8 +47,8 @@ const Preferences = ({ navigation }) => {
         loudMusic: musicchecked,
         talkative: talkativechecked,
         UserFirebaseId: user.uid,
-        girlsOnly:girlsOnly,
-        boysOnly:boysOnly
+        girlsOnly:isGirlsSelected,
+        boysOnly:isBoysSelected
 
       });
       isYesClick
@@ -244,9 +262,13 @@ const Preferences = ({ navigation }) => {
         </Text>
         <Checkbox
           style={{ marginRight: 8 }}
-          value={boysOnly}
-          onValueChange={setBoysOnly}
-          color={boysOnly ? COLORS.primary : undefined}
+          // value={boysOnly}
+          // onValueChange={setBoysOnly}
+          // color={boysOnly ? COLORS.primary : undefined}
+          value={isBoysSelected}
+          color={isBoysSelected ? COLORS.primary : undefined}
+          status={isBoysSelected ? "checked" : "unchecked"}
+          onValueChange={handleBoysSelection}
         />
       </View>
 
@@ -268,9 +290,13 @@ const Preferences = ({ navigation }) => {
         </Text>
         <Checkbox
           style={{ marginRight: 8 }}
-          value={girlsOnly}
-          onValueChange={setGirlsOnly}
-          color={girlsOnly ? COLORS.primary : undefined}
+          // value={girlsOnly}
+          // onValueChange={setGirlsOnly}
+          // color={girlsOnly ? COLORS.primary : undefined}
+          value={isGirlsSelected}
+          color={isGirlsSelected ? COLORS.primary : undefined}
+          status={isGirlsSelected ? "checked" : "unchecked"}
+          onValueChange={handleGirlsSelection}
         />
       </View>
 
