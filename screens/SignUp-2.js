@@ -21,6 +21,7 @@ import { createUser ,saveImage } from "../api/UserService";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 
 const Signup = ({ navigation }) => {
+
   
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhone] = useState("");
@@ -40,6 +41,26 @@ const Signup = ({ navigation }) => {
   const [phoneError, setPhoneError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [rePasswordError, setRePasswordError] = useState("");
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const carouselRef = useRef();
+
+  //to manually switch a slide
+  const goToSlide = index => {
+    carouselRef.current.snapToItem(index);
+  };
+  //related to pagination of slides , no edit
+  const renderPagination = () => (
+    <Pagination
+      dotsLength={2} // Number of divs
+      activeDotIndex={activeIndex}
+      containerStyle={commonStyles.paginationContainer}
+      dotStyle={commonStyles.paginationDot}
+      inactiveDotStyle={commonStyles.paginationDot}
+      inactiveDotOpacity={0.4}
+      inactiveDotScale={0.6}
+    />
+  );
 
   const validateEmail = (email) => {
     var re = /^[a-zA-Z0-9._-]+@(medtech\.tn|msb\.tn|smu.tn)$/;
@@ -145,7 +166,6 @@ const Signup = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-
       <ImageBackground
         source={require("../assets/background-4.png")}
         resizeMode="cover"
@@ -155,8 +175,11 @@ const Signup = ({ navigation }) => {
           position: "absolute",
         }}
       />
-      <ScrollView keyboardDismissMode="on-drag">
-
+      <Carousel
+            ref={carouselRef}
+            data={[{}, {}]} // Dummy data to create two slides
+            renderItem={({ index }) =>
+              index === 0 ? (
         <View style={{ flex: 1, marginHorizontal: 22 }}>
           <View style={{ marginVertical: 22 }}>
             <Text
@@ -444,7 +467,7 @@ const Signup = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-
+          ) : (
           <View style={{ marginBottom: 12 }}>
             <Text
               style={{
@@ -598,9 +621,16 @@ const Signup = ({ navigation }) => {
             </Pressable>
           </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      )
+    }
+    sliderWidth={width*0.95}
+    itemWidth={width*0.95}
+    onSnapToItem={index => setActiveIndex(index)}
+  />
+  {renderPagination()}
+    
   );
+</SafeAreaView>
 };
 
 export default Signup;
