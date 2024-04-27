@@ -16,8 +16,6 @@ import {
 } from "react-native";
 import COLORS from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
-// import Checkbox from "expo-checkbox";
-// import Button from "../components/Button";
 import { signIn } from "../api/UserService";
 import { Button,Checkbox } from 'react-native-paper';
 
@@ -40,8 +38,8 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <View
+      
       style={styles.container}
     >
       <ImageBackground
@@ -143,7 +141,7 @@ const Login = ({ navigation }) => {
           </View>
         </View>
       </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -152,12 +150,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f4f4fb",
     justifyContent: "center",
-    marginBottom: 100,
+    
   },
   innerContainer: {
     paddingHorizontal: 20,
     width: "85%",
     alignSelf: "center", 
+    marginBottom: 30,
   },
   back:{
     width: "100%",
@@ -172,11 +171,12 @@ const styles = StyleSheet.create({
     marginBottom : 8
   },
   logo: {
-    width: 300, // Adjust width as needed
-    height: 300, // Adjust height as needed
-    resizeMode: "contain", // Adjust resizeMode as needed
-    alignSelf: "center", // Center the logo horizontally
-    marginBottom: 20, // Adjust margin as needed
+    width: 300, 
+    height: 300, 
+    resizeMode: "contain", 
+    alignSelf: "center", 
+    marginBottom: 50,
+    paddingBottom: 50, 
   },
   forgetText : {
     fontSize : 15,
