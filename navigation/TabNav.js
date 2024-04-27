@@ -8,9 +8,11 @@ import PassengerRides from "../screens/passenger/PassengerRides";
 import { Alert, Platform, TouchableOpacity, View } from "react-native";
 import RideInfoInput from "../screens/RideInfoInput";
 import { useAuth } from "../context/AuthContext";
-import EditProfileStack from "./EditProfileStack";
+// import EditProfileStack from "./EditProfileStack";
 import PassengerSearchRidesStack from "./PassengerSearchRideStack";
 import DetailsNav from "./DetailsNav";
+import DriverRequestNav from "./DriverRequestNav";
+import ProfileDrawer from "./ProfileDrawer";
 
 const Tab = createBottomTabNavigator();
 function TabNav() {
@@ -59,7 +61,7 @@ function TabNav() {
       {!isPassenger ? (
         <>
           <Tab.Screen name='Provide Rides' component={RideInfoInput} />
-          <Tab.Screen name='My Rides' component={DriverRides} />
+          <Tab.Screen name='My Rides' component={DriverRequestNav} />
         </>
       ) : (
         <>
@@ -113,7 +115,7 @@ function TabNav() {
       />
 
       <Tab.Screen name='History' component={DetailsNav} />
-      <Tab.Screen name='Profile' component={EditProfileStack} />
+      <Tab.Screen name='Profile' component={ProfileDrawer} />
     </Tab.Navigator>
   );
 }

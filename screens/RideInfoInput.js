@@ -1,9 +1,9 @@
-import { StyleSheet, Image, View, Alert } from "react-native";
+import { StyleSheet, Image, View, Alert , Dimensions } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
 
 // import { isPointInPolygon } from "geolib";
 import DriverRideFromTo from "../components/driver/DriverRideFromTo";
-import RideLocationInput from "../components/driver/DriverRideLocationInput";
+import DriverRideLocationInput from "../components/driver/DriverRideLocationInput";
 import { Button, Icon, Portal, Snackbar } from "react-native-paper";
 import DriverRideExtraOptions from "../components/driver/DriverRideExtraOptions";
 import {
@@ -13,10 +13,12 @@ import {
 import Map from "../components/Map";
 import axios from "axios";
 import { postRide, searchForRides } from "../api/RideService";
-import { fromToObjBuilder } from "../utils/RideHelpers";
+import { dateObjBuilder, fromToObjBuilder } from "../utils/RideHelpers";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
 import { GOOGLE_MAPS_KEY } from "@env";
+const { width, height } = Dimensions.get("window");
+
 
 const RideInfo = ({ navigation }) => {
   const {
@@ -115,6 +117,7 @@ const RideInfo = ({ navigation }) => {
       initialDate: { customSelectedDate, selectedDateType },
       fromTime: customSelectedFromTime,
       toTime: customSelectedToTime,
+      passengerId: user.uid,
     };
     try {
       let data = await searchForRides(ridefiltersPayload);
@@ -122,6 +125,10 @@ const RideInfo = ({ navigation }) => {
       navigation.navigate("Rides", {
         rideIds: data,
         passengerLocation: destinationOrOrigin,
+        date: dateObjBuilder(
+          selectedDateType,
+          customSelectedDate
+        ).toISOString(),
       });
     } catch (err) {
       console.error(err);
@@ -129,10 +136,10 @@ const RideInfo = ({ navigation }) => {
     }
   };
   return (
-    <View style={{ flex: 1, paddingTop: 50, backgroundColor: "#E2EAF4" }}>
+    <View style={{ flex: 1, paddingTop: "8%", backgroundColor: "#E2EAF4" }}>
       {onLocationInputPage ? (
         //Destination/origin places autocomplete page
-        <RideLocationInput
+        <DriverRideLocationInput
           isToSmu={isToSmu}
           setOnLocationInputPage={setOnLocationInputPage}
           setCustomLocationMarker={setCustomLocationMarker}
@@ -140,7 +147,7 @@ const RideInfo = ({ navigation }) => {
       ) : (
         //Map + from to inputs
         <>
-          <DriverRideFromTo setOnLocationInputPage={goToLocationInputPage} />
+          <DriverRideFromTo setOnLocationInputPage={goToLocationInputPage} isOptionShown={isOptionShown}/>
 
           <Map
             currentRegion={currentRegion}
@@ -232,7 +239,7 @@ const RideInfoInput = ({ navigation }) => (
 const styles = StyleSheet.create({
   markerFixed: {
     position: "absolute",
-    top: "65%", // Center vertically
+    top: "63.4%", // Center vertically
     left: "50%", // Center horizontally
     marginLeft: -24, // Adjust based on half of the marker width
     marginTop: -24, // Adjust based on half of the marker height
@@ -243,18 +250,18 @@ const styles = StyleSheet.create({
   },
   PlaceMarkerBtn: {
     position: "absolute",
-    top: 250,
+    top: height*0.27,
     right: 10,
-    width: 180,
+    width: width*0.35,
     height: 50,
     borderRadius: 10,
     justifyContent: "center",
   },
   PostRideBtn: {
     position: "absolute",
-    top: 195,
+    top: height*0.27,
     right: 10,
-    width: 160,
+    width: width*0.35,
     height: 50,
     borderRadius: 10,
     justifyContent: "center",

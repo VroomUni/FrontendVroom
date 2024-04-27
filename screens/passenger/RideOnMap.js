@@ -4,9 +4,8 @@ import { decode } from "@googlemaps/polyline-codec";
 import { StyleSheet, View, Text } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-
 const RideOnMap = ({ route }) => {
-  const { passengerLocation, routePolyLine , from , to  } = route.params; // Assuming you have fromPlace and toPlace in your route params
+  const { passengerLocation, routePolyLine, from, to } = route.params; // Assuming you have fromPlace and toPlace in your route params
   const mapRef = useRef();
   const polylineCods = decode(routePolyLine);
 
@@ -24,7 +23,7 @@ const RideOnMap = ({ route }) => {
           <Text style={styles.addressText}>{from}</Text>
         </View>
         <Text style={styles.dots}>
-          <FontAwesome name='ellipsis-h' size={16} color='#333' />
+          <FontAwesome name='long-arrow-right' size={16} color='#333' />
         </Text>
         <View style={styles.infoRow}>
           <FontAwesome
@@ -86,31 +85,30 @@ const RideOnMap = ({ route }) => {
 
 const styles = StyleSheet.create({
   departureInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: 'blue',
-    justifyContent:'space-around'
+    borderBottomColor: "blue",
+    justifyContent: "space-around",
   },
   infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   icon: {
     marginHorizontal: 5,
   },
   addressText: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   dots: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
     marginHorizontal: 10, // Spacing around the ellipsis icon
   },
 });
-
 
 export default RideOnMap;
