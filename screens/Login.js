@@ -32,7 +32,7 @@ const Login = ({ navigation }) => {
         navigation.navigate("Home");
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       Alert.alert("wrong username or password");
     }
   };

@@ -136,7 +136,7 @@ const RideInfo = ({ navigation }) => {
     }
   };
   return (
-    <View style={{ flex: 1, paddingTop: 50, backgroundColor: "#E2EAF4" }}>
+    <View style={{ flex: 1, paddingTop: "8%", backgroundColor: "#E2EAF4" }}>
       {onLocationInputPage ? (
         //Destination/origin places autocomplete page
         <DriverRideLocationInput
@@ -239,7 +239,7 @@ const RideInfoInput = ({ navigation }) => (
 const styles = StyleSheet.create({
   markerFixed: {
     position: "absolute",
-    top: "65%", // Center vertically
+    top: "63.4%", // Center vertically
     left: "50%", // Center horizontally
     marginLeft: -24, // Adjust based on half of the marker width
     marginTop: -24, // Adjust based on half of the marker height
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
   },
   PlaceMarkerBtn: {
     position: "absolute",
-    top: height*0.3,
+    top: height*0.27,
     right: 10,
     width: width*0.35,
     height: 50,
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   PostRideBtn: {
     position: "absolute",
-    top: height*0.25,
+    top: height*0.27,
     right: 10,
     width: width*0.35,
     height: 50,

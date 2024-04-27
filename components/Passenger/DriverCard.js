@@ -4,6 +4,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { PaperProvider, Button } from "react-native-paper";
 import PreferenceItem from "./preferenceItem";
 import RideInfo from "../RideInfo";
+import { isPreferenceAttrMatch } from "../../utils/UserHelpers";
 
 export default function DriverCard({
   data,
@@ -63,13 +64,6 @@ export default function DriverCard({
           return 1;
         })
     );
-  };
-  const isPreferenceAttrMatch = (attribute, driverPref, passengerPref) => {
-    //if passenger pref on the given attr is null , then he doesnt care => match
-    if (passengerPref[attribute] === null) {
-      return true;
-    }
-    return driverPref[attribute] === passengerPreferences[attribute];
   };
   return (
     <PaperProvider>

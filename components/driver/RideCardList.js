@@ -1,51 +1,66 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import RideCard from "./RideCard";
 import { View, StyleSheet, Text, Alert } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useAuth } from "../../context/AuthContext";
 import { fetchDriverActiveRides } from "../../api/RideService";
+import { useFocusEffect } from "@react-navigation/native";
+import { cancelRide } from "../../api/RideService";
+import { filterCanceledRides } from "../../utils/RideHelpers";
 
 function RideCardList({ selectedDate, navigation }) {
   const { user } = useAuth();
   const driverId = user.uid;
   const [isLoading, setIsLoading] = useState(true);
   const [rideData, setRideData] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchDriverActiveRides(driverId);
-        setRideData(data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        Alert.alert("An error occured while fetchind your rides");
-      }
-    };
+  // console.log(rideData);
+  // NEED TO TEST MORE
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const data = await fetchDriverActiveRides(driverId);
+          setRideData(data);
+          setIsLoading(false);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          Alert.alert("An error occured while fetching your rides");
+        }
+      };
 
-    fetchData();
-  }, []);
-  console.log("selected date", selectedDate);
+      fetchData();
+    }, [driverId]) // Add driverId as a dependency
+  );
+
   const filteredData = rideData.filter(
     item => item.occurenceDate === selectedDate
   );
-  //cancel all rides in the series: for automatically scheduled rides => no more auto creation of those rides + cancel all existing  ,
-  const handleDelete = id => {
+
+  const handleDelete = async canceledId => {
+    const handleCancelRide = async allInseries => {
+      try {
+        await cancelRide(canceledId, allInseries);
+        setRideData(filterCanceledRides(rideData, canceledId, allInseries));
+      } catch (err) {
+        Alert.alert("An error occured while trying to cancel a ride");
+      }
+    };
+    //must add check based on whether ride is recurrent or not
     Alert.alert(
-      "Cancel Rides",
-      "Would you like to cancel all rides in this series?",
+      "Cancel Ride",
+      "This ride is repeating.\nWould you like to cancel this ride only ?",
       [
         {
           text: "No",
-          onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
         {
-          text: "Only this ride",
-          onPress: () => setRideData(rideData.filter(item => item.id !== id)),
+          text: "All related rides",
+          onPress: async () => await handleCancelRide(true),
         },
         {
           text: "Yes",
-          onPress: () => setRideData(rideData.filter(item => item.id !== id)),
+          onPress: async () => await handleCancelRide(false),
         },
       ]
     );
@@ -83,6 +98,7 @@ function RideCardList({ selectedDate, navigation }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
