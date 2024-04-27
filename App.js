@@ -31,7 +31,6 @@ function App() {
         <Stack.Screen name='OnBoarding' component={OnBoarding} />
         <Stack.Screen name='SplashScreen' component={SplashScreen} />
         <Stack.Screen name='Signup' component={Signup} />
-        {/* <Stack.Screen name='Signup2' component={Signup2} /> */}
         <Stack.Screen name='Login' component={Login} />
       </Stack.Navigator>
     </NavigationContainer>
