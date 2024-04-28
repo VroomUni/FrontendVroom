@@ -31,30 +31,30 @@ const DriverRideExtraOptions = () => {
     />
   );
 
-  return (
-    <View style={commonStyles.carouselContainer}>
+  return !isPassenger ? (
+    <View style={commonStyles.container}>
       {/* since component is reused for passenger and driver */}
-      {!isPassenger ? (
-        <>
-          <Carousel
-            ref={carouselRef}
-            data={[{}, {}]} // Dummy data to create two slides
-            renderItem={({ index }) =>
-              index === 0 ? (
-                <OptionsFirstSlide goToSlide={goToSlide} />
-              ) : (
-                <OptionsSecondSlide />
-              )
-            }
-            sliderWidth={width*0.95}
-            itemWidth={width*0.95}
-            onSnapToItem={index => setActiveIndex(index)}
-          />
-          {renderPagination()}
-        </>
-      ) : (
-        <OptionsFirstSlide />
-      )}
+      <>
+        <Carousel
+          ref={carouselRef}
+          data={[{}, {}]} // Dummy data to create two slides
+          renderItem={({ index }) =>
+            index === 0 ? (
+              <OptionsFirstSlide goToSlide={goToSlide} />
+            ) : (
+              <OptionsSecondSlide />
+            )
+          }
+          sliderWidth={width * 0.95}
+          itemWidth={width * 0.95}
+          onSnapToItem={index => setActiveIndex(index)}
+        />
+        {renderPagination()}
+      </>
+    </View>
+  ) : (
+    <View style={commonStyles.container}>
+      <OptionsFirstSlide />
     </View>
   );
 };
@@ -62,22 +62,22 @@ const DriverRideExtraOptions = () => {
 const commonStyles = StyleSheet.create({
   //outer div for options component
   //  this is the blue div in the scene  .
-  carouselContainer: {
-    backgroundColor: "#96DDF4",
+  container: {
+    position: "absolute",
+    bottom: height * 0.045,
     alignItems: "center",
-    justifyContent:"center",
-    flex: 3.7,
-    // paddingBottom:15
+    alignSelf: "center",
+    width:width*0.95
   },
 
   // related to the dots pagination ( that indicate which slider currently on) , no need to edit
   paginationContainer: {
     position: "absolute",
-    bottom: height * 0.01,
+    bottom: 0,
   },
   paginationDot: {
-    width: 7,
-    height: 7,
+    width: 6,
+    height: 6,
     borderRadius: 5,
     marginHorizontal: 5,
     backgroundColor: "black",

@@ -60,7 +60,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       }
 
       setCustomSelectedTime(selectedDateOrTime);
-      isPassenger&&setToTimePickerVisible(true);
+      isPassenger && setToTimePickerVisible(true);
       goToSlide &&
         setTimeout(() => {
           goToSlide(1);
@@ -124,7 +124,6 @@ const OptionsFirstSlide = ({ goToSlide }) => {
               }),
               checkedColor: "grey",
               uncheckedColor: "black",
-              // style: { borderRadius: 15 },
             },
           ]}
         />
@@ -136,15 +135,17 @@ const OptionsFirstSlide = ({ goToSlide }) => {
     //inner container for slider content , the one with white background
     innerSliderContainer: {
       borderRadius: 7,
-      padding: 15,
+      paddingHorizontal: 20,
+      paddingVertical: 25,
+      paddingBottom: !isPassenger && 50,
       backgroundColor: "#F4F4FB",
       borderWidth: 1,
       borderColor: "black",
       flex: 1,
       rowGap:
-        isPassenger && customSelectedFromTime ? height * 0.035 : height * 0.075,
+        isPassenger && customSelectedFromTime ? height * 0.03 : height * 0.065,
       margin: 10,
-      width: "90%",
+      width: "97%",
       alignSelf: "center",
     },
   });
@@ -200,47 +201,53 @@ const OptionsFirstSlide = ({ goToSlide }) => {
         </View>
       </View>
       {/* date picker for passenger and driver */}
-      {isDatePickerVisible&&<DateTimePickerModal
-        isVisible={true}
-        mode='date'
-        date={customSelectedDate || new Date()}
-        maximumDate={new Date(new Date().setDate(new Date().getDate() + 7))}
-        minimumDate={new Date()}
-        onConfirm={handleDateTimeChange}
-        onCancel={() => {
-          setDatePickerVisibility(false);
-          setDateValue("today");
-        }}
-      />}
+      {isDatePickerVisible && (
+        <DateTimePickerModal
+          isVisible={true}
+          mode='date'
+          date={customSelectedDate || new Date()}
+          maximumDate={new Date(new Date().setDate(new Date().getDate() + 7))}
+          minimumDate={new Date()}
+          onConfirm={handleDateTimeChange}
+          onCancel={() => {
+            setDatePickerVisibility(false);
+            setDateValue("today");
+          }}
+        />
+      )}
       {/* from time Picker for passenger and driver */}
-      {isFromTimePickrVisible&&<DateTimePickerModal
-        isVisible={true}
-        mode='time'
-        is24Hour
-        date={
-          customSelectedFromTime ||
-          new Date(new Date().getTime() + 60 * 60 * 1000)
-        }
-        onConfirm={handleDateTimeChange}
-        onCancel={() => {
-          setFromTimePickerVisible(false);
-        }}
-      />}
+      {isFromTimePickrVisible && (
+        <DateTimePickerModal
+          isVisible={true}
+          mode='time'
+          is24Hour
+          date={
+            customSelectedFromTime ||
+            new Date(new Date().getTime() + 60 * 60 * 1000)
+          }
+          onConfirm={handleDateTimeChange}
+          onCancel={() => {
+            setFromTimePickerVisible(false);
+          }}
+        />
+      )}
 
       {/* {/*to time Picker  , only for passenger */}
-      {isToTimePickrVisible&&<DateTimePickerModal
-        isVisible={true}
-        mode='time'
-        is24Hour
-        date={
-          customSelectedToTime ||
-          new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
-        }
-        onConfirm={handleToTimeChange}
-        onCancel={() => {
-          setToTimePickerVisible(false);
-        }}
-      />}
+      {isToTimePickrVisible && (
+        <DateTimePickerModal
+          isVisible={true}
+          mode='time'
+          is24Hour
+          date={
+            customSelectedToTime ||
+            new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
+          }
+          onConfirm={handleToTimeChange}
+          onCancel={() => {
+            setToTimePickerVisible(false);
+          }}
+        />
+      )}
     </View>
   );
 };
