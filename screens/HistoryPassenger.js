@@ -1,6 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Dimensions, TouchableOpacity, Image } from 'react-native';
-import { AntDesign } from '@expo/vector-icons'; 
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import DriverCalendar from '../components/driver/Calendar';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -8,93 +19,65 @@ function HistoryPassenger() {
   const [startPoint, setStartPoint] = useState('City A');
   const [endPoint, setEndPoint] = useState('City B');
   const [startTime, setStartTime] = useState('10:00 AM');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [filteredUserData, setFilteredUserData] = useState([]);
+  const { user } = useAuth();
 
-  const userData = [
-    {
-      id: 1,
-      photo: 'https://bootdey.com/img/Content/avatar/avatar7.png',
-      name: 'John',
-      lastName: 'Doe',
-      age: 30,
-      rating: 4.5,
-    },
-    {
-      id: 2,
-      photo: 'https://bootdey.com/img/Content/avatar/avatar5.png',
-      name: 'Jane',
-      lastName: 'Doe',
-      age: 25,
-      rating: 5,
-    },
-    {
-      id: 3,
-      photo: 'https://bootdey.com/img/Content/avatar/avatar4.png',
-      name: 'Jeneffer',
-      lastName: 'Doe',
-      age: 19,
-      rating: 4,
-    },
-    {
-      id: 4,
-      photo: 'https://bootdey.com/img/Content/avatar/avatar6.png',
-      name: 'Joey',
-      lastName: 'Doe',
-      age: 25,
-      rating: 5,
-    },
-    {
-      id: 5,
-      photo: 'https://bootdey.com/img/Content/avatar/avatar2.png',
-      name: 'Jerry',
-      lastName: 'Doe',
-      age: 21,
-      rating: 3,
-    },
-    {
-      id: 6,
-      photo: 'https://bootdey.com/img/Content/avatar/avatar1.png',
-      name: 'Jemy',
-      lastName: 'Doe',
-      age: 20,
-      rating: 1,
-    },
-  ];
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`/api/history/${user.uid}`, {
+        params: { selectedDate: selectedDate.toISOString() },
+      });
+      setFilteredUserData(response.data.rideHistory || []);
+    } catch (error) {
+      console.error('Error fetching ride history:', error);
+    }
+  };
 
-  
+  useEffect(() => {
+    fetchData();
+  }, [selectedDate]);
 
   const handleRatingPress = (userId) => {
-    // Navigate to rating screen with userId
     console.log('Navigate to rating screen for user:', userId);
   };
 
   const handleReportPress = (userId) => {
-    // Navigate to report screen with userId
     console.log('Navigate to report screen for user:', userId);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        {userData.map((user) => (
-          <View key={user.id} style={styles.cardView} >
-            <Image source={{ uri: user.photo }} style={styles.userPhoto} />
-            <View style={styles.userInfo}>
-              <Text style={styles.userName}>{user.name} {user.lastName}</Text>
-              <Text style={styles.userAge}>{user.age} years old</Text>
-              <Text style={styles.userLocation}>From: {startPoint}</Text>
-              <Text style={styles.userLocation}>To: {endPoint}</Text>
-              <Text style={styles.userTime}>Time: {startTime}</Text>
-              <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={() => handleRatingPress(user.id)} style={styles.button}>
-                  <Text style={styles.buttonText}>Rate</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleReportPress(user.id)} style={[styles.button, styles.reportButton]}>
-                  <Text style={styles.buttonText}>Report</Text>
-                </TouchableOpacity>
+      <DriverCalendar onDateSelected={setSelectedDate} />
+
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.centeredView}>
+          {filteredUserData.length === 0 ? (
+            <Text style={styles.noHistoryText}>No history available</Text>
+          ) : (
+            filteredUserData.map((ride) => (
+              <View key={ride.id} style={styles.cardView}>
+                {/* Assuming ride.driver contains driver info */}
+                <Image source={{ uri: ride.driver.photo }} style={styles.userPhoto} />
+                <View style={styles.userInfo}>
+                  <Text style={styles.userName}>{ride.driver.firstName} {ride.driver.lastName}</Text>
+                  <Text style={styles.userAge}>{ride.driver.age} years old</Text>
+                  <Text style={styles.userLocation}>From: {ride.from}</Text>
+                  <Text style={styles.userLocation}>To: {ride.to}</Text>
+                  <Text style={styles.userTime}>Time: {ride.occurenceDate}</Text>
+                  <View style={styles.buttonsContainer}>
+                    <TouchableOpacity onPress={() => handleRatingPress(ride.driver.id)} style={styles.button}>
+                      <Text style={styles.buttonText}>Rate</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleReportPress(ride.driver.id)} style={[styles.button, styles.reportButton]}>
+                      <Text style={styles.buttonText}>Report</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
-        ))}
+            ))
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -103,11 +86,14 @@ function HistoryPassenger() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: '#fff',
-    paddingTop: 50,
   },
- 
+  scrollViewContent: {
+    flexGrow: 1,
+  },
+  centeredView: {
+    alignItems: 'center',
+  },
   cardView: {
     backgroundColor: '#fff',
     flexDirection: 'row',
@@ -166,6 +152,12 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
+  },
+  noHistoryText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: '#777',
   },
 });
 
