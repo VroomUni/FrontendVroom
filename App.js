@@ -7,6 +7,7 @@ import OnBoarding from "./screens/OnBoarding";
 import TabNav from "./navigation/TabNav";
 import Home from "./screens/Home";
 import Signup from "./screens/SignUp";
+import Signup2 from "./screens/SignUp-2";
 import Login from "./screens/Login";
 import Preferences from "./screens/Preferences";
 import Car from "./screens/Car";
@@ -27,7 +28,6 @@ function App() {
         <Stack.Screen name='Preferences' component={Preferences} />
         <Stack.Screen name='TabNav' component={TabNav} />
         <Stack.Screen name='Car' component={Car} />
-        <Stack.Screen name="car Setting" component={CarSettings}/>
         <Stack.Screen name='OnBoarding' component={OnBoarding} />
         <Stack.Screen name='SplashScreen' component={SplashScreen} />
         <Stack.Screen name='Signup' component={Signup} />

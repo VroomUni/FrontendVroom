@@ -17,9 +17,11 @@ import Checkbox from "expo-checkbox";
 import Button from "../components/Button";
 import { RadioButton } from "react-native-paper";
 import ImageUpload from "../components/ImageUpload";
-import { createUser } from "../api/UserService";
+import { createUser ,saveImage } from "../api/UserService";
+import Carousel, { Pagination } from "react-native-snap-carousel";
 
 const Signup = ({ navigation }) => {
+  
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhone] = useState("");
   const [age, setAge] = useState("");
@@ -32,28 +34,30 @@ const Signup = ({ navigation }) => {
   const [gender, setGender] = useState("");
   const [message, setMessage] = useState("");
 
+  const [profileImage, setProfileImage] = useState("");
+
   const [errorMessage, setErrorMessage] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [rePasswordError, setRePasswordError] = useState("");
 
-  const validateEmail = email => {
+  const validateEmail = (email) => {
     var re = /^[a-zA-Z0-9._-]+@(medtech\.tn|msb\.tn|smu.tn)$/;
     return re.test(email);
   };
 
-  const handleEmailChange = text => {
+  const handleEmailChange = (text) => {
     setEmail(text);
     const isValid = validateEmail(text);
     setErrorMessage(isValid ? "" : "Invalid email address.");
   };
 
-  const validatePassword = password => {
+  const validatePassword = (password) => {
     let re = /^(?=.*[A-Z])(?=.*[0-9])/;
     return re.test(password);
   };
 
-  const handlePasswordChange = text => {
+  const handlePasswordChange = (text) => {
     setPassword(text);
     const isValid = validatePassword(text);
     setPasswordError(
@@ -63,23 +67,26 @@ const Signup = ({ navigation }) => {
     );
   };
 
-  const handleRePasswordChange = text => {
+  const handleRePasswordChange = (text) => {
     setRePassword(text);
     setRePasswordError(text === password ? "" : "Passwords do not match!");
   };
 
-  const validatePhone = phone => {
+  const validatePhone = (phone) => {
     let re = /^[\d]{8}$/;
     return re.test(phone);
   };
 
-  const handlePhoneChange = text => {
+  const handlePhoneChange = (text) => {
     setPhone(text);
     const isValid = validatePhone(text);
     setPhoneError(isValid ? "" : "Invalid phone number");
   };
 
   const handleSubmit = async () => {
+
+    // const imagePath = await saveImage(profileImage);
+    
     setErrorMessage("");
     setPhoneError("");
     setPasswordError("");
@@ -111,6 +118,7 @@ const Signup = ({ navigation }) => {
       setMessage("Please agree to the terms and conditions");
     } else {
       try {
+        const imagePath = await saveImage(profileImage);
         await createUser({
           email,
           firstName,
@@ -118,17 +126,18 @@ const Signup = ({ navigation }) => {
           password,
           gender,
           phoneNumber,
-          profilePicPath: "toBeAdded",
+          profilePicPath: imagePath,
         });
+        // await saveImage(profileImage);
         navigation.navigate("Preferences");
       } catch (err) {
-        let msg="";
+        let msg = "";
         if (err.code === "auth/email-already-in-use") {
           msg = "The email address is already in use.";
-        } 
-        else{
-          msg="We encountered an error during registration"
+        } else {
+          msg = "We encountered an error during registration";
         }
+        console.error(err);
         Alert.alert(msg);
       }
     }
@@ -136,17 +145,18 @@ const Signup = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      {/* <ImageBackground
-          source={require("../assets/background-4.png")}
-          resizeMode="cover"
-          style={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            
-          }}
-          /> */}
-      <ScrollView keyboardDismissMode='on-drag'>
+
+      <ImageBackground
+        source={require("../assets/background-4.png")}
+        resizeMode="cover"
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+        }}
+      />
+      <ScrollView keyboardDismissMode="on-drag">
+
         <View style={{ flex: 1, marginHorizontal: 22 }}>
           <View style={{ marginVertical: 22 }}>
             <Text
@@ -155,7 +165,8 @@ const Signup = ({ navigation }) => {
                 fontWeight: "bold",
                 marginVertical: 12,
                 color: COLORS.blue,
-              }}>
+              }}
+            >
               Create Account
             </Text>
           </View>
@@ -168,7 +179,8 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}>
+              }}
+            >
               Email address
               {errorMessage && (
                 <Text style={{ color: "red" }}>{errorMessage}</Text>
@@ -186,11 +198,12 @@ const Signup = ({ navigation }) => {
                 justifyContent: "center",
                 paddingLeft: 22,
                 backgroundColor: "white",
-              }}>
+              }}
+            >
               <TextInput
-                placeholder='Enter your email address'
+                placeholder="Enter your email address"
                 placeholderTextColor={COLORS.black}
-                keyboardType='email-address'
+                keyboardType="email-address"
                 style={{
                   width: "100%",
                 }}
@@ -209,7 +222,8 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}>
+              }}
+            >
               First Name
             </Text>
 
@@ -224,11 +238,12 @@ const Signup = ({ navigation }) => {
                 justifyContent: "center",
                 paddingLeft: 22,
                 backgroundColor: "white",
-              }}>
+              }}
+            >
               <TextInput
-                placeholder='Enter your first name'
+                placeholder="Enter your first name"
                 placeholderTextColor={COLORS.black}
-                keyboardType='name-phone-pad'
+                keyboardType="name-phone-pad"
                 style={{
                   width: "100%",
                 }}
@@ -246,7 +261,8 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}>
+              }}
+            >
               Last Name
             </Text>
 
@@ -261,11 +277,12 @@ const Signup = ({ navigation }) => {
                 justifyContent: "center",
                 paddingLeft: 22,
                 backgroundColor: "white",
-              }}>
+              }}
+            >
               <TextInput
-                placeholder='Enter your last name'
+                placeholder="Enter your last name"
                 placeholderTextColor={COLORS.black}
-                keyboardType='name-phone-pad'
+                keyboardType="name-phone-pad"
                 style={{
                   width: "100%",
                 }}
@@ -283,7 +300,8 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}>
+              }}
+            >
               Age
             </Text>
 
@@ -298,11 +316,12 @@ const Signup = ({ navigation }) => {
                 justifyContent: "center",
                 paddingLeft: 22,
                 backgroundColor: "white",
-              }}>
+              }}
+            >
               <TextInput
-                placeholder='Enter your Age'
+                placeholder="Enter your Age"
                 placeholderTextColor={COLORS.black}
-                keyboardType='phone-pad'
+                keyboardType="phone-pad"
                 style={{
                   width: "100%",
                 }}
@@ -320,7 +339,8 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}>
+              }}
+            >
               Password {""}
               {passwordError && (
                 <Text style={{ color: "red" }}>{passwordError}</Text>
@@ -338,9 +358,10 @@ const Signup = ({ navigation }) => {
                 justifyContent: "center",
                 paddingLeft: 22,
                 backgroundColor: "white",
-              }}>
+              }}
+            >
               <TextInput
-                placeholder='Enter your password'
+                placeholder="Enter your password"
                 placeholderTextColor={COLORS.black}
                 secureTextEntry={isPasswordShown}
                 style={{
@@ -356,11 +377,12 @@ const Signup = ({ navigation }) => {
                 style={{
                   position: "absolute",
                   right: 12,
-                }}>
+                }}
+              >
                 {isPasswordShown == true ? (
-                  <Ionicons name='eye-off' size={24} color={COLORS.black} />
+                  <Ionicons name="eye-off" size={24} color={COLORS.black} />
                 ) : (
-                  <Ionicons name='eye' size={24} color={COLORS.black} />
+                  <Ionicons name="eye" size={24} color={COLORS.black} />
                 )}
               </TouchableOpacity>
             </View>
@@ -374,7 +396,8 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}>
+              }}
+            >
               Confirm Password {""}
               {rePasswordError && (
                 <Text style={{ color: "red" }}>{rePasswordError}</Text>
@@ -392,9 +415,10 @@ const Signup = ({ navigation }) => {
                 justifyContent: "center",
                 paddingLeft: 22,
                 backgroundColor: "white",
-              }}>
+              }}
+            >
               <TextInput
-                placeholder='Enter your password'
+                placeholder="Enter your password"
                 placeholderTextColor={COLORS.black}
                 secureTextEntry={isPasswordShown}
                 style={{
@@ -410,11 +434,12 @@ const Signup = ({ navigation }) => {
                 style={{
                   position: "absolute",
                   right: 12,
-                }}>
+                }}
+              >
                 {isPasswordShown == true ? (
-                  <Ionicons name='eye-off' size={24} color={COLORS.black} />
+                  <Ionicons name="eye-off" size={24} color={COLORS.black} />
                 ) : (
-                  <Ionicons name='eye' size={24} color={COLORS.black} />
+                  <Ionicons name="eye" size={24} color={COLORS.black} />
                 )}
               </TouchableOpacity>
             </View>
@@ -428,7 +453,8 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}>
+              }}
+            >
               Phone Number {""}
               {phoneError && <Text style={{ color: "red" }}>{phoneError}</Text>}
             </Text>
@@ -445,11 +471,12 @@ const Signup = ({ navigation }) => {
                 justifyContent: "space-between",
                 paddingLeft: 22,
                 backgroundColor: "white",
-              }}>
+              }}
+            >
               <TextInput
-                placeholder='+216'
+                placeholder="+216"
                 placeholderTextColor={COLORS.black}
-                keyboardType='numeric'
+                keyboardType="numeric"
                 style={{
                   width: "12%",
                   borderRightWidth: 1,
@@ -459,9 +486,9 @@ const Signup = ({ navigation }) => {
               />
 
               <TextInput
-                placeholder='Enter your phone number'
+                placeholder="Enter your phone number"
                 placeholderTextColor={COLORS.black}
-                keyboardType='numeric'
+                keyboardType="numeric"
                 style={{
                   width: "80%",
                 }}
@@ -480,14 +507,15 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}>
+              }}
+            >
               Gender
             </Text>
 
             <View style={{ flexDirection: "row" }}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <RadioButton
-                  value='Male'
+                  value="Male"
                   status={gender === "Male" ? "checked" : "unchecked"}
                   onPress={() => setGender("Male")}
                 />
@@ -496,7 +524,7 @@ const Signup = ({ navigation }) => {
 
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <RadioButton
-                  value='Female'
+                  value="Female"
                   status={gender === "Female" ? "checked" : "unchecked"}
                   onPress={() => setGender("Female")}
                 />
@@ -508,14 +536,18 @@ const Signup = ({ navigation }) => {
           </View>
 
           <View>
-            <ImageUpload />
+            <ImageUpload
+              profileImage={profileImage}
+              setProfileImage={setProfileImage}
+            />
           </View>
 
           <View
             style={{
               flexDirection: "row",
               marginVertical: 6,
-            }}>
+            }}
+          >
             <Checkbox
               style={{ marginRight: 8 }}
               value={termsChecked}
@@ -531,7 +563,7 @@ const Signup = ({ navigation }) => {
             <Text style={{ color: "red", marginBottom: 12 }}>{message}</Text>
           )}
           <Button
-            title='Sign Up'
+            title="Sign Up"
             filled
             onPress={handleSubmit}
             style={{
@@ -545,9 +577,11 @@ const Signup = ({ navigation }) => {
               flexDirection: "row",
               justifyContent: "center",
               marginVertical: 22,
-            }}>
+            }}
+          >
             <Text
-              style={{ fontSize: 16, color: COLORS.blue, fontWeight: "bold" }}>
+              style={{ fontSize: 16, color: COLORS.blue, fontWeight: "bold" }}
+            >
               Already have an account
             </Text>
             <Pressable onPress={() => navigation.navigate("Login")}>
@@ -557,7 +591,8 @@ const Signup = ({ navigation }) => {
                   color: COLORS.primary,
                   fontWeight: "bold",
                   marginLeft: 6,
-                }}>
+                }}
+              >
                 Login
               </Text>
             </Pressable>

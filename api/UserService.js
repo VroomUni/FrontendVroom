@@ -1,4 +1,5 @@
 require("../config/Firebase");
+import * as FileSystem from 'expo-file-system';
 
 import {
   getAuth,
@@ -17,6 +18,7 @@ const auth = getAuth();
 
 const createUser = async (userValidatedPayload) => {
   const url = `${apiConfig.baseURL}/user/signup`;
+  console.log("URL" , url);
   let FbaseUser;
   try {
     FbaseUser = await createUserWithEmailAndPassword(
@@ -24,13 +26,18 @@ const createUser = async (userValidatedPayload) => {
       userValidatedPayload.email,
       userValidatedPayload.password
     );
+
     await sendEmailVerification(FbaseUser.user);
+
     const response = await axios.post(url, {
       ...userValidatedPayload,
       firebaseId: FbaseUser.user.uid,
     });
+
     console.log("SUCCESS: User created successfully");
+
     return response;
+    
   } catch (err) {
     console.error("Error creating user:", err);
     // Handle Firebase errors
@@ -98,8 +105,49 @@ const updateUserPassword = async (currentPassword, newPassword)=>{
     console.error("Failed to update password:",error.message)
     throw error
   }
-
 };
+
+const saveImage = async (profileImage) => {
+  const imgDir = FileSystem.documentDirectory;
+
+  if (!profileImage) {
+      console.error('No image selected.');
+      return null;
+  }
+
+  const filename = new Date().getTime() + '.jpg';
+
+  try {
+    const url = `${apiConfig.baseURL}/user/upload-image`; 
+
+  const formData = new FormData();
+  formData.append('image', {
+      uri: profileImage,
+      name: filename,
+      type: 'image/jpg',
+  });
+
+  const response = await axios.post(url, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+      });
+
+      const data = response.data;
+
+      if (data.success) {
+          console.log('Image uploaded successfully:', data.message);
+          return data.imagePath;
+      } else {
+          console.error('Image upload failed:', data.error);
+      }
+  } catch (error) {
+      console.error('Error uploading image:', error);
+  }
+};
+
+
+
 
 const reauthenticateUser = async(currentPassword) =>{
   const user = auth.currentUser
@@ -112,4 +160,5 @@ const reauthenticateUser = async(currentPassword) =>{
     throw error
   }
 }
-module.exports = { signIn, createUser, setPreferences, getUserPreferences, updateUserPassword };
+module.exports = { signIn, createUser, setPreferences, getUserPreferences, updateUserPassword,saveImage };
+

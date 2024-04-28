@@ -1,15 +1,9 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Image,ImageBackground } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { StackActions } from '@react-navigation/native';
 
-// import Client from '../api/Client';
 
-const ImageUpload = props => {
-  const [profileImage, setProfileImage] = useState('');
-  const [progress, setProgress] = useState(0);
-
-//   const { token } = props.route.params;
+const ImageUpload = ({profileImage,setProfileImage}) => {
 
   const openImageLibrary = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -24,61 +18,31 @@ const ImageUpload = props => {
         allowsEditing: true,
       });
 
-      if (!response.cancelled) {
-        setProfileImage(response.uri);
+      if (!response.canceled) {
+        console.log(response.assets[0].uri);
+        setProfileImage(response.assets[0].uri);
       }
     }
   };
 
-//   const uploadProfileImage = async () => {
-//     const formData = new FormData();
-//     formData.append('profile', {
-//       name: new Date() + '_profile',
-//       uri: profileImage,
-//       type: 'image/jpg',
-//     });
-
-//     try {
-//       const res = await client.post('/upload-profile', formData, {
-//         headers: {
-//           Accept: 'application/json',
-//           'Content-Type': 'multipart/form-data',
-//           authorization: `JWT ${token}`,
-//         },
-//       });
-
-//       if (res.data.success) {
-//         props.navigation.dispatch(StackActions.replace('UserProfile'));
-//       }
-//     } catch (error) {
-//       console.log(error.message);
-//     }
-//   };
 
   return (
     <View style={styles.container}>
       <View>
-        
-        <TouchableOpacity onPress={openImageLibrary} style={styles.uploadBtnContainer}>
+        <TouchableOpacity
+          onPress={openImageLibrary}
+          style={styles.uploadBtnContainer}
+        >
           {profileImage ? (
-            <Image source={{ uri: profileImage }} style={{ width: '100%', height: '100%' }} />
+            <Image
+              source={{ uri: profileImage }}
+              style={{ width: '100%', height: '100%' }}
+            />
           ) : (
-            <Text style={styles.uploadBtn}>Upload Profile Picture</Text>
+            <Text style={styles.uploadBtn}>Upload Profile Image</Text>
           )}
         </TouchableOpacity>
-      
         
-        {/* {profileImage ? (
-          <Text
-            onPress={uploadProfileImage}
-            style={[
-              styles.skip,
-              { backgroundColor: 'green', color: 'white', borderRadius: 8 },
-            ]}
-          >
-            Upload
-          </Text>
-        ) : null} */}
       </View>
     </View>
   );
@@ -99,8 +63,6 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     borderWidth: 1,
     overflow: 'hidden',
-    
-    
   },
   uploadBtn: {
     textAlign: 'center',
