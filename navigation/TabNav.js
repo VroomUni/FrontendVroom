@@ -2,15 +2,13 @@ import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import DriverRides from "../screens/driver/DriverRides";
-import HistoryDriver from "../screens/driver/HistoryDriver";
 import PassengerRides from "../screens/passenger/PassengerRides";
 import { Alert, Platform, TouchableOpacity, View } from "react-native";
 import RideInfoInput from "../screens/RideInfoInput";
 import { useAuth } from "../context/AuthContext";
 // import EditProfileStack from "./EditProfileStack";
 import PassengerSearchRidesStack from "./PassengerSearchRideStack";
-import DetailsNav from "./DetailsNav";
+import HistoryNav from "./HistoryNav";
 import DriverRequestNav from "./DriverRequestNav";
 import ProfileDrawer from "./ProfileDrawer";
 
@@ -114,7 +112,7 @@ function TabNav() {
         }}
       />
 
-      <Tab.Screen name='History' component={DetailsNav} />
+      <Tab.Screen name='History' component={HistoryNav} />
       <Tab.Screen name='Profile' component={ProfileDrawer} />
     </Tab.Navigator>
   );

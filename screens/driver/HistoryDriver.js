@@ -1,54 +1,66 @@
-// HistoryDriver.js
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Dimensions, TouchableOpacity, Image } from 'react-native';
-import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
-import DriverCalendar from '../../components/driver/Calendar';
-import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '../../context/AuthContext';
-import apiConfig from '../../api/apiConfig';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import {
+  RecyclerListView,
+  DataProvider,
+  LayoutProvider,
+} from "recyclerlistview";
+import Calendar from "../../components/Calendar";
+import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../../context/AuthContext";
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 function HistoryDriver() {
-  const [startPoint, setStartPoint] = useState('City A');
-  const [endPoint, setEndPoint] = useState('City B');
-  const [startTime, setStartTime] = useState('10:00 AM');
+  const [startPoint, setStartPoint] = useState("City A");
+  const [endPoint, setEndPoint] = useState("City B");
+  const [startTime, setStartTime] = useState("10:00 AM");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [userData, setUserData] = useState([]);
   const navigation = useNavigation();
 
-  const {user} =useAuth();
+  const { user } = useAuth();
   const driverFirebaseId = user.uid;
 
-  useEffect(() => {
-    // Fetch ride history data from backend
-    const fetchRideHistory = async () => {
-      try {
-        const url = apiConfig.baseURL;
-        const response = await fetch(`${url}/history-driver/${driverFirebaseId}`); // Assuming driverFirebaseId is available
-        const data = await response.json();
-        console.log('Ride history:', data.rideHistory);
-        setUserData(data.rideHistory);
-      } catch (error) {
-        console.error('Error fetching ride history:', error);
-      }
-    };
+  // useEffect(() => {
+  //   // Fetch ride history data from backend
+  //   const fetchRideHistory = async () => {
+  //     try {
+  //       const url = apiConfig.baseURL;
+  //       const response = await fetch(`${url}/history-driver/${driverFirebaseId}`); // Assuming driverFirebaseId is available
+  //       const data = await response.json();
+  //       console.log('Ride history:', data.rideHistory);
+  //       setUserData(data.rideHistory);
+  //     } catch (error) {
+  //       console.error('Error fetching ride history:', error);
+  //     }
+  //   };
 
-    fetchRideHistory();
-  }, [selectedDate]); // Trigger fetch on selectedDate change
+  //   fetchRideHistory();
+  // }, [selectedDate]); // Trigger fetch on selectedDate change
 
-  const handleCardPress = (user) => {
-    navigation.navigate('Passengers', { selectedPassengers: user.passengers });
+  const handleCardPress = user => {
+    navigation.navigate("Passengers", { selectedPassengers: user.passengers });
   };
 
-  const onDateSelected = (date) => {
+  const onDateSelected = date => {
     setSelectedDate(new Date(date));
   };
 
-  const dataProvider = new DataProvider((r1, r2) => r1 !== r2).cloneWithRows(userData);
+  const dataProvider = new DataProvider((r1, r2) => r1 !== r2).cloneWithRows(
+    userData
+  );
 
   const layoutProvider = new LayoutProvider(
-    (index) => index,
+    index => index,
     (type, dim, index) => {
       dim.width = windowWidth / 1.2;
       dim.height = 180; // Adjust height as needed
@@ -64,20 +76,33 @@ function HistoryDriver() {
         <Text style={styles.userTime}>Time: {startTime}</Text>
         <View style={styles.passengersContainer}>
           {data.passengers.map((passenger, index) => (
-            <Image key={index} source={{ uri: passenger.photo }} style={styles.passengerPhoto} />
+            <Image
+              key={index}
+              source={{ uri: passenger.photo }}
+              style={styles.passengerPhoto}
+            />
           ))}
         </View>
       </View>
-      <TouchableOpacity style={styles.details} onPress={() => handleCardPress(data)}>
+      <TouchableOpacity
+        style={styles.details}
+        onPress={() => handleCardPress(data)}>
         <Text style={styles.buttonText}>Rate passengers</Text>
       </TouchableOpacity>
     </View>
   );
 
+  const today = new Date();
+  const yesterday = today.setDate(today.getDate() - 1);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.calendarContainer}>
-        <DriverCalendar onDateSelected={onDateSelected} />
+        <Calendar
+          onDateSelected={onDateSelected}
+          maxDate={yesterday}
+          selectedDate={yesterday}
+        />
       </View>
       <View style={styles.cardsContainer}>
         {userData.length > 0 ? (
@@ -98,29 +123,29 @@ function HistoryDriver() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   calendarContainer: {
-    height: '25%',
+    height: "25%",
   },
   cardsContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   recyclerList: {
-    width: '100%',
+    width: "100%",
   },
   cardView: {
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    margin: '10%',
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    margin: "10%",
     padding: 16,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '95%',
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "95%",
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     //shadowOffset: { width: 5, height: 5 },
     //shadowOpacity: 0.8,
     //shadowRadius: 9,
@@ -131,21 +156,21 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   userLocation: {
     fontSize: 14,
-    color: '#333',
+    color: "#333",
   },
   userTime: {
     fontSize: 14,
-    color: '#05375a',
+    color: "#05375a",
   },
   passengersContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "space-around",
   },
   passengerPhoto: {
     width: 50,
@@ -154,22 +179,22 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   details: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     right: 10,
-    backgroundColor: '#DA554E',
+    backgroundColor: "#DA554E",
     padding: 8,
     borderRadius: 5,
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 12,
   },
   noHistoryText: {
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 20,
     fontSize: 16,
-    color: '#777',
+    color: "#777",
   },
 });
 

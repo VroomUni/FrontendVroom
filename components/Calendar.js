@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import CalendarStrip from 'react-native-calendar-strip';
 
-function DriverCalendar({onDateSelected}) {
+function Calendar({onDateSelected , minDate,maxDate,selectedDate}) {
   const currentDate = new Date();
   return (
     <View style={styles.container}>
@@ -15,11 +15,11 @@ function DriverCalendar({onDateSelected}) {
       iconContainer={{ flex: 0.1 }}
       highlightDateNumberStyle={{ color: 'red' }}
       highlightDateNameStyle={{ color: 'red' }}
-      selectedDate={currentDate}
+      selectedDate={selectedDate}
       onDateSelected={date=>onDateSelected(date)}
-      startingDate={currentDate}
-      minDate={currentDate}
-      maxDate={new Date(currentDate).setDate(currentDate.getDate()+7)}
+      startingDate={selectedDate}
+      minDate={minDate}
+      maxDate={maxDate}
       scrollable={true}
       
     />
@@ -40,4 +40,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default DriverCalendar;
+export default Calendar;
