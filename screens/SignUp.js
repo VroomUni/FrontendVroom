@@ -14,14 +14,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
-import Button from "../components/Button";
-import { RadioButton } from "react-native-paper";
+// import Button from "../components/Button";
+import { RadioButton, Button } from "react-native-paper";
 import ImageUpload from "../components/ImageUpload";
-import { createUser ,saveImage } from "../api/UserService";
+import { createUser, saveImage } from "../api/UserService";
 import Carousel, { Pagination } from "react-native-snap-carousel";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useRideContext } from "../context/UserRideContext";
 
 const Signup = ({ navigation }) => {
-  
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhone] = useState("");
   const [age, setAge] = useState("");
@@ -49,7 +50,7 @@ const Signup = ({ navigation }) => {
   const handleEmailChange = (text) => {
     setEmail(text);
     const isValid = validateEmail(text);
-    setErrorMessage(isValid ? "" : "Invalid email address.");
+    setErrorMessage(isValid ? "" : " Invalid Email address.");
   };
 
   const validatePassword = (password) => {
@@ -63,13 +64,13 @@ const Signup = ({ navigation }) => {
     setPasswordError(
       isValid
         ? ""
-        : "Password should include at least one capital letter and one number"
+        : " Password should include at least one capital letter and one number"
     );
   };
 
   const handleRePasswordChange = (text) => {
     setRePassword(text);
-    setRePasswordError(text === password ? "" : "Passwords do not match!");
+    setRePasswordError(text === password ? "" : " Passwords do not match!");
   };
 
   const validatePhone = (phone) => {
@@ -80,13 +81,10 @@ const Signup = ({ navigation }) => {
   const handlePhoneChange = (text) => {
     setPhone(text);
     const isValid = validatePhone(text);
-    setPhoneError(isValid ? "" : "Invalid phone number");
+    setPhoneError(isValid ? "" : " Invalid phone number");
   };
 
   const handleSubmit = async () => {
-
-    // const imagePath = await saveImage(profileImage);
-    
     setErrorMessage("");
     setPhoneError("");
     setPasswordError("");
@@ -128,7 +126,7 @@ const Signup = ({ navigation }) => {
           phoneNumber,
           profilePicPath: imagePath,
         });
-        // await saveImage(profileImage);
+
         navigation.navigate("Preferences");
       } catch (err) {
         let msg = "";
@@ -140,6 +138,40 @@ const Signup = ({ navigation }) => {
         console.error(err);
         Alert.alert(msg);
       }
+    }
+  };
+  // const {
+  //   setDateValue,
+
+  // } = useRideContext();
+
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isDateSelected, setDateSelected] = useState(false);
+
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    console.warn("A date has been picked: ", date);
+    setDateSelected(date);
+    hideDatePicker();
+    
+  };
+
+  const handleDateTimeChange = (selectedDateOrTime) => {
+    setFromTimePickerVisible(false);
+    
+    if (isDatePickerVisible) {
+      setDatePickerVisibility(false);
+      setCustomSelectedDate(selectedDateOrTime);
+
+      return;
     }
   };
 
@@ -162,14 +194,14 @@ const Signup = ({ navigation }) => {
                 fontSize: 22,
                 fontWeight: "bold",
                 marginVertical: 12,
-                color: COLORS.blue,
+                color: COLORS.white,
               }}
             >
               Create Account
             </Text>
           </View>
 
-          <View style={{ marginBottom: 12 }}>
+          <View style={{ marginBottom: 12 , marginTop:12 }}>
             <Text
               style={{
                 fontSize: 16,
@@ -290,7 +322,7 @@ const Signup = ({ navigation }) => {
             </View>
           </View>
 
-          <View style={{ marginBottom: 12 }}>
+          {/* <View style={{ marginBottom: 12 }}>
             <Text
               style={{
                 fontSize: 16,
@@ -327,7 +359,7 @@ const Signup = ({ navigation }) => {
                 onChangeText={setAge}
               />
             </View>
-          </View>
+          </View> */}
 
           <View style={{ marginBottom: 12 }}>
             <Text
@@ -491,13 +523,18 @@ const Signup = ({ navigation }) => {
                   width: "80%",
                 }}
                 value={phoneNumber}
-                // onChangeText={setPhone}
                 onChangeText={handlePhoneChange}
               />
             </View>
           </View>
 
-          <View style={{ marginBottom: 12 }}>
+          <View style={{ flexDirection: "row", 
+                        justifyContent: "space-between" ,
+                        marginBottom: 18,
+                        marginTop: 18
+                        }}>
+
+          <View style={{ marginBottom: 18 }}>
             <Text
               style={{
                 fontSize: 16,
@@ -517,7 +554,7 @@ const Signup = ({ navigation }) => {
                   status={gender === "Male" ? "checked" : "unchecked"}
                   onPress={() => setGender("Male")}
                 />
-                <Text style={{ marginRight: 8, color: COLORS.blue }}>Male</Text>
+                <Text style={{ marginRight: 8, color: COLORS.black }}>Male</Text>
               </View>
 
               <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -526,18 +563,53 @@ const Signup = ({ navigation }) => {
                   status={gender === "Female" ? "checked" : "unchecked"}
                   onPress={() => setGender("Female")}
                 />
-                <Text style={{ marginRight: 8, color: COLORS.blue }}>
+                <Text style={{ marginRight: 8, color: COLORS.black }}>
                   Female
                 </Text>
               </View>
             </View>
+          {/* </View> */}
+          
+          <View
+            style={{
+              width: "100%",
+              height: 48,
+
+              alignItems: "center",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingLeft: 22,
+              
+              marginTop: 18,
+            }}
+          >
+            <Button
+              title="Show Date Picker"
+              onPress={showDatePicker}
+              mode="outlined"
+              textColor="grey"
+              
+            >
+              Birthday
+            </Button>
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              mode="date"
+              onConfirm={handleConfirm}
+              onCancel={hideDatePicker}
+              // onValueChange={handleDateTimeChange}
+            />
+          </View>
           </View>
 
-          <View>
+          <View   style={{
+              marginEnd: 20
+            }}> 
             <ImageUpload
               profileImage={profileImage}
               setProfileImage={setProfileImage}
             />
+          </View>
           </View>
 
           <View
@@ -550,10 +622,10 @@ const Signup = ({ navigation }) => {
               style={{ marginRight: 8 }}
               value={termsChecked}
               onValueChange={setTermsChecked}
-              color={termsChecked ? COLORS.primary : undefined}
+              color={termsChecked ? COLORS.b100 : undefined}
             />
 
-            <Text style={{ color: COLORS.blue, fontWeight: "bold" }}>
+            <Text style={{ color: COLORS.black }}>
               I aggree to the terms and conditions
             </Text>
           </View>
@@ -562,13 +634,21 @@ const Signup = ({ navigation }) => {
           )}
           <Button
             title="Sign Up"
-            filled
+            // filled
             onPress={handleSubmit}
             style={{
               marginTop: 18,
               marginBottom: 4,
+              width: "50%",
+              marginLeft: 75,
             }}
-          />
+            mode="contained-tonal"
+            buttonColor={COLORS.b400}
+            textColor="white"
+            fontSize="18"
+          >
+            Sign Up
+          </Button>
 
           <View
             style={{
@@ -577,16 +657,14 @@ const Signup = ({ navigation }) => {
               marginVertical: 22,
             }}
           >
-            <Text
-              style={{ fontSize: 16, color: COLORS.blue, fontWeight: "bold" }}
-            >
+            <Text style={{ fontSize: 16, color: COLORS.black }}>
               Already have an account
             </Text>
             <Pressable onPress={() => navigation.navigate("Login")}>
               <Text
                 style={{
                   fontSize: 16,
-                  color: COLORS.primary,
+                  color: COLORS.b100,
                   fontWeight: "bold",
                   marginLeft: 6,
                 }}

@@ -1,10 +1,9 @@
-import { View, Text, Alert,StyleSheet,Dimensions } from "react-native";
+import { View, Text, Alert,StyleSheet,Dimensions,Image, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
 import Checkbox from "expo-checkbox";
-import { RadioButton } from "react-native-paper";
-import { Button } from "react-native-paper";
+import { RadioButton,Button } from "react-native-paper";
 import { setPreferences } from "../api/UserService";
 import { useAuth } from "../context/AuthContext";
 
@@ -60,6 +59,7 @@ const Preferences = ({ navigation }) => {
     }
   };
 
+
   return (
     <SafeAreaView
       style={{
@@ -68,6 +68,8 @@ const Preferences = ({ navigation }) => {
         paddingLeft: 10,
         paddingRight: 10,
       }}>
+        <ScrollView>
+        
       <View
         style={{
           marginVertical: 22,
@@ -96,6 +98,15 @@ const Preferences = ({ navigation }) => {
           Skip
         </Button>
       </View>
+
+      {/* <Image
+        style={{ width: 300,
+          height: 300,
+          marginRight: 0,
+          marginLeft: 50 
+        }}
+        source={require('../assets/PreferencesSettings.png')}
+      /> */}
 
       <View style={{ marginBottom: 12 }}>
         <Text
@@ -359,6 +370,8 @@ const Preferences = ({ navigation }) => {
           justifyContent: "center",
           marginVertical: 22,
         }}></View>
+
+</ScrollView>
     </SafeAreaView>
   );
 };
