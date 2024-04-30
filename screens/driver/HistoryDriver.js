@@ -1,150 +1,104 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Dimensions, TouchableOpacity, Image, Modal } from 'react-native';
-import { Button } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
-import DetailsNav from '../../navigation/DetailsNav';
-
-
-
-const windowWidth = Dimensions.get('window').width;
-const windowlength = Dimensions.get('window').length;
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import {
+  RecyclerListView,
+  DataProvider,
+  LayoutProvider,
+} from "recyclerlistview";
+import Calendar from "../../components/Calendar";
+import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../../context/AuthContext";
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 function HistoryDriver() {
-  const [startPoint, setStartPoint] = useState('City A');
-  const [endPoint, setEndPoint] = useState('City B');
-  const [startTime, setStartTime] = useState('10:00 AM');
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedPassengers, setSelectedPassengers] = useState([]);
-
-  const userData = [
-    {
-      id: 1,
-      rideNumber: 'Ride 1',
-      passengers: [
-        {
-          photo: 'https://bootdey.com/img/Content/avatar/avatar5.png',
-          name: 'John',
-          lastName: 'Doe',
-          age: 30,
-        },
-        {
-          photo: 'https://bootdey.com/img/Content/avatar/avatar4.png',
-          name: 'Jane',
-          lastName: 'Doe',
-          age: 25,
-        },
-        {
-          photo: 'https://bootdey.com/img/Content/avatar/avatar6.png',
-          name: 'Jeneffer',
-          lastName: 'Doe',
-          age: 19,
-        },
-        {
-          photo: 'https://bootdey.com/img/Content/avatar/avatar7.png',
-          name: 'Jeneffer',
-          lastName: 'Doe',
-          age: 19,
-        },
-      ],
-    },
-    {
-      id: 2,
-      rideNumber: 'Ride 2',
-      passengers: [
-        {
-          photo: 'https://bootdey.com/img/Content/avatar/avatar1.png',
-          name: 'Jack',
-          lastName: 'Smith',
-          age: 35,
-        },
-        {
-          photo: 'https://bootdey.com/img/Content/avatar/avatar2.png',
-          name: 'Jessica',
-          lastName: 'Johnson',
-          age: 28,
-        },
-      ],
-    },
-    {
-      id: 3,
-      rideNumber: 'Ride 3',
-      passengers: [
-        {
-          photo: 'https://bootdey.com/img/Content/avatar/avatar3.png',
-          name: 'Michael',
-          lastName: 'Williams',
-          age: 42,
-        },
-        {
-          photo: 'https://bootdey.com/img/Content/avatar/avatar7.png',
-          name: 'Emily',
-          lastName: 'Brown',
-          age: 24,
-        },
-      ],
-    },
-    {
-      id: 4,
-      rideNumber: 'Ride 4',
-      passengers: [
-        {
-          photo: 'https://bootdey.com/img/Content/avatar/avatar5.png',
-          name: 'John',
-          lastName: 'Doe',
-          age: 30,
-        },
-        {
-          photo: 'https://bootdey.com/img/Content/avatar/avatar4.png',
-          name: 'Jane',
-          lastName: 'Doe',
-          age: 25,
-        },
-        {
-          photo: 'https://bootdey.com/img/Content/avatar/avatar6.png',
-          name: 'Jeneffer',
-          lastName: 'Doe',
-          age: 19,
-        },
-        {
-          photo: 'https://bootdey.com/img/Content/avatar/avatar7.png',
-          name: 'Jeneffer',
-          lastName: 'Doe',
-          age: 19,
-        },
-      ],
-    },
-  ];
-
+  const [startPoint, setStartPoint] = useState("City A");
+  const [endPoint, setEndPoint] = useState("City B");
+  const [startTime, setStartTime] = useState("10:00 AM");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [userData, setUserData] = useState([]);
   const navigation = useNavigation();
-  const handleCardPress = (user) => {
-    setSelectedPassengers(user.passengers);
-    navigation.navigate('Passengers', { selectedPassengers: user.passengers });
+
+  const { user } = useAuth();
+  const driverFirebaseId = user.uid;
+
+  const handleCardPress = user => {
+    navigation.navigate("Passengers", { selectedPassengers: user.passengers });
   };
 
- 
+  const onDateSelected = date => {
+    setSelectedDate(new Date(date));
+  };
+
+  const dataProvider = new DataProvider((r1, r2) => r1 !== r2).cloneWithRows(
+    userData
+  );
+
+  const layoutProvider = new LayoutProvider(
+    index => index,
+    (type, dim, index) => {
+      dim.width = windowWidth / 1.2;
+      dim.height = 180; // Adjust height as needed
+    }
+  );
+
+  const rowRenderer = (type, data) => (
+    <View style={styles.cardView}>
+      <View style={styles.userInfo}>
+        <Text style={styles.userName}>{data.rideNumber}</Text>
+        <Text style={styles.userLocation}>From: {startPoint}</Text>
+        <Text style={styles.userLocation}>To: {endPoint}</Text>
+        <Text style={styles.userTime}>Time: {startTime}</Text>
+        <View style={styles.passengersContainer}>
+          {data.passengers.map((passenger, index) => (
+            <Image
+              key={index}
+              source={{ uri: passenger.photo }}
+              style={styles.passengerPhoto}
+            />
+          ))}
+        </View>
+      </View>
+      <TouchableOpacity
+        style={styles.details}
+        onPress={() => handleCardPress(data)}>
+        <Text style={styles.buttonText}>Rate passengers</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const today = new Date();
+  const yesterday = today.setDate(today.getDate() - 1);
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        {userData.map((user) => (
-          <View key={user.id} style={styles.cardView}>
-            <View style={styles.userInfo}>
-              <Text style={styles.userName}>{user.rideNumber}</Text>
-              <Text style={styles.userLocation}>From: {startPoint}</Text>
-              <Text style={styles.userLocation}>To: {endPoint}</Text>
-              <Text style={styles.userTime}>Time: {startTime}</Text>
-              <View style={styles.passengersContainer}>
-                {user.passengers.map((passenger, index) => (
-                  <Image key={index} source={{ uri: passenger.photo }} style={styles.passengerPhoto} />
-                ))}
-                <TouchableOpacity onPress={() => handleCardPress(user)} style={styles.details}>
-                  <Text style={styles.buttonText}>Rate passengers</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+      <View style={styles.calendarContainer}>
+        <Calendar
+          onDateSelected={onDateSelected}
+          maxDate={yesterday}
+          selectedDate={yesterday}
+        />
+      </View>
+      <View style={styles.cardsContainer}>
+        {userData.length > 0 ? (
+          <RecyclerListView
+            style={styles.recyclerList}
+            dataProvider={dataProvider}
+            layoutProvider={layoutProvider}
+            rowRenderer={rowRenderer}
+          />
+        ) : (
+          <Text style={styles.noHistoryText}>No history available</Text>
+        )}
+      </View>
     </SafeAreaView>
   );
 }
@@ -152,112 +106,78 @@ function HistoryDriver() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    paddingTop: 50,
+    backgroundColor: "#fff",
   },
- 
+  calendarContainer: {
+    height: "25%",
+  },
+  cardsContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  recyclerList: {
+    width: "100%",
+  },
   cardView: {
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    margin: 6,
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    margin: "10%",
     padding: 16,
-    width: windowWidth / 1.2,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "95%",
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 8,
-    elevation: 8,
-    borderWidth: 2,
-    borderColor: 'white',
+    shadowColor: "#000",
+    //shadowOffset: { width: 5, height: 5 },
+    //shadowOpacity: 0.8,
+    //shadowRadius: 9,
+    elevation: 5,
   },
   userInfo: {
     flex: 1,
-    marginLeft: 10,
   },
   userName: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   userLocation: {
     fontSize: 14,
-    color: '#333',
+    color: "#333",
   },
   userTime: {
     fontSize: 14,
-    color: '#05375a',
+    color: "#05375a",
   },
   passengersContainer: {
-    flexDirection: 'row',
-    marginTop: 10,
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "space-around",
   },
   passengerPhoto: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    marginRight: 10,
+    marginVertical: 5,
   },
-  modalBackground: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 10,
-    width: windowWidth / 1.2,
-  },
-  modalText: {
-    fontSize: 20,
-    color: 'black',
-    marginBottom: 10,
-  },
-  closeButton: {
-    marginTop: 20,
-    color: 'red',
-  },
-  passengerAccordion: {
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
+  details: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    backgroundColor: "#DA554E",
+    padding: 8,
     borderRadius: 5,
-  },
-  passengerHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#f0f0f0',
-  },
-  passengerHeaderText: {
-    fontSize: 16,
-  },
-  passengerDetails: {
-    padding: 10,
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
   },
   buttonText: {
-    color: 'white',
-    fontSize: 10,
+    color: "white",
+    fontSize: 12,
   },
-  
-  details: {
-    position: 'absolute',
-    top: '-190%', 
-    right: 10, 
-    backgroundColor: '#DA554E',
-    padding: 4,
-    borderRadius: 5,
+  noHistoryText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
+    color: "#777",
   },
 });
 

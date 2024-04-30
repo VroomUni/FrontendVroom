@@ -1,4 +1,4 @@
-import { View, Text, Alert,StyleSheet,Dimensions,Image, ScrollView } from "react-native";
+import { View, Text, Alert, StyleSheet, Dimensions,Image, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
@@ -15,8 +15,6 @@ const Preferences = ({ navigation }) => {
   const [foodchecked, setFoodChecked] = useState(null);
   const [musicchecked, setMusicChecked] = useState(null);
   const [talkativechecked, setTalkativeChecked] = useState(null);
-  // const [boysOnly, setBoysOnly] = useState(false);
-  // const [girlsOnly, setGirlsOnly] = useState(false);
   const { user } = useAuth();
 
   const [isBoysSelected, setBoysSelected] = useState(false);
@@ -37,8 +35,6 @@ const Preferences = ({ navigation }) => {
   };
 
   const submitPreferences = async isYesClick => {
-    
-  
     try {
       const res = await setPreferences({
         smoking: smokerchecked,
@@ -93,7 +89,7 @@ const Preferences = ({ navigation }) => {
           buttonColor='#00f0dc'
           textColor='white'
           icon='chevron-right'
-          onPress={() => navigation.navigate("SplashScreen")}
+          onPress={() => submitPreferences(false)}
           contentStyle={{ flexDirection: "row-reverse" }}>
           Skip
         </Button>
@@ -273,9 +269,6 @@ const Preferences = ({ navigation }) => {
         </Text>
         <Checkbox
           style={{ marginRight: 8 }}
-          // value={boysOnly}
-          // onValueChange={setBoysOnly}
-          // color={boysOnly ? COLORS.primary : undefined}
           value={isBoysSelected}
           color={isBoysSelected ? COLORS.primary : undefined}
           status={isBoysSelected ? "checked" : "unchecked"}
@@ -352,18 +345,6 @@ const Preferences = ({ navigation }) => {
           </Button>
         </View>
       </View>
-
-      {/* <Button
-        title="Skip"
-        mode="contained-tonal"
-        icon="chevron-right"
-        buttonColor="#00f0dc"
-        textColor="white"
-        onPress={() => console.log("SKIP")}
-      >
-        Skip
-      </Button> */}
-
       <View
         style={{
           flexDirection: "row",

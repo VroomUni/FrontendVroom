@@ -25,7 +25,7 @@ import { useRideContext } from "../context/UserRideContext";
 const Signup = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhone] = useState("");
-  const [age, setAge] = useState("");
+  const [age, setAge] = useState(22);
   const [firstName, setFirstname] = useState("");
   const [lastName, setLastname] = useState("");
   const [password, setPassword] = useState("");

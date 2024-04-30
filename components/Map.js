@@ -82,10 +82,10 @@ const Map = ({
         })),
         {
           edgePadding: {
-            top: 40,
-            bottom: 40,
-            right: 10,
-            left: 10,
+            top: 50,
+            bottom:270,
+            right:0,
+            left: 0,
           },
           animated: true,
         }

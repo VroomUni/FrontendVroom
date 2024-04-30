@@ -15,6 +15,7 @@ function RideCardList({ selectedDate, navigation }) {
   const [rideData, setRideData] = useState([]);
   // console.log(rideData);
   // NEED TO TEST MORE
+  
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
@@ -82,7 +83,7 @@ function RideCardList({ selectedDate, navigation }) {
   return (
     <View style={styles.container}>
       {isLoading ? (
-        <Text>LOADING...</Text>
+        <Text>  LOADING...</Text>
       ) : filteredData.length > 0 ? (
         <FlatList
           data={filteredData}

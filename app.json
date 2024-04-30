@@ -18,7 +18,7 @@
     "android": {
       "package": "com.iss.vroom",
       "versionCode": 1,
-      "googleServicesFile":".config/vroom-412215-firebase-adminsdk-6mwxs-7ef5080081.json" ,
+      "googleServicesFile":"config/vroom-412215-firebase-adminsdk-6mwxs-7ef5080081.json" ,
 
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -71,6 +71,6 @@
         "projectId": "942e1ae2-4bad-43a9-a68b-e10f27720254"
       }
     },
-    "owner": "prismal"
+    "owner": "vroomvroom"
   }
 }
