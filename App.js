@@ -7,7 +7,7 @@ import OnBoarding from "./screens/OnBoarding";
 import TabNav from "./navigation/TabNav";
 import Home from "./screens/Home";
 import Signup from "./screens/SignUp";
-import Signup2 from "./screens/SignUp-2";
+// import Signup2 from "./screens/SignUp-2";
 import Login from "./screens/Login";
 import Preferences from "./screens/Preferences";
 import Car from "./screens/Car";
