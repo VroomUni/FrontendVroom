@@ -30,23 +30,6 @@ function HistoryDriver() {
   const { user } = useAuth();
   const driverFirebaseId = user.uid;
 
-  // useEffect(() => {
-  //   // Fetch ride history data from backend
-  //   const fetchRideHistory = async () => {
-  //     try {
-  //       const url = apiConfig.baseURL;
-  //       const response = await fetch(`${url}/history-driver/${driverFirebaseId}`); // Assuming driverFirebaseId is available
-  //       const data = await response.json();
-  //       console.log('Ride history:', data.rideHistory);
-  //       setUserData(data.rideHistory);
-  //     } catch (error) {
-  //       console.error('Error fetching ride history:', error);
-  //     }
-  //   };
-
-  //   fetchRideHistory();
-  // }, [selectedDate]); // Trigger fetch on selectedDate change
-
   const handleCardPress = user => {
     navigation.navigate("Passengers", { selectedPassengers: user.passengers });
   };
