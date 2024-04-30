@@ -11,7 +11,7 @@ import { Button, IconButton } from "react-native-paper";
 import { useRideContext } from "../../context/UserRideContext";
 
 const { width, height } = Dimensions.get("window");
-const DriverRideFromTo = ({ setOnLocationInputPage, isOptionShown }) => {
+const DriverRideFromTo = ({ setOnLocationInputPage }) => {
   const {
     setPolygonCods,
     setPolylineCods,
@@ -58,7 +58,7 @@ const DriverRideFromTo = ({ setOnLocationInputPage, isOptionShown }) => {
     itineraryComponentContainer: {
       flexDirection: "row",
       alignItems: "center",
-      flex: isOptionShown ? 2 : 1.4,
+      flex: 1.4,
       backgroundColor: "#E2EAF4",
       width: width, // 90% of screen width
       paddingHorizontal: width * 0.03, // 5% padding on left and right

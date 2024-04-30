@@ -30,40 +30,44 @@ export default function DriverCard({
   const { driver } = data?.Ride;
   const fullName = driver?.firstName + " " + driver?.lastName;
   const renderPreferenceItems = () => {
-    return (
-      Object.keys(driver.Preference)
-        .map(attribute => {
-          if (driver.Preference[attribute] === null) {
-            return null;
-          }
-          return (
-            <PreferenceItem
-              key={attribute}
-              attribute={attribute}
-              value={driver?.Preference[attribute]}
-              matched={isPreferenceAttrMatch(
-                attribute,
-                driver.Preference,
-                passengerPreferences
-              )}
-            />
-          );
-        })
-        //to get the matched prefs at the start
-        .sort((a, b) => {
-          // Extract the 'matched' prop from the JSX elements
-          const matchedA = a?.props?.matched || false;
-          const matchedB = b?.props?.matched || false;
+    const preferenceItems = Object.keys(driver.Preference)
+      .map(attribute => {
+        if (driver.Preference[attribute] === null) {
+          return null;
+        }
+        return (
+          <PreferenceItem
+            key={attribute}
+            attribute={attribute}
+            value={driver?.Preference[attribute]}
+            matched={isPreferenceAttrMatch(
+              attribute,
+              driver.Preference,
+              passengerPreferences
+            )}
+          />
+        );
+      })
+      //to get the matched prefs at the start
+      .sort((a, b) => {
+        // Extract the 'matched' prop from the JSX elements
+        const matchedA = a?.props?.matched || false;
+        const matchedB = b?.props?.matched || false;
 
-          if (matchedA === matchedB) {
-            return 0;
-          }
-          if (matchedA === true) {
-            return -1;
-          }
-          return 1;
-        })
+        if (matchedA === matchedB) {
+          return 0;
+        }
+        if (matchedA === true) {
+          return -1;
+        }
+        return 1;
+      });
+    const result = preferenceItems.every(elt => elt === null) ? (
+      <Text style={{ fontWeight: "bold" }}>No Preferences</Text>
+    ) : (
+      preferenceItems
     );
+    return result;
   };
   return (
     <PaperProvider>
@@ -125,7 +129,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 4,
-    padding: 20,
+    padding: 15,
     alignItems: "center",
     justifyContent: "space-between",
   },
@@ -134,17 +138,18 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     borderRadius: 40,
-    marginLeft: 40,
+    alignSelf: "center",
   },
   name: {
     fontWeight: "bold",
     fontSize: 22,
     color: "#333",
     marginBottom: 5,
+    alignSelf: "center",
   },
   stars: {
     flexDirection: "row",
-    marginLeft: 30,
+    alignSelf: "center",
   },
   filledStar: {
     color: "#FFD700",

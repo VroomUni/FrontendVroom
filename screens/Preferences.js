@@ -1,4 +1,4 @@
-import { View, Text, Alert,StyleSheet,Dimensions } from "react-native";
+import { View, Text, Alert, StyleSheet, Dimensions } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
@@ -16,12 +16,10 @@ const Preferences = ({ navigation }) => {
   const [foodchecked, setFoodChecked] = useState(null);
   const [musicchecked, setMusicChecked] = useState(null);
   const [talkativechecked, setTalkativeChecked] = useState(null);
-  const [boysOnly, setBoysOnly] = useState(false);
-  const [girlsOnly, setGirlsOnly] = useState(false);
+  const [boysOnly, setBoysOnly] = useState(null);
+  const [girlsOnly, setGirlsOnly] = useState(null);
   const { user } = useAuth();
   const submitPreferences = async isYesClick => {
-    
-  
     try {
       const res = await setPreferences({
         smoking: smokerchecked,
@@ -29,9 +27,8 @@ const Preferences = ({ navigation }) => {
         loudMusic: musicchecked,
         talkative: talkativechecked,
         UserFirebaseId: user.uid,
-        girlsOnly:girlsOnly,
-        boysOnly:boysOnly
-
+        girlsOnly: girlsOnly,
+        boysOnly: boysOnly,
       });
       isYesClick
         ? navigation.navigate("Car")
@@ -73,7 +70,7 @@ const Preferences = ({ navigation }) => {
           buttonColor='#00f0dc'
           textColor='white'
           icon='chevron-right'
-          onPress={() => navigation.navigate("SplashScreen")}
+          onPress={() => submitPreferences(false)}
           contentStyle={{ flexDirection: "row-reverse" }}>
           Skip
         </Button>
@@ -244,7 +241,7 @@ const Preferences = ({ navigation }) => {
         </Text>
         <Checkbox
           style={{ marginRight: 8 }}
-          value={boysOnly}
+          value={boysOnly ? true : false}
           onValueChange={setBoysOnly}
           color={boysOnly ? COLORS.primary : undefined}
         />
@@ -268,7 +265,7 @@ const Preferences = ({ navigation }) => {
         </Text>
         <Checkbox
           style={{ marginRight: 8 }}
-          value={girlsOnly}
+          value={girlsOnly ? true : false}
           onValueChange={setGirlsOnly}
           color={girlsOnly ? COLORS.primary : undefined}
         />

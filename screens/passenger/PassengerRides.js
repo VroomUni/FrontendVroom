@@ -1,6 +1,6 @@
 import { View, StyleSheet, Alert } from "react-native";
 import React, { useState } from "react";
-import DriverCalendar from "../../components/driver/DriverCalendar";
+import Calendar from "../../components/Calendar";
 import RideCardListPassenger from "../../components/Passenger/RideCardListPassenger";
 
 // Mock data
@@ -29,29 +29,39 @@ const rides = [
   // Add the rest of your ride objects here
 ];
 
-function PassengerRides({navigation}) {
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
-  
+function PassengerRides({ navigation }) {
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const handleDateSelection = selectedDate => {
+    if (
+      new Date(selectedDate).setHours(0, 0, 0, 0) <
+      new Date().setHours(0, 0, 0, 0)
+    ) {
+      Alert.alert("History", "Would you like to check your rides history", [
+        {
+          text: "No",
+          style: "cancel",
+        },
+        {
+          text: "Go to history",
+          onPress: () => navigation.navigate("History"),
+        },
+      ]);
+      return;
+    }
+    setSelectedDate(selectedDate.format("YYYY-MM-DD"));
+  };
+
+  const today = new Date();
+
   return (
     <View style={styles.container}>
-      <DriverCalendar
-        onDateSelected={date => {
-          if (new Date(date).getDate() < new Date().getDate()) {
-            Alert.alert("History","Would you like to check rides history",   [
-              {
-                text: "No",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel",
-              },
-              {
-                text: "Go to history",
-                onPress: () => navigation.navigate("History"),
-              },
-            ]);
-            return;
-          }
-          setSelectedDate(date.format("YYYY-MM-DD"));
-        }}
+      <Calendar
+        onDateSelected={handleDateSelection}
+        selectedDate={today}
+        minDate={today}
+        maxDate={new Date().setDate(new Date().getDate() + 7)}
       />
       <RideCardListPassenger rides={rides} navigation={navigation} />
     </View>

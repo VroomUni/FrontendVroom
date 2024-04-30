@@ -83,7 +83,7 @@ function RideCardList({ selectedDate, navigation }) {
   return (
     <View style={styles.container}>
       {isLoading ? (
-        <Text>LOADING...</Text>
+        <Text>  LOADING...</Text>
       ) : filteredData.length > 0 ? (
         <FlatList
           data={filteredData}

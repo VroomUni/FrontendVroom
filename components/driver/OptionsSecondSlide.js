@@ -112,16 +112,12 @@ const OptionsSecondSlide = () => {
           style={{
             flexDirection: "row",
             alignItems: "center",
-            columnGap: width*0.1,
+            columnGap: width * 0.1,
           }}>
-          <Chip
-            mode='outlined'
-            icon={() => (
-              <Icon source={"seat-passenger"} color='black' size={20} />
-            )}
-            showSelectedCheck={false}>
+          <Text>
+            <Icon source={"seat-passenger"} color='black' size={20} />
             Seats
-          </Chip>
+          </Text>
           {renderCounter()}
         </View>
 
@@ -130,18 +126,19 @@ const OptionsSecondSlide = () => {
           style={{
             flexDirection: "row",
             alignItems: "center",
-            columnGap: width*0.1,
+            columnGap: width * 0.1,
           }}>
-          <Chip mode='outlined' icon={"repeat"}>
-            Repeat
-          </Chip>
+          <Text>
+            <Icon source={"repeat"} color='black' size={20} />
+            Seats
+          </Text>
           <Button
             mode='outlined'
             textColor='black'
             contentStyle={{
               flexDirection: "row-reverse",
               borderColor: "black",
-              width: width*0.37,
+              width: width * 0.37,
             }}
             style={{ borderRadius: 5 }}
             icon={"chevron-right"}
@@ -230,7 +227,7 @@ const commonStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "black",
     flex: 1,
-    rowGap: height*0.035,
+    rowGap: height * 0.035,
     margin: 10,
   },
 });
