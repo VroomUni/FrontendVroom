@@ -83,11 +83,11 @@ const signIn = async (email, password) => {
     );
 
     const token = await registerForPushNotificationsAsync();
+    const url = `${apiConfig.baseURL}/user/token`;
+    await axios.post(url, { userId:userCredential.user.uid, token });
     console.log(token);
-    return token;
+    return ;
   } catch (error) {
-    const errorCode = error.code;
-    const errorMessage = error.message;
     throw error;
   }
 };

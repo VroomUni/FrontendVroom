@@ -7,96 +7,99 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
-import {
-  RecyclerListView,
-  DataProvider,
-  LayoutProvider,
-} from "recyclerlistview";
 import Calendar from "../../components/Calendar";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../context/AuthContext";
+import { getUserRideHistory } from "../../api/RideService";
+import { useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import RideInfo from "../../components/RideInfo";
+import { ScrollView } from "react-native-gesture-handler";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 function HistoryDriver() {
-  const [startPoint, setStartPoint] = useState("City A");
-  const [endPoint, setEndPoint] = useState("City B");
-  const [startTime, setStartTime] = useState("10:00 AM");
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [userData, setUserData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const [ridesData, setRidesData] = useState([]);
   const navigation = useNavigation();
 
-  const { user } = useAuth();
-  const driverFirebaseId = user.uid;
+  const { user, isPassenger } = useAuth();
 
-  const handleCardPress = user => {
-    navigation.navigate("Passengers", { selectedPassengers: user.passengers });
+  useFocusEffect(
+    useCallback(() => {
+      const fetchDriverRidesHistory = async () => {
+        try {
+          const rides = await getUserRideHistory(user.uid, isPassenger);
+          setRidesData(rides);
+          console.log(JSON.stringify(rides[0]));
+        } catch (error) {
+          Alert.alert("Error fetching rides history ");
+        }
+      };
+      fetchDriverRidesHistory();
+    }, [user])
+  );
+
+  const handleRateClick = passengers => {
+    navigation.navigate("Passengers", { passengers });
   };
 
   const onDateSelected = date => {
-    setSelectedDate(new Date(date));
+    setSelectedDate(date.format("YYYY-MM-DD"));
   };
 
-  const dataProvider = new DataProvider((r1, r2) => r1 !== r2).cloneWithRows(
-    userData
-  );
-
-  const layoutProvider = new LayoutProvider(
-    index => index,
-    (type, dim, index) => {
-      dim.width = windowWidth / 1.2;
-      dim.height = 180; // Adjust height as needed
-    }
-  );
-
-  const rowRenderer = (type, data) => (
-    <View style={styles.cardView}>
-      <View style={styles.userInfo}>
-        <Text style={styles.userName}>{data.rideNumber}</Text>
-        <Text style={styles.userLocation}>From: {startPoint}</Text>
-        <Text style={styles.userLocation}>To: {endPoint}</Text>
-        <Text style={styles.userTime}>Time: {startTime}</Text>
-        <View style={styles.passengersContainer}>
-          {data.passengers.map((passenger, index) => (
-            <Image
-              key={index}
-              source={{ uri: passenger.photo }}
-              style={styles.passengerPhoto}
-            />
-          ))}
-        </View>
-      </View>
-      <TouchableOpacity
-        style={styles.details}
-        onPress={() => handleCardPress(data)}>
-        <Text style={styles.buttonText}>Rate passengers</Text>
-      </TouchableOpacity>
-    </View>
+  const filteredRidesByDate = ridesData.filter(
+    item => item.occurenceDate === selectedDate
   );
 
   const today = new Date();
-  const yesterday = today.setDate(today.getDate() - 1);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.calendarContainer}>
         <Calendar
           onDateSelected={onDateSelected}
-          maxDate={yesterday}
-          selectedDate={yesterday}
+          maxDate={today}
+          selectedDate={today}
         />
       </View>
       <View style={styles.cardsContainer}>
-        {userData.length > 0 ? (
-          <RecyclerListView
-            style={styles.recyclerList}
-            dataProvider={dataProvider}
-            layoutProvider={layoutProvider}
-            rowRenderer={rowRenderer}
-          />
-        ) : (
+        {filteredRidesByDate.length === 0 ? (
           <Text style={styles.noHistoryText}>No history available</Text>
+        ) : (
+          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            {filteredRidesByDate.map(item => (
+              <View style={styles.cardView} key={item.id}>
+                <View style={styles.userInfo}>
+                  <RideInfo
+                    from={item.Ride.from}
+                    to={item.Ride.to}
+                    startTime={item.Ride.startTime}
+                  />
+                  <View style={styles.passengersContainer}>
+                    {item.passenger.map((passenger, index) => (
+                      <Image
+                        key={index}
+                        source={{
+                          uri: "https://bootdey.com/img/Content/avatar/avatar5.png",
+                        }}
+                        style={styles.passengerPhoto}
+                      />
+                    ))}
+                  </View>
+                </View>
+                <TouchableOpacity
+                  style={styles.details}
+                  onPress={() => handleRateClick(item.passenger)}>
+                  <Text style={styles.buttonText}>Rate passengers</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </ScrollView>
         )}
       </View>
     </SafeAreaView>
@@ -116,8 +119,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  recyclerList: {
-    width: "100%",
+  scrollViewContent: {
+    flexGrow: 1,
+    alignItems: "center",
+    width: "95%",
   },
   cardView: {
     backgroundColor: "#fff",
@@ -126,12 +131,9 @@ const styles = StyleSheet.create({
     padding: 16,
     justifyContent: "space-between",
     alignItems: "center",
-    width: "95%",
+    alignSelf: "center",
     borderRadius: 10,
     shadowColor: "#000",
-    //shadowOffset: { width: 5, height: 5 },
-    //shadowOpacity: 0.8,
-    //shadowRadius: 9,
     elevation: 5,
   },
   userInfo: {
@@ -152,18 +154,18 @@ const styles = StyleSheet.create({
   passengersContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
+    width: "60%",
   },
   passengerPhoto: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     borderRadius: 25,
     marginVertical: 5,
   },
   details: {
     position: "absolute",
-    top: 10,
+    bottom: 20,
     right: 10,
     backgroundColor: "#DA554E",
     padding: 8,

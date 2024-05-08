@@ -10,26 +10,26 @@ import {
 import Calendar from "../../components/Calendar";
 import { useFocusEffect } from "@react-navigation/native";
 import RideHistoryCard from "../../components/RideHistoryCard";
-import { getPassengerRidesHistory } from "../../api/RideService";
+import { getUserRideHistory } from "../../api/RideService";
 
 function HistoryPassenger() {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
   );
   const [ridesData, setRidesData] = useState([]);
-  const { user } = useAuth();
+  const { user, isPassenger } = useAuth();
 
   useFocusEffect(
     useCallback(() => {
-      const fetchPassengerHistory = async () => {
+      const fetchPassengerRidesHistory = async () => {
         try {
-          const rides = await getPassengerRidesHistory(user.uid);
+          const rides = await getUserRideHistory(user.uid, isPassenger);
           setRidesData(rides);
         } catch (error) {
           Alert.alert("Error fetching rides history ");
         }
       };
-      fetchPassengerHistory();
+      fetchPassengerRidesHistory();
     }, [user]) // Add 'user' to the dependency array
   );
 
