@@ -11,8 +11,10 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Card } from "react-native-paper";
+import ImageUpload from "./ImageUpload";
 
 function GeneralInfo() {
+  const [profileImage, setProfileImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
   const [userDetails, setUserDetails] = useState({
@@ -67,64 +69,73 @@ function GeneralInfo() {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        onPress={handleEditPress}
-        style={styles.editIconContainer}
-      >
-        <Icon name="pencil" size={35} color="#000" />
-      </TouchableOpacity>
-      <View style={styles.profilePicContainer}>
-        <Image
-          source={{ uri: "https://bootdey.com/img/Content/avatar/avatar7.png" }}
-          style={styles.profilePic}
-        />
-      </View>
-
-      {isEditing ? (
-        <>
-          {renderField("firstName", "First Name")}
-          {renderField("lastName", "Last Name")}
-          {renderField("email", "Email")}
-          {renderField("phoneNo", "Phone No")}
-        </>
-      ) : (
-        <>
-          <Card style={styles.cardContainer}>
-            <Card.Content>
-              <Text style={styles.infoText}>
-                <Text style={{ fontWeight: "bold" }}>Full Name:</Text>{" "}
-                {userDetails.firstName} {userDetails.lastName}
-              </Text>
-              <Text style={styles.infoText}>
-                <Text style={{ fontWeight: "bold" }}>Email:</Text>{" "}
-                {userDetails.email}
-              </Text>
-              <Text style={styles.infoText}>
-                <Text style={{ fontWeight: "bold" }}>Phone Number:</Text>{" "}
-                {userDetails.phoneNo}
-              </Text>
-            </Card.Content>
-          </Card>
-        </>
-      )}
-
-      <View style={styles.SaveContainer}>
+    <>
+      <View style={styles.container}>
         {isEditing ? (
-          <Button title="Save Changes" onPress={handleSaveChanges} />
-        ) : null}
-      </View>
+          <>
+            <View style={styles.editProfileContainer}>
+              <ImageUpload
+                profileImage={profileImage}
+                setProfileImage={setProfileImage}
+              />
+            </View>
+            {renderField("firstName", "First Name")}
+            {renderField("lastName", "Last Name")}
+            {renderField("email", "Email")}
+            {renderField("phoneNo", "Phone No")}
+          </>
+        ) : (
+          <>
+            <TouchableOpacity
+              onPress={handleEditPress}
+              style={styles.editIconContainer}
+            >
+              <Icon name="pencil" size={35} color="#000" />
+            </TouchableOpacity>
+            <View style={styles.profilePicContainer}>
+              <Image
+                source={{
+                  uri: "https://bootdey.com/img/Content/avatar/avatar7.png",
+                }}
+                style={styles.profilePic}
+              />
+            </View>
+            <Card style={styles.cardContainer}>
+              <Card.Content>
+                <Text style={styles.infoText}>
+                  <Text style={{ fontWeight: "bold" }}>Full Name:</Text>{" "}
+                  {userDetails.firstName} {userDetails.lastName}
+                </Text>
+                <Text style={styles.infoText}>
+                  <Text style={{ fontWeight: "bold" }}>Email:</Text>{" "}
+                  {userDetails.email}
+                </Text>
+                <Text style={styles.infoText}>
+                  <Text style={{ fontWeight: "bold" }}>Phone Number:</Text>{" "}
+                  {userDetails.phoneNo}
+                </Text>
+              </Card.Content>
+            </Card>
+          </>
+        )}
 
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={handleDeleteProfile}
-      >
-        <Text style={styles.deleteButtonText}>Delete Account</Text>
-      </TouchableOpacity>
-    </View>
+        <View style={styles.SaveContainer}>
+          {isEditing ? (
+            <Button title="Save Changes" onPress={handleSaveChanges} />
+          ) : null}
+        </View>
+
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={handleDeleteProfile}
+        >
+          <Text style={styles.deleteButtonText}>Delete Account</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
-//todo profile picture update
+
 
 const styles = StyleSheet.create({
   container: {
@@ -145,7 +156,7 @@ const styles = StyleSheet.create({
   },
   profilePicContainer: {
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: "20%",
     marginTop: "20%",
   },
   profilePic: {
@@ -188,6 +199,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     right: 20,
+    marginTop: "20%",
+  },
+  editProfileContainer: {
+    alignItems: "center",
+    marginBottom: "50%",
     marginTop: "20%",
   },
 });
