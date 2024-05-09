@@ -7,6 +7,8 @@ import OnBoarding from "./screens/OnBoarding";
 import TabNav from "./navigation/TabNav";
 import Home from "./screens/Home";
 import Signup from "./screens/SignUp";
+import verification from "./screens/Veification";
+import ForgotPassword from "./screens/ForgotPassword";
 // import Signup2 from "./screens/SignUp-2";
 import Login from "./screens/Login";
 import Preferences from "./screens/Preferences";
@@ -23,7 +25,7 @@ function App() {
     // <PassengerSearchRides />
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name='LoadingScreen' component={LoadingScreen} />
+        {/* <Stack.Screen name='LoadingScreen' component={LoadingScreen} />
         <Stack.Screen name='Home' component={Home} />
         <Stack.Screen name='Preferences' component={Preferences} />
         <Stack.Screen name='TabNav' component={TabNav} />
@@ -31,7 +33,9 @@ function App() {
         <Stack.Screen name='OnBoarding' component={OnBoarding} />
         <Stack.Screen name='SplashScreen' component={SplashScreen} />
         <Stack.Screen name='Signup' component={Signup} />
-        <Stack.Screen name='Login' component={Login} />
+        <Stack.Screen name='Login' component={Login} /> */}
+        <Stack.Screen name='Verification' component={verification} />
+        <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
       </Stack.Navigator>
     </NavigationContainer>
   );
