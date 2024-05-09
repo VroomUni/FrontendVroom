@@ -1,18 +1,61 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { Card, RadioButton, Button } from "react-native-paper";
+import getUserPreferences from "../api/UserService";
+import { useAuth } from "../context/AuthContext";
 
 function PreferencesSettings() {
   const [preferences, setPreferences] = useState({
-    smoker: "No",
-    talkative: "Yes",
-    music: "No",
-    food: "Yes",
-    gender: "Any",
+    smoking: "",
+    talkative: "",
+    loudMusic: "",
+    foodFriendly: "",
+    genderAllowed: "",
   });
+  const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+  useEffect(() => {
+    const fetchPreferences = async () => {
+      if (user && user.uid) {
+        try {
+          const fetchedPreferences = await getUserPreferences(user.uid);
+          setPreferences({
+            smoking: fetchedPreferences.smoking,
+            talkative: fetchedPreferences.talkative,
+            loudMusic: fetchedPreferences.loudMusic,
+            foodFriendly: fetchedPreferences.foodFriendly,
+            genderAllowed: fetchedPreferences.girlOnly
+              ? "Girls Only"
+              : fetchedPreferences.boysOnly
+              ? "Boys Only"
+              : "Any",
+          });
+        } catch (error) {
+          console.error("Failed to fetch preferences", error);
+          Alert.alert("Error", "Failed to fetch preferences");
+        }
+      }
+    };
+    fetchPreferences();
+  }, [user]);
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
+    if (isEditing) {
+      try {
+        await updateUserPreferences(user.uid, {
+          smoking: preferences.smoking,
+          talkative: preferences.talktative,
+          loudMusic: preferences.loudMusic,
+          foodFriendly: preferences.foodFriendly,
+          girlsOnly: preferences.genderAllowed === "Girls Only",
+          boysOnly: preferences.genderAllowed === "Boys Only",
+        });
+        Alert.alert("Sucess", "Preferences updated successfully");
+      } catch (error) {
+        console.error("Failed to update preferences", error);
+        Alert.alert("Error", "Failed to update preferences");
+      }
+    }
     setIsEditing(!isEditing);
   };
 
@@ -38,80 +81,84 @@ function PreferencesSettings() {
   };
   return (
     <>
-   
       {isEditing ? (
         <>
-        <View style={styles.container}>
-          <Card style={styles.cardContainer}>
-            <Card.Content>
-              <Text style={styles.infoText}>Smoker:</Text>
-              {renderRadioButtonGroup("smoker", ["Yes", "No"])}
-              <Text style={styles.infoText}>Talkative:</Text>
-              {renderRadioButtonGroup("talkative", ["Yes", "No"])}
-              <Text style={styles.infoText}>Loud Music:</Text>
-              {renderRadioButtonGroup("music", ["Yes", "No"])}
-              <Text style={styles.infoText}>Food Friendly:</Text>
-              {renderRadioButtonGroup("food", ["Yes", "No"])}
-              <Text style={styles.infoText}>Gender Allowed:</Text>
-              {renderRadioButtonGroup("gender", ["Male", "Female", "Any"])}
-            </Card.Content>
-          </Card>
+          <View style={styles.container}>
+            <Card style={styles.cardContainer}>
+              <Card.Content>
+                <Text style={styles.infoText}>Smoker:</Text>
+                {renderRadioButtonGroup("smoking", ["Yes", "No"])}
+                <Text style={styles.infoText}>Talkative:</Text>
+                {renderRadioButtonGroup("talkative", ["Yes", "No"])}
+                <Text style={styles.infoText}>Loud Music:</Text>
+                {renderRadioButtonGroup("loudMusic", ["Yes", "No"])}
+                <Text style={styles.infoText}>Food Friendly:</Text>
+                {renderRadioButtonGroup("foodFriendly", ["Yes", "No"])}
+                <Text style={styles.infoText}>Gender Allowed:</Text>
+                {renderRadioButtonGroup("genderAllowed", [
+                  "Boys Only",
+                  "Girls Only",
+                  "Any",
+                ])}
+              </Card.Content>
+            </Card>
 
-          <Button
-            title="Skip"
-            mode="contained-tonal"
-            buttonColor="#172446"
-            textColor="white"
-            style={styles.updateButton}
-            onPress={handleUpdate}
-          >
-            Save Changes
-          </Button>
+            <Button
+              title="Skip"
+              mode="contained-tonal"
+              buttonColor="#172446"
+              textColor="white"
+              style={styles.updateButton}
+              onPress={handleUpdate}
+            >
+              Save Changes
+            </Button>
           </View>
         </>
       ) : (
         <>
-         <View style={styles.container}>
-         <Image style={styles.logo} source={require("../assets/PreferencesSettings.png")} />
-          <Card style={styles.cardContainer}>
-         
-            <Card.Content>
-              <Text style={styles.infoText}>
-                <Text style={styles.boldText}>Smoker:</Text>{" "}
-                {preferences.smoker}
-              </Text>
-              <Text style={styles.infoText}>
-                <Text style={styles.boldText}>Talkative:</Text>{" "}
-                {preferences.talkative}
-              </Text>
-              <Text style={styles.infoText}>
-                <Text style={styles.boldText}>Loud Music:</Text>{" "}
-                {preferences.music}
-              </Text>
-              <Text style={styles.infoText}>
-                <Text style={styles.boldText}>Food Friendly:</Text>{" "}
-                {preferences.food}
-              </Text>
-              <Text style={styles.infoText}>
-                <Text style={styles.boldText}>Gender Allowed:</Text>{" "}
-                {preferences.gender}
-              </Text>
-            </Card.Content>
-          </Card>
-          <Button
-            title="Skip"
-            mode="contained-tonal"
-            buttonColor="#172446"
-            textColor="white"
-            style={styles.updateButton}
-            onPress={handleUpdate}
-          >
-            Update
-          </Button>
+          <View style={styles.container}>
+            <Image
+              style={styles.logo}
+              source={require("../assets/PreferencesSettings.png")}
+            />
+            <Card style={styles.cardContainer}>
+              <Card.Content>
+                <Text style={styles.infoText}>
+                  <Text style={styles.boldText}>Smoker:</Text>{" "}
+                  {preferences.smoking}
+                </Text>
+                <Text style={styles.infoText}>
+                  <Text style={styles.boldText}>Talkative:</Text>{" "}
+                  {preferences.talkative}
+                </Text>
+                <Text style={styles.infoText}>
+                  <Text style={styles.boldText}>Loud Music:</Text>{" "}
+                  {preferences.loudMusic}
+                </Text>
+                <Text style={styles.infoText}>
+                  <Text style={styles.boldText}>Food Friendly:</Text>{" "}
+                  {preferences.foodFriendly}
+                </Text>
+                <Text style={styles.infoText}>
+                  <Text style={styles.boldText}>Gender Allowed:</Text>{" "}
+                  {preferences.genderAllowed}
+                </Text>
+              </Card.Content>
+            </Card>
+            <Button
+              title="Skip"
+              mode="contained-tonal"
+              buttonColor="#172446"
+              textColor="white"
+              style={styles.updateButton}
+              onPress={handleUpdate}
+            >
+              Update
+            </Button>
           </View>
         </>
       )}
-    
     </>
   );
 }
@@ -155,11 +202,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-   
     width: 250,
     height: 250,
     marginLeft: "18%",
-    
   },
 });
 

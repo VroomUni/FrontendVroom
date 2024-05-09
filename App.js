@@ -13,7 +13,8 @@ import Preferences from "./screens/Preferences";
 import Car from "./screens/Car";
 import { AuthContextProvider, useAuth } from "./context/AuthContext";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import CarSettings from "./components/CarSettings";
+import 'react-native-reanimated'
+
 function App() {
   const Stack = createStackNavigator();
   const { user } = useAuth();
