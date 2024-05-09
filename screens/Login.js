@@ -55,9 +55,7 @@ const Login = ({ navigation }) => {
             source={require("../assets/logo.png")}
             resizeMode="contain"
           />
-          {/* <Text style={styles.title}>LOGIN</Text> */}
           <View style={styles.inputContainer}>
-            {/* <Text style={styles.label}>Email Address</Text> */}
             <TextInput
               value={email}
               onChangeText={(val) => {
@@ -70,10 +68,8 @@ const Login = ({ navigation }) => {
             />
           </View>
           <View style={styles.inputContainer}>
-            {/* <Text style={styles.label}>Password</Text> */}
             <View style={styles.passwordContainer}>
               <TextInput
-                // style={styles.input}
                 value={password}
                 onChangeText={(val) => {
                   setPassword(val);

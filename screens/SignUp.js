@@ -14,11 +14,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
-// import Button from "../components/Button";
 import { RadioButton, Button } from "react-native-paper";
 import ImageUpload from "../components/ImageUpload";
 import { createUser, saveImage } from "../api/UserService";
-import Carousel, { Pagination } from "react-native-snap-carousel";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useRideContext } from "../context/UserRideContext";
 
@@ -549,7 +547,7 @@ const Signup = ({ navigation }) => {
 
             <View style={{ flexDirection: "row" }}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <RadioButton
+                <RadioButton.Android
                   value="Male"
                   status={gender === "Male" ? "checked" : "unchecked"}
                   onPress={() => setGender("Male")}
@@ -558,7 +556,7 @@ const Signup = ({ navigation }) => {
               </View>
 
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <RadioButton
+                <RadioButton.Android
                   value="Female"
                   status={gender === "Female" ? "checked" : "unchecked"}
                   onPress={() => setGender("Female")}

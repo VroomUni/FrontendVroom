@@ -1,63 +1,72 @@
-import { View, Text, Image,StyleSheet } from "react-native";
-import { Button } from 'react-native-paper';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
+  
+} from "react-native";
+import { Button } from "react-native-paper";
 import { useState } from "react";
 import COLORS from "../constants/colors";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState("");
 
-  const handleContinue = async () => {
-    try {
-      if (email !== "" ) {
-        await signIn(email);
-        navigation.navigate("Home");
-      }
-    } catch (err) {
-      console.error(err);
-      Alert.alert("Email not found");
-    }
-  };
 
   return (
-    <View>
-      <Text>Forgot Password</Text>
+    <View style={styles.Container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.innerContainer}>
 
-      <Image
-        style={styles.logo}
-        source={require("../assets/ForgotPass-1.png")}
-        resizeMode="contain"
-      />
-      <Text>
-        Enter your email for the verification process, we will send you a
-        confirmation code.
-      </Text>
+          <Text style={styles.title}>
+          Verification 
+          </Text>
 
-      {/* <Text style={styles.title}>LOGIN</Text> */}
-      <View style={styles.inputContainer}>
-        {/* <Text style={styles.label}>Email Address</Text> */}
-        <TextInput
-          value={email}
-          onChangeText={(val) => {
-            setEmail(val);
-          }}
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor={COLORS.darkGray}
-          keyboardType="email-address"
-        />
-      </View>
-      <Button
+          <Image
+            style={styles.logo}
+            source={require("../assets/ForgotPass-1.png")}
+            resizeMode="contain"
+          />
+          
+          <Text style={styles.Text}>
+          <MaterialCommunityIcons name="information-outline" size={24} color="black" />
+            Enter your email for the verification process, we will send you a
+            confirmation code.
+          </Text>
+
+          <View style={styles.inputContainer}>
+
+            <TextInput
+              value={email}
+              onChangeText={(val) => {
+                setEmail(val);
+              }}
+              style={styles.input}
+              placeholder="Email"
+              placeholderTextColor={COLORS.darkGray}
+              keyboardType="email-address"
+            />
+          </View>
+          
+          <Button
             title="Login"
             // filled
             style={styles.Button}
-            onPress={handleContinue}
-            mode = "contained-tonal"
+            // onPress={handleContinue}
+            mode="contained-tonal"
             buttonColor={COLORS.b400}
             textColor="white"
             fontSize="18"
           >
             Continue
           </Button>
+          
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
@@ -72,6 +81,32 @@ const styles = StyleSheet.create({
     paddingLeft: 22,
     fontSize: 16,
   },
+  title: {
+    fontSize: 30,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    textAlign: "center",
+    paddingVertical: 40,
+    color: COLORS.black,
+    fontFamily: "Helvetica",
+  },
+  innerContainer: {
+    paddingHorizontal: 20,
+    width: "85%",
+    alignSelf: "center", 
+    marginBottom: 30,
+  },
+  Text : {
+    fontSize : 14,
+    color : COLORS.g300,
+    // alignSelf:"flex-end",
+    marginBottom: 10, 
+  },
+  Container: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+  },
   inputContainer: {
     marginTop: 10,
     marginBottom: 12,
@@ -81,15 +116,14 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     width: "50%",
     marginLeft: 75,
-    
   },
   logo: {
-    width: 300, 
-    height: 300, 
-    resizeMode: "contain", 
-    alignSelf: "center", 
+    width: 300,
+    height: 300,
+    resizeMode: "contain",
+    alignSelf: "center",
     marginBottom: 50,
-    paddingBottom: 50, 
+    paddingBottom: 50,
   },
 });
 export default ForgotPassword;
