@@ -6,7 +6,6 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import passengerIcon from "../../assets/people.png";
 import dot from "../../assets/rec.png";
 
-
 const RideOnMap = ({ route }) => {
   const { passengerLocation, routePolyLine, from, to } = route.params; // Assuming you have fromPlace and toPlace in your route params
   const mapRef = useRef();
@@ -41,7 +40,7 @@ const RideOnMap = ({ route }) => {
 
       <MapView
         ref={mapRef}
-        onMapLoaded={() => {
+        onLayout={() => {
           mapRef.current.fitToCoordinates(
             polylineCods.map(coord => ({
               latitude: coord[0],
@@ -76,8 +75,8 @@ const RideOnMap = ({ route }) => {
         />
         <Marker
           coordinate={{
-            longitude: polylineCods[polylineCods.length - 1][1],
-            latitude: polylineCods[polylineCods.length - 1][0],
+            longitude: polylineCods[0][1],
+            latitude: polylineCods[1][0],
           }}
           title='Departure'
           anchor={{ x: 0.5, y: 0.5 }}>
@@ -87,8 +86,8 @@ const RideOnMap = ({ route }) => {
         </Marker>
         <Marker
           coordinate={{
-            longitude: polylineCods[0][1],
-            latitude: polylineCods[1][0],
+            longitude: polylineCods[polylineCods.length - 1][1],
+            latitude: polylineCods[polylineCods.length - 1][0],
           }}
           title='Destination'
         />

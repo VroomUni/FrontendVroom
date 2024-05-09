@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, Image, Alert } from "react-native";
 import { Card, RadioButton, Button } from "react-native-paper";
-import getUserPreferences from "../api/UserService";
+import { getUserPreferences, updateUserPreferences } from "../api/UserService";
 import { useAuth } from "../context/AuthContext";
 
 function PreferencesSettings() {
@@ -24,7 +24,7 @@ function PreferencesSettings() {
             talkative: fetchedPreferences.talkative,
             loudMusic: fetchedPreferences.loudMusic,
             foodFriendly: fetchedPreferences.foodFriendly,
-            genderAllowed: fetchedPreferences.girlOnly
+            genderAllowed: fetchedPreferences.girlsOnly
               ? "Girls Only"
               : fetchedPreferences.boysOnly
               ? "Boys Only"
@@ -38,13 +38,12 @@ function PreferencesSettings() {
     };
     fetchPreferences();
   }, [user]);
-
   const handleUpdate = async () => {
     if (isEditing) {
       try {
         await updateUserPreferences(user.uid, {
           smoking: preferences.smoking,
-          talkative: preferences.talktative,
+          talkative: preferences.talkative,
           loudMusic: preferences.loudMusic,
           foodFriendly: preferences.foodFriendly,
           girlsOnly: preferences.genderAllowed === "Girls Only",
@@ -62,7 +61,7 @@ function PreferencesSettings() {
   const renderRadioButtonGroup = (preferenceKey, options) => {
     return (
       <View style={styles.radioContainer}>
-        {options.map((option) => (
+        {options.map(option => (
           <View key={option} style={styles.radioOption}>
             <RadioButton.Android
               value={option}
@@ -104,13 +103,12 @@ function PreferencesSettings() {
             </Card>
 
             <Button
-              title="Skip"
-              mode="contained-tonal"
-              buttonColor="#172446"
-              textColor="white"
+              title='Skip'
+              mode='contained-tonal'
+              buttonColor='#172446'
+              textColor='white'
               style={styles.updateButton}
-              onPress={handleUpdate}
-            >
+              onPress={handleUpdate}>
               Save Changes
             </Button>
           </View>
@@ -147,13 +145,12 @@ function PreferencesSettings() {
               </Card.Content>
             </Card>
             <Button
-              title="Skip"
-              mode="contained-tonal"
-              buttonColor="#172446"
-              textColor="white"
+              title='Skip'
+              mode='contained-tonal'
+              buttonColor='#172446'
+              textColor='white'
               style={styles.updateButton}
-              onPress={handleUpdate}
-            >
+              onPress={handleUpdate}>
               Update
             </Button>
           </View>

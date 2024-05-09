@@ -52,12 +52,13 @@ function GeneralInfo() {
 
   const handleEditPress = () => {
     setEditableInfo({ ...userDetails });
-    console.log(editableInfo);
+    // console.log(editableInfo);
     setIsEditing(true);
   };
 
   const handleSaveChanges = async () => {
     try {
+      console.log(editableInfo);
       await updateUserInfo(user.uid, editableInfo);
       setUserDetails({ ...editableInfo });
       setIsEditing(false);

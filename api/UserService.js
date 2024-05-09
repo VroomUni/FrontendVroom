@@ -16,7 +16,7 @@ import axios from "axios";
 import { registerForPushNotificationsAsync } from "../api/pushNotifService";
 const auth = getAuth();
 
-const createUser = async (userValidatedPayload) => {
+const createUser = async userValidatedPayload => {
   const url = `${apiConfig.baseURL}/user/signup`;
   console.log("URL", url);
   let FbaseUser;
@@ -47,7 +47,7 @@ const createUser = async (userValidatedPayload) => {
   }
 };
 
-const setPreferences = async (userPreferences) => {
+const setPreferences = async userPreferences => {
   const url = `${apiConfig.baseURL}/user/preferences`;
   console.log(userPreferences);
   try {
@@ -59,7 +59,7 @@ const setPreferences = async (userPreferences) => {
   }
 };
 
-const getUserPreferences = async (userId) => {
+const getUserPreferences = async userId => {
   const url = `${apiConfig.baseURL}/user/preferences?userId=${userId}`;
   try {
     console.log(userId);
@@ -85,13 +85,14 @@ const updateUserPreferences = async (userId, preferences) => {
   }
 };
 
-const signIn = async (email, password) => {
+const signIn = async (email, password, navigation) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
       email,
       password
     );
+    navigation.navigate("Home");
 
     const token = await registerForPushNotificationsAsync();
     const url = `${apiConfig.baseURL}/user/token`;
@@ -102,7 +103,7 @@ const signIn = async (email, password) => {
     throw error;
   }
 };
-const saveImage = async (profileImage) => {
+const saveImage = async profileImage => {
   const imgDir = FileSystem.documentDirectory;
 
   if (!profileImage) {
@@ -141,7 +142,7 @@ const saveImage = async (profileImage) => {
   }
 };
 
-const getUserInfo = async (userId) => {
+const getUserInfo = async userId => {
   console.log(`${apiConfig.baseURL}`);
   const url = `${apiConfig.baseURL}/user/info?userId=${userId}`;
   try {
@@ -157,7 +158,7 @@ const getUserInfo = async (userId) => {
 };
 
 const updateUserInfo = async (userId, userData) => {
-  const url = `${apiConfig.baseURL}/userInfo`;
+  const url = `${apiConfig.baseURL}/user/info`;
   try {
     const response = await axios.put(url, userData, {
       params: { userId },
@@ -187,7 +188,7 @@ const updateUserPassword = async (currentPassword, newPassword) => {
   }
 };
 
-const reauthenticateUser = async (currentPassword) => {
+const reauthenticateUser = async currentPassword => {
   const user = auth.currentUser;
   const credential = EmailAuthProvider.credential(user.email, currentPassword);
   console.log("credential", credential);
@@ -199,7 +200,7 @@ const reauthenticateUser = async (currentPassword) => {
   }
 };
 
-const createCar = async (createCar) => {
+const createCar = async createCar => {
   const url = `${apiConfig.baseURL}/user/car`;
   console.log(createCar);
   try {
@@ -211,7 +212,7 @@ const createCar = async (createCar) => {
   }
 };
 
-const getUserCar = async (userId) => {
+const getUserCar = async userId => {
   const url = `${apiConfig.baseURL}/user/car?userId=${userId}`;
   try {
     console.log(userId);
@@ -224,7 +225,7 @@ const getUserCar = async (userId) => {
 };
 
 const updateUserCar = async (carId, carData) => {
-  const url = `${apiConfig.baseURL}/car`;
+  const url = `${apiConfig.baseURL}/user/car`;
   try {
     const response = await axios.put(url, carData, {
       params: { userId },

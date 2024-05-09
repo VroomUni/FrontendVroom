@@ -27,8 +27,7 @@ const Login = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       if (email !== "" && password !== "") {
-        await signIn(email, password);
-        navigation.navigate("Home");
+        await signIn(email, password , navigation);
       }
     } catch (err) {
       console.error(err);
