@@ -1,5 +1,5 @@
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem} from '@react-navigation/drawer';
-import Profile from '../screens/Profile';
+
 import { View } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import GeneralInfo from '../components/GeneralInfo';
