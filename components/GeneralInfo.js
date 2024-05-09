@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import {
   View,
   TextInput,
@@ -12,21 +12,47 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Card } from "react-native-paper";
 import ImageUpload from "./ImageUpload";
+import { useAuth } from "../context/AuthContext";
+import {getUserInfo} from "../api/UserService"
 
 function GeneralInfo() {
+  const {user} = useAuth()
   const [profileImage, setProfileImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
   const [userDetails, setUserDetails] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john@example.com",
-    phoneNo: "23567146",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
   });
+  
+  useEffect(()=>{
+    if(user){
+      const fetchUserData = async()=>{
+        try{
+          const userInfo = await getUserInfo(user.uid)
+          if(userInfo){
+            setUserDetails({
+              firstName: userInfo.firstName || "",
+              lastName: userInfo.lastName || "",
+              email: userInfo.email || "",
+              phoneNumber: userInfo.phoneNumber || ""
+            })
+          }
+        }catch(error){
+          console.error("failed to fetch user data")
+        }
+      };
+      fetchUserData()
+    }
+  },[user]);
 
   const [editableInfo, setEditableInfo] = useState({ ...userDetails });
 
   const handleEditPress = () => {
+    setEditableInfo({ ...userDetails });
+    console.log(editableInfo)
     setIsEditing(true);
   };
 
@@ -59,9 +85,11 @@ function GeneralInfo() {
       <TextInput
         style={styles.input}
         onChangeText={(value) => handleChange(fieldName, value)}
-        value={editableInfo[fieldName]}
+        value={editableInfo[fieldName].toString()}
         placeholder={label}
         clearButtonMode="always"
+       
+    
       />
     ) : (
       <Text style={styles.infoText}>{userDetails[fieldName]}</Text>
@@ -82,7 +110,7 @@ function GeneralInfo() {
             {renderField("firstName", "First Name")}
             {renderField("lastName", "Last Name")}
             {renderField("email", "Email")}
-            {renderField("phoneNo", "Phone No")}
+            {renderField("phoneNumber", "Phone Number")}
           </>
         ) : (
           <>
@@ -112,7 +140,7 @@ function GeneralInfo() {
                 </Text>
                 <Text style={styles.infoText}>
                   <Text style={{ fontWeight: "bold" }}>Phone Number:</Text>{" "}
-                  {userDetails.phoneNo}
+                  {userDetails.phoneNumber}
                 </Text>
               </Card.Content>
             </Card>

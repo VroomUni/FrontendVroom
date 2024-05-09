@@ -73,6 +73,7 @@ const getUserPreferences = async userId => {
   }
 };
 
+
 const signIn = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
@@ -146,7 +147,21 @@ const saveImage = async (profileImage) => {
   }
 };
 
-
+const getUserInfo = async (userId) =>{
+  console.log(`${apiConfig.baseURL}`)
+  const url = `${apiConfig.baseURL}/user/info?userId=${userId}`;
+  try{
+    console.log("fetching user data for ID",userId);
+    const response = await axios.get(url);
+    console.log("user data retrived successfully:", response.data)
+    return response.data
+  }catch(error){
+    console.error("error retrieving user data", error)
+    
+    throw error;
+   
+  }
+}
 
 
 const reauthenticateUser = async(currentPassword) =>{
@@ -160,5 +175,5 @@ const reauthenticateUser = async(currentPassword) =>{
     throw error
   }
 }
-module.exports = { signIn, createUser, setPreferences, getUserPreferences, updateUserPassword,saveImage };
+module.exports = { signIn, createUser, setPreferences, getUserPreferences, updateUserPassword,saveImage,getUserInfo };
 
