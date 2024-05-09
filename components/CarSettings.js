@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -9,14 +9,35 @@ import {
   Platform,
 } from "react-native";
 import { Button, Card } from "react-native-paper";
-
+import { useAuth } from "../context/AuthContext";
+import { getUserCar } from "../api/UserService";
 function CarSettings() {
+  const { user } = useAuth();
   const [editing, setEditing] = useState(false);
   const [carDetails, setCarDetails] = useState({
-    brand: "Toyota",
-    model: "Corolla",
-    color: "Red",
+    brand: "",
+    model: "",
+    color: "",
   });
+
+  useEffect(() => {
+    const loadCarDetails = async () => {
+      if (user && user.uid) {
+        try {
+          const car = await getUserCar(user.uid);
+          setCarDetails({
+            brand: car.brand,
+            model: car.model,
+            color: car.color,
+          });
+        } catch (error) {
+          console.error("Failed to fetch car details:", error);
+          Alert.alert("Error", "Failed to fetch car details");
+        }
+      }
+    };
+    loadCarDetails();
+  }, [user]);
 
   const handleInputChange = (name, value) => {
     setCarDetails((prevDetails) => ({
@@ -25,7 +46,16 @@ function CarSettings() {
     }));
   };
 
-  const toggleEdit = () => {
+  const toggleEdit = async () => {
+    if (editing) {
+      try {
+        await updateCar(user.uid, carDetails);
+        Alert.alert("Success", "Car updated successfully");
+      } catch (error) {
+        console.error("failed to update car:", error);
+        Alert.alert("error", "failed to update car");
+      }
+    }
     setEditing(!editing);
   };
 

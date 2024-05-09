@@ -1,4 +1,4 @@
-import React, { useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -13,10 +13,10 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Card } from "react-native-paper";
 import ImageUpload from "./ImageUpload";
 import { useAuth } from "../context/AuthContext";
-import {getUserInfo} from "../api/UserService"
+import { getUserInfo, updateUserInfo } from "../api/UserService";
 
 function GeneralInfo() {
-  const {user} = useAuth()
+  const { user } = useAuth();
   const [profileImage, setProfileImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -26,39 +26,45 @@ function GeneralInfo() {
     email: "",
     phoneNumber: "",
   });
-  
-  useEffect(()=>{
-    if(user){
-      const fetchUserData = async()=>{
-        try{
-          const userInfo = await getUserInfo(user.uid)
-          if(userInfo){
+
+  useEffect(() => {
+    if (user) {
+      const fetchUserData = async () => {
+        try {
+          const userInfo = await getUserInfo(user.uid);
+          if (userInfo) {
             setUserDetails({
               firstName: userInfo.firstName || "",
               lastName: userInfo.lastName || "",
               email: userInfo.email || "",
-              phoneNumber: userInfo.phoneNumber || ""
-            })
+              phoneNumber: userInfo.phoneNumber || "",
+            });
           }
-        }catch(error){
-          console.error("failed to fetch user data")
+        } catch (error) {
+          console.error("failed to fetch user data");
         }
       };
-      fetchUserData()
+      fetchUserData();
     }
-  },[user]);
+  }, [user]);
 
   const [editableInfo, setEditableInfo] = useState({ ...userDetails });
 
   const handleEditPress = () => {
     setEditableInfo({ ...userDetails });
-    console.log(editableInfo)
+    console.log(editableInfo);
     setIsEditing(true);
   };
 
-  const handleSaveChanges = () => {
-    setUserDetails({ ...editableInfo });
-    setIsEditing(false);
+  const handleSaveChanges = async () => {
+    try {
+      await updateUserInfo(user.uid, editableInfo);
+      setUserDetails({ ...editableInfo });
+      setIsEditing(false);
+    } catch (error) {
+      console.error("failed to update profile", error);
+      Alert.alert("Update Failed", "Failed to update profile");
+    }
   };
 
   const handleChange = (name, value) => {
@@ -88,8 +94,6 @@ function GeneralInfo() {
         value={editableInfo[fieldName].toString()}
         placeholder={label}
         clearButtonMode="always"
-       
-    
       />
     ) : (
       <Text style={styles.infoText}>{userDetails[fieldName]}</Text>
@@ -163,7 +167,6 @@ function GeneralInfo() {
     </>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

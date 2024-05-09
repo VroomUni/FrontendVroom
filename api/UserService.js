@@ -1,5 +1,5 @@
 require("../config/Firebase");
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from "expo-file-system";
 
 import {
   getAuth,
@@ -9,17 +9,16 @@ import {
   signInWithEmailAndPassword,
   updatePassword,
   EmailAuthProvider,
-  reauthenticateWithCredential
+  reauthenticateWithCredential,
 } from "firebase/auth";
 import apiConfig from "./apiConfig";
 import axios from "axios";
 import { registerForPushNotificationsAsync } from "../api/pushNotifService";
 const auth = getAuth();
 
-
 const createUser = async (userValidatedPayload) => {
   const url = `${apiConfig.baseURL}/user/signup`;
-  console.log("URL" , url);
+  console.log("URL", url);
   let FbaseUser;
   try {
     FbaseUser = await createUserWithEmailAndPassword(
@@ -38,7 +37,6 @@ const createUser = async (userValidatedPayload) => {
     console.log("SUCCESS: User created successfully");
 
     return response;
-    
   } catch (err) {
     console.error("Error creating user:", err);
     // Handle Firebase errors
@@ -48,7 +46,6 @@ const createUser = async (userValidatedPayload) => {
     throw err;
   }
 };
-
 
 const setPreferences = async (userPreferences) => {
   const url = `${apiConfig.baseURL}/user/preferences`;
@@ -62,7 +59,7 @@ const setPreferences = async (userPreferences) => {
   }
 };
 
-const getUserPreferences = async userId => {
+const getUserPreferences = async (userId) => {
   const url = `${apiConfig.baseURL}/user/preferences?userId=${userId}`;
   try {
     console.log(userId);
@@ -74,6 +71,19 @@ const getUserPreferences = async userId => {
   }
 };
 
+const updateUserPreferences = async (userId, preferences) => {
+  const url = `${apiConfig.baseURL}/user/preferences`;
+  try {
+    const response = await axios.put(url, preferences, {
+      params: { userId },
+    });
+    console.log("preferences updated successfully", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("error updating preferences:", error.message);
+    throw error;
+  }
+};
 
 const signIn = async (email, password) => {
   try {
@@ -85,9 +95,9 @@ const signIn = async (email, password) => {
 
     const token = await registerForPushNotificationsAsync();
     const url = `${apiConfig.baseURL}/user/token`;
-    await axios.post(url, { userId:userCredential.user.uid, token });
+    await axios.post(url, { userId: userCredential.user.uid, token });
     console.log(token);
-    return ;
+    return;
   } catch (error) {
     throw error;
   }
@@ -96,84 +106,98 @@ const saveImage = async (profileImage) => {
   const imgDir = FileSystem.documentDirectory;
 
   if (!profileImage) {
-      console.error('No image selected.');
-      return null;
+    console.error("No image selected.");
+    return null;
   }
 
-  const filename = new Date().getTime() + '.jpg';
+  const filename = new Date().getTime() + ".jpg";
 
   try {
-    const url = `${apiConfig.baseURL}/user/upload-image`; 
+    const url = `${apiConfig.baseURL}/user/upload-image`;
 
-  const formData = new FormData();
-  formData.append('image', {
+    const formData = new FormData();
+    formData.append("image", {
       uri: profileImage,
       name: filename,
-      type: 'image/jpg',
-  });
+      type: "image/jpg",
+    });
 
-  const response = await axios.post(url, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-      });
+    const response = await axios.post(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-      const data = response.data;
+    const data = response.data;
 
-      if (data.success) {
-          console.log('Image uploaded successfully:', data.message);
-          return data.imagePath;
-      } else {
-          console.error('Image upload failed:', data.error);
-      }
+    if (data.success) {
+      console.log("Image uploaded successfully:", data.message);
+      return data.imagePath;
+    } else {
+      console.error("Image upload failed:", data.error);
+    }
   } catch (error) {
-      console.error('Error uploading image:', error);
+    console.error("Error uploading image:", error);
   }
 };
 
-const getUserInfo = async (userId) =>{
-  console.log(`${apiConfig.baseURL}`)
+const getUserInfo = async (userId) => {
+  console.log(`${apiConfig.baseURL}`);
   const url = `${apiConfig.baseURL}/user/info?userId=${userId}`;
-  try{
-    console.log("fetching user data for ID",userId);
+  try {
+    console.log("fetching user data for ID", userId);
     const response = await axios.get(url);
-    console.log("user data retrived successfully:", response.data)
-    return response.data
-  }catch(error){
-    console.error("error retrieving user data", error)
-    
-    throw error;
-   
-  }
-}const updateUserPassword = async (currentPassword, newPassword)=>{
-  const user = auth.currentUser
-  if(!user){
-    throw new Error ("No user is currently signed in")
-  }
-  try{
-    console.log("error here")
-    await reauthenticateUser(currentPassword)
-    console.log("successfully reauthenticated ")
-    await updatePassword(user, newPassword)
-    console.log("password updated successfully")
-  }catch(error){
-    console.error("Failed to update password:",error.message)
-    throw error
-  }
+    console.log("user data retrived successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("error retrieving user data", error);
 
+    throw error;
+  }
 };
 
-const reauthenticateUser = async(currentPassword) =>{
-  const user = auth.currentUser
-  const credential = EmailAuthProvider.credential(user.email, currentPassword)
-  console.log("credential",credential)
-  try{
-    await reauthenticateWithCredential(user, credential)
-  }catch(error){
-    console.error("reauthentication failed", error.message)
-    throw error
+const updateUserInfo = async (userId, userData) => {
+  const url = `${apiConfig.baseURL}/userInfo`;
+  try {
+    const response = await axios.put(url, userData, {
+      params: { userId },
+    });
+    console.log("User updated successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user data:", error.message);
+    throw error;
   }
-}
+};
+
+const updateUserPassword = async (currentPassword, newPassword) => {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error("No user is currently signed in");
+  }
+  try {
+    console.log("error here");
+    await reauthenticateUser(currentPassword);
+    console.log("successfully reauthenticated ");
+    await updatePassword(user, newPassword);
+    console.log("password updated successfully");
+  } catch (error) {
+    console.error("Failed to update password:", error.message);
+    throw error;
+  }
+};
+
+const reauthenticateUser = async (currentPassword) => {
+  const user = auth.currentUser;
+  const credential = EmailAuthProvider.credential(user.email, currentPassword);
+  console.log("credential", credential);
+  try {
+    await reauthenticateWithCredential(user, credential);
+  } catch (error) {
+    console.error("reauthentication failed", error.message);
+    throw error;
+  }
+};
 
 const createCar = async (createCar) => {
   const url = `${apiConfig.baseURL}/user/car`;
@@ -187,7 +211,7 @@ const createCar = async (createCar) => {
   }
 };
 
-const getUserCar = async userId => {
+const getUserCar = async (userId) => {
   const url = `${apiConfig.baseURL}/user/car?userId=${userId}`;
   try {
     console.log(userId);
@@ -199,6 +223,30 @@ const getUserCar = async userId => {
   }
 };
 
-module.exports = { signIn, createUser, setPreferences, getUserPreferences, updateUserPassword,saveImage, createCar, getUserCar };
+const updateUserCar = async (carId, carData) => {
+  const url = `${apiConfig.baseURL}/car`;
+  try {
+    const response = await axios.put(url, carData, {
+      params: { userId },
+    });
+    console.log("car updated successfully", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("error updating car data:", error.message);
+  }
+};
 
-
+module.exports = {
+  signIn,
+  createUser,
+  setPreferences,
+  getUserPreferences,
+  updateUserPassword,
+  saveImage,
+  createCar,
+  getUserCar,
+  getUserInfo,
+  updateUserInfo,
+  updateUserPreferences,
+  updateUserCar,
+};
