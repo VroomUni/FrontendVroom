@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import { Image, StyleSheet, Text, View, TextInput } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { Button, Card } from "react-native-paper";
 
 function CarSettings() {
-  const [editing, setEditing] = useState(false); // State to track edit mode
+  const [editing, setEditing] = useState(false);
   const [carDetails, setCarDetails] = useState({
     brand: "Toyota",
     model: "Corolla",
@@ -18,31 +26,46 @@ function CarSettings() {
   };
 
   const toggleEdit = () => {
-    setEditing(!editing); // Toggle the editing state
+    setEditing(!editing);
   };
 
   const renderContent = () => {
     if (editing) {
       return (
         <>
-          <TextInput
-            style={styles.input}
-            onChangeText={(text) => handleInputChange("brand", text)}
-            value={carDetails.brand}
-            placeholder="Enter brand"
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={(text) => handleInputChange("model", text)}
-            value={carDetails.model}
-            placeholder="Enter model"
-          />
-          <TextInput
-            style={styles.input}
-            onChangeText={(text) => handleInputChange("color", text)}
-            value={carDetails.color}
-            placeholder="Enter color"
-          />
+          <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === "ios" ? "position" : "height"}
+            enabled
+          >
+            <View style={styles.inputRow}>
+              <Text style={styles.label}>Car Brand:</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => handleInputChange("brand", text)}
+                value={carDetails.brand}
+                placeholder="Enter brand"
+              />
+            </View>
+            <View style={styles.inputRow}>
+              <Text style={styles.label}>Car Model:</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => handleInputChange("model", text)}
+                value={carDetails.model}
+                placeholder="Enter model"
+              />
+            </View>
+            <View style={styles.inputRow}>
+              <Text style={styles.label}>Car Color:</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => handleInputChange("color", text)}
+                value={carDetails.color}
+                placeholder="Enter color"
+              />
+            </View>
+          </KeyboardAvoidingView>
         </>
       );
     } else {
@@ -93,11 +116,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFF",
-    paddingTop: "10%",
+    // paddingTop: "5%",
   },
   logo: {
     width: 350,
-    height: 350,
+    height: 300,
     marginLeft: "5%",
   },
   cardContainer: {
@@ -126,6 +149,7 @@ const styles = StyleSheet.create({
   updateButton: {
     backgroundColor: "#172446",
     margin: "3%",
+    marginBottom: "10%",
   },
   updateButtonText: {
     color: "white",
@@ -140,17 +164,28 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
-    paddingVertical: 15,
+
     marginBottom: 10,
-    margin:10,
-    paddingLeft:10,
+    height: 40,
+    marginVertical: 10,
+    marginHorizontal: 5,
+
+    padding: 10,
+    fontSize: 16,
+    flex: 1,
   },
   label: {
     fontSize: 16,
     marginBottom: 5,
     fontWeight: "bold",
     color: "#162447",
-    paddingLeft:10
+    paddingLeft: 10,
+    width: 100,
+  },
+  inputRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
   },
 });
 
