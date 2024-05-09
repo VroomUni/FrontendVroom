@@ -8,7 +8,6 @@ import {
   StyleSheet,
   Platform,
   Pressable,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
@@ -129,7 +128,9 @@ const Login = ({ navigation }) => {
             buttonColor={COLORS.b400}
             textColor="white"
             fontSize="18"
-          >Login</Button>
+          >
+            Login
+          </Button>
           
           <View style={styles.registerContainer}>
             <Pressable onPress={() => navigation.navigate("Signup")}>

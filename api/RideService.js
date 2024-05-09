@@ -107,12 +107,15 @@ const fetchDriverActiveRides = async driverId => {
     throw err;
   }
 };
+//common for driver & passenger history ride fetching
+const getUserRideHistory = async (id, isPassenger) => {
+  const sufix = isPassenger
+    ? `history-passenger?passengerId=${id}`
+    : `history-driver?driverId=${id}`;
+  const finalurl = `${url}/${sufix}`;
 
-const getPassengerRidesHistory = async id => {
   try {
-    const response = await axios.get(
-      `${apiConfig.baseURL}/history?passengerId=${id}`
-    );
+    const response = await axios.get(finalurl);
     return response.data;
   } catch (err) {
     console.error(err);
@@ -126,5 +129,5 @@ module.exports = {
   fetchAllUnrequestedRides: fetchAllPassengerUnrequestedRides,
   fetchDriverActiveRides,
   cancelRide,
-  getPassengerRidesHistory,
+  getUserRideHistory,
 };

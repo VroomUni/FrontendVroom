@@ -4,6 +4,8 @@ import { Button } from "react-native-paper";
 import SelectDropdown from "react-native-select-dropdown";
 import companyWithModel from "../constants/companyWithModel.json";
 import ColorPalette from 'react-native-color-palette';
+import {createCar} from "../api/UserService";
+import { useAuth } from "../context/AuthContext";
 
 const Car = ({ navigation }) => {
   const [selectedCompany, setSelectedCompany] = useState(null);
@@ -12,9 +14,9 @@ const Car = ({ navigation }) => {
   const [selectedColor, setSelectedColor] = useState('#C0392B');
 
   const onColorChange = color => {
-    setColor(color);
+    setSelectedColor(color);
   };
-
+ 
   const companies = companyWithModel.map((item) => item.company);
 
   // Function to filter models based on selected company
@@ -37,7 +39,25 @@ const Car = ({ navigation }) => {
     }
   }, [selectedCompany]);
 
-  
+  const { user } = useAuth();
+
+  const handleNext = async () => {
+    
+    try {
+      const response = await createCar ({
+        brand: selectedCompany,
+        model: selectedModel,
+        color: selectedColor,
+        UserFirebaseId: user.uid,
+       
+      });
+       console.log("Car created:", response.data);
+       navigation.navigate("OnBoarding");
+     } catch (error) {
+       console.error("Error creating car:", error); 
+     }
+   };
+   
   return (
     <View style={styles.container}>
       <Text
@@ -98,7 +118,7 @@ const Car = ({ navigation }) => {
   <ColorPalette
         onChange={(color) => setSelectedColor(color)}
         value={selectedColor}
-        colors={['#C0C0C0', '#FFFFFF', '#000000', 'red', '#FFD700','blue']}
+        colors={['grey', 'white', 'black', 'red', '#FFD700','blue']}
         title={"Select The Color"}
         // icon={
         //   <Icon name={'check-circle-o'} size={25} color={'black'} />
@@ -110,7 +130,7 @@ const Car = ({ navigation }) => {
               mode="contained-tonal"
               buttonColor="#188bff"
               textColor="white"
-              onPress={() => navigation.navigate("OnBoarding")}
+              onPress={handleNext}
               
             >
               Next

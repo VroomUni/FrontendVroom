@@ -1,10 +1,9 @@
-import { View, Text, Alert, StyleSheet, Dimensions } from "react-native";
+import { View, Text, Alert, StyleSheet, Dimensions,Image, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
 import Checkbox from "expo-checkbox";
-import { RadioButton } from "react-native-paper";
-import { Button } from "react-native-paper";
+import { RadioButton,Button } from "react-native-paper";
 import { setPreferences } from "../api/UserService";
 import { useAuth } from "../context/AuthContext";
 
@@ -16,9 +15,25 @@ const Preferences = ({ navigation }) => {
   const [foodchecked, setFoodChecked] = useState(null);
   const [musicchecked, setMusicChecked] = useState(null);
   const [talkativechecked, setTalkativeChecked] = useState(null);
-  const [boysOnly, setBoysOnly] = useState(null);
-  const [girlsOnly, setGirlsOnly] = useState(null);
   const { user } = useAuth();
+
+  const [isBoysSelected, setBoysSelected] = useState(false);
+  const [isGirlsSelected, setGirlsSelected] = useState(false);
+
+  const handleBoysSelection = () => {
+    setBoysSelected(!isBoysSelected); 
+    if (isGirlsSelected) {
+      setGirlsSelected(false); 
+    }
+  };
+
+  const handleGirlsSelection = () => {
+    setGirlsSelected(!isGirlsSelected); 
+    if (isBoysSelected) {
+      setBoysSelected(false); 
+    }
+  };
+
   const submitPreferences = async isYesClick => {
     try {
       const res = await setPreferences({
@@ -27,8 +42,9 @@ const Preferences = ({ navigation }) => {
         loudMusic: musicchecked,
         talkative: talkativechecked,
         UserFirebaseId: user.uid,
-        girlsOnly: girlsOnly,
-        boysOnly: boysOnly,
+        girlsOnly:isGirlsSelected,
+        boysOnly:isBoysSelected
+
       });
       isYesClick
         ? navigation.navigate("Car")
@@ -39,6 +55,7 @@ const Preferences = ({ navigation }) => {
     }
   };
 
+
   return (
     <SafeAreaView
       style={{
@@ -47,6 +64,8 @@ const Preferences = ({ navigation }) => {
         paddingLeft: 10,
         paddingRight: 10,
       }}>
+        <ScrollView>
+        
       <View
         style={{
           marginVertical: 22,
@@ -75,6 +94,15 @@ const Preferences = ({ navigation }) => {
           Skip
         </Button>
       </View>
+
+      {/* <Image
+        style={{ width: 300,
+          height: 300,
+          marginRight: 0,
+          marginLeft: 50 
+        }}
+        source={require('../assets/PreferencesSettings.png')}
+      /> */}
 
       <View style={{ marginBottom: 12 }}>
         <Text
@@ -241,9 +269,10 @@ const Preferences = ({ navigation }) => {
         </Text>
         <Checkbox
           style={{ marginRight: 8 }}
-          value={boysOnly ? true : false}
-          onValueChange={setBoysOnly}
-          color={boysOnly ? COLORS.primary : undefined}
+          value={isBoysSelected}
+          color={isBoysSelected ? COLORS.primary : undefined}
+          status={isBoysSelected ? "checked" : "unchecked"}
+          onValueChange={handleBoysSelection}
         />
       </View>
 
@@ -265,9 +294,13 @@ const Preferences = ({ navigation }) => {
         </Text>
         <Checkbox
           style={{ marginRight: 8 }}
-          value={girlsOnly ? true : false}
-          onValueChange={setGirlsOnly}
-          color={girlsOnly ? COLORS.primary : undefined}
+          // value={girlsOnly}
+          // onValueChange={setGirlsOnly}
+          // color={girlsOnly ? COLORS.primary : undefined}
+          value={isGirlsSelected}
+          color={isGirlsSelected ? COLORS.primary : undefined}
+          status={isGirlsSelected ? "checked" : "unchecked"}
+          onValueChange={handleGirlsSelection}
         />
       </View>
 
@@ -312,24 +345,14 @@ const Preferences = ({ navigation }) => {
           </Button>
         </View>
       </View>
-
-      {/* <Button
-        title="Skip"
-        mode="contained-tonal"
-        icon="chevron-right"
-        buttonColor="#00f0dc"
-        textColor="white"
-        onPress={() => console.log("SKIP")}
-      >
-        Skip
-      </Button> */}
-
       <View
         style={{
           flexDirection: "row",
           justifyContent: "center",
           marginVertical: 22,
         }}></View>
+
+</ScrollView>
     </SafeAreaView>
   );
 };

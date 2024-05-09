@@ -1,40 +1,62 @@
 // SeeDetails.js
-import React from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Button } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import React from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { Button } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 const SeeDetails = ({ route }) => {
-  const { selectedPassengers } = route.params;
+  const { passengers } = route.params;
   const navigation = useNavigation();
 
-  const handleRateButton = (passenger) => {
-    console.log('Rate passenger:', passenger);
+  const handleRateButton = passenger => {
+    console.log("Rate passenger:", passenger);
   };
 
-  const handleReportButton = (passenger) => {
-    console.log('Report passenger:', passenger);
+  const handleReportButton = passenger => {
+    console.log("Report passenger:", passenger);
   };
 
-  if (!selectedPassengers) {
+  if (!passengers) {
     return <Text>No passengers selected</Text>;
   }
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
       <ScrollView>
-        {selectedPassengers.map((passenger, index) => (
+        {passengers.map((passenger, index) => (
           <View key={index} style={styles.passengerContainer}>
             <View style={styles.passengerInfo}>
-              <Image source={{ uri: passenger.photo }} style={styles.passengerPhoto} />
+              <Image
+                source={{
+                  uri: "https://bootdey.com/img/Content/avatar/avatar5.png",
+                }}
+                style={styles.passengerPhoto}
+              />
               <View style={styles.passengerText}>
-                <Text style={styles.passengerName}>{passenger.name} {passenger.lastName}</Text>
-                <Text>Age: {passenger.age}</Text>
+                <Text style={styles.passengerName}>
+                  {passenger.firstName} {passenger.lastName}
+                </Text>
+                <Text>Age: 22</Text>
               </View>
             </View>
             <View style={styles.buttonContainer}>
-              <Button onPress={() => handleRateButton(passenger)} style={styles.button}>Rate</Button>
-              <Button onPress={() => handleReportButton(passenger)} style={styles.button}>Report</Button>
+              <Button
+                onPress={() => handleRateButton(passenger)}
+                style={styles.button}>
+                Rate
+              </Button>
+              <Button
+                onPress={() => handleReportButton(passenger)}
+                style={styles.button}>
+                Report
+              </Button>
             </View>
           </View>
         ))}
@@ -45,18 +67,18 @@ const SeeDetails = ({ route }) => {
 
 const styles = StyleSheet.create({
   passengerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
   },
   passengerInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   passengerPhoto: {
     width: 50,
@@ -72,7 +94,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   buttonContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 0,
     padding: 0,
   },
