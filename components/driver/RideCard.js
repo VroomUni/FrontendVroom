@@ -22,14 +22,14 @@ function RideCard({
   };
   console.log(requests);
 
-  const getPendingRequestsCount = () =>
-    requests.filter(req => req.ride_request.status === 0).length;
+  const getRequestsCount = (status) =>
+    requests.filter(req => req.ride_request.status === status).length;
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
         <Card.Content>
-          <RideInfo from={from} to={to} startTime={time} />
-          <View style={styles.requestsRow}>
+          <RideInfo  from={from} to={to} startTime={time} />
+          <View style={[styles.requestsRow,{marginTop:10}]}>
             <Text variant='bodyMedium' style={{ fontWeight: "bold" }}>
               Requests:{" "}
             </Text>
@@ -40,7 +40,22 @@ function RideCard({
                   color: "white",
                   alignSelf: "center",
                 }}>
-                {getPendingRequestsCount()}
+                {getRequestsCount(0)}
+              </Text>
+            </Badge>
+          </View>
+          <View style={styles.requestsRow}>
+            <Text variant='bodyMedium' style={{ fontWeight: "bold" }}>
+              Confirmed:{" "}
+            </Text>
+            <Badge size={20} style={{ backgroundColor: "green" }}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  color: "white",
+                  alignSelf: "center",
+                }}>
+                {getRequestsCount(1)}
               </Text>
             </Badge>
           </View>
@@ -75,7 +90,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    paddingVertical: 15,
+    paddingVertical: 10,
   },
   iconContainer: {
     position: "absolute",

@@ -130,7 +130,7 @@ const OptionsSecondSlide = () => {
           }}>
           <Text>
             <Icon source={"repeat"} color='black' size={20} />
-            Seats
+            Repeat
           </Text>
           <Button
             mode='outlined'
@@ -140,7 +140,7 @@ const OptionsSecondSlide = () => {
               borderColor: "black",
               width: width * 0.37,
             }}
-            style={{ borderRadius: 5 }}
+            style={{ borderRadius: 5 , marginLeft:12}}
             icon={"chevron-right"}
             onPress={() => {
               setRecurrenceModalVisible(true);

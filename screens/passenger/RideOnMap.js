@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from "react-native-maps";
 import { decode } from "@googlemaps/polyline-codec";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import passengerIcon from "../../assets/people.png";
+import dot from "../../assets/rec.png";
+
 
 const RideOnMap = ({ route }) => {
   const { passengerLocation, routePolyLine, from, to } = route.params; // Assuming you have fromPlace and toPlace in your route params
@@ -73,11 +76,33 @@ const RideOnMap = ({ route }) => {
         />
         <Marker
           coordinate={{
+            longitude: polylineCods[polylineCods.length - 1][1],
+            latitude: polylineCods[polylineCods.length - 1][0],
+          }}
+          title='Departure'
+          anchor={{ x: 0.5, y: 0.5 }}>
+          <View style={styles.markerContainer}>
+            <Image source={dot} style={styles.markerImage} />
+          </View>
+        </Marker>
+        <Marker
+          coordinate={{
+            longitude: polylineCods[0][1],
+            latitude: polylineCods[1][0],
+          }}
+          title='Destination'
+        />
+
+        <Marker
+          coordinate={{
             longitude: passengerLocation.coords.longitude,
             latitude: passengerLocation.coords.latitude,
           }}
-          title='YOU'
-        />
+          title='YOU'>
+          <View style={styles.markerContainer}>
+            <Image source={passengerIcon} style={styles.passengerIcon} />
+          </View>
+        </Marker>
       </MapView>
     </View>
   );
@@ -108,6 +133,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
     marginHorizontal: 10, // Spacing around the ellipsis icon
+  },
+  markerImage: {
+    width: 25,
+    height: 25,
+    resizeMode: "contain",
+  },
+  passengerIcon: {
+    width: 35,
+    height: 35,
+    resizeMode: "contain",
   },
 });
 

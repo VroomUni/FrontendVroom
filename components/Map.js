@@ -1,4 +1,10 @@
-import { StyleSheet, Platform, Alert, View, Image } from "react-native";
+import {
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+  View,
+  Image,
+} from "react-native";
 import React, { useRef, useEffect, useMemo } from "react";
 import MapView, {
   Marker,
@@ -30,13 +36,17 @@ const Map = ({
     longitude: 10.268806957645351,
   };
 
-  const apiUrl = useMemo(() => {
-    return `https://maps.googleapis.com/maps/api/directions/json?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${GOOGLE_MAPS_KEY}`;
-  }, [destinationOrOrigin]);
   const mapViewRef = useRef();
 
   //if  destinationOrOrigin !==null this is the logic to draw the route(polyline) & area(polygon)
   useEffect(() => {
+    const baseURL = "https://maps.googleapis.com/maps/api/directions/json";
+    let apiUrl;
+    if (isToSmu) {
+      apiUrl = `${baseURL}?origin=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&destination=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&key=${GOOGLE_MAPS_KEY}`;
+    } else {
+      apiUrl = `${baseURL}?origin=${SMUCOORDS.latitude},${SMUCOORDS.longitude}&destination=${destinationOrOrigin?.coords.latitude},${destinationOrOrigin?.coords.longitude}&key=${GOOGLE_MAPS_KEY}`;
+    }
     destinationOrOrigin &&
       axios
         .get(apiUrl)
@@ -71,7 +81,7 @@ const Map = ({
           console.error("Error ", error);
           Alert.alert("we encountered a problem");
         });
-  }, [destinationOrOrigin]);
+  }, [destinationOrOrigin, isToSmu]);
   // when area , route or destination/origin change , then recenter the camera view on the route
   useEffect(() => {
     if (mapViewRef.current && polylineCods) {
@@ -83,8 +93,8 @@ const Map = ({
         {
           edgePadding: {
             top: 50,
-            bottom:270,
-            right:0,
+            bottom: 270,
+            right: 0,
             left: 0,
           },
           animated: true,

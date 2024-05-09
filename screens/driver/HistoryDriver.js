@@ -73,7 +73,7 @@ function HistoryDriver() {
         ) : (
           <ScrollView contentContainerStyle={styles.scrollViewContent}>
             {filteredRidesByDate.map(item => (
-              <View style={styles.cardView} key={item.id}>
+              <View key={item.id} style={styles.cardView}>
                 <View style={styles.userInfo}>
                   <RideInfo
                     from={item.Ride.from}
@@ -107,49 +107,46 @@ function HistoryDriver() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  calendarContainer: {
-    height: "25%",
-  },
-  cardsContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   scrollViewContent: {
     flexGrow: 1,
     alignItems: "center",
-    width: "95%",
+    paddingVertical: 20,
   },
   cardView: {
     backgroundColor: "#fff",
     flexDirection: "row",
-    margin: "10%",
+    margin: 6,
     padding: 16,
-    justifyContent: "space-between",
+    width: windowWidth / 1.2,
+    justifyContent: "center",
     alignItems: "center",
-    alignSelf: "center",
     borderRadius: 10,
     shadowColor: "#000",
-    elevation: 5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 8,
+    borderWidth: 2,
+    borderColor: "white",
+  },
+  userPhoto: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
   userInfo: {
     flex: 1,
-  },
-  userName: {
-    fontSize: 18,
-    fontWeight: "bold",
+    marginLeft: 10,
   },
   userLocation: {
     fontSize: 14,
     color: "#333",
+    fontWeight: "bold",
   },
   userTime: {
     fontSize: 14,
     color: "#05375a",
+    fontWeight: "bold",
   },
   passengersContainer: {
     flexDirection: "row",

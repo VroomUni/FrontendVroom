@@ -17,6 +17,7 @@ import decline from "../../assets/decine.json";
 import { decode } from "@googlemaps/polyline-codec";
 import { handleRequestRespone } from "../../api/RequestService";
 import passengerIcon from "../../assets/people.png";
+import dot from "../../assets/rec.png";
 
 function RideCardDetails({ route }) {
   const [rideRequests, setRideRequests] = useState(route.params.requests);
@@ -225,7 +226,7 @@ function RideCardDetails({ route }) {
         title={item.firstName + " " + item.lastName}
         anchor={{ y: 0.5, x: 0.5 }} // Center the anchor
         onPress={() => selectMarker(item.ride_request.id)} // Track marker selection
-      >
+        zIndex={1}>
         <View style={styles.markerContainer}>
           <Image source={passengerIcon} style={styles.passengerIcon} />
         </View>
@@ -275,6 +276,26 @@ function RideCardDetails({ route }) {
             strokeWidth={3}
             strokeColor='blue'
           />
+          <Marker
+            coordinate={{
+              longitude: polylineCods.current[0][1],
+              latitude: polylineCods.current[0][0],
+            }}
+            title='Departure'
+            anchor={{ x: 0.5, y: 0.5 }}>
+            <View style={styles.markerContainer}>
+              <Image source={dot} style={styles.markerImage} />
+            </View>
+          </Marker>
+          <Marker
+            coordinate={{
+              longitude:
+                polylineCods.current[polylineCods.current.length - 1][1],
+              latitude:
+                polylineCods.current[polylineCods.current.length - 1][0],
+            }}
+            title='Destination'
+          />
           {rideRequests.length > 0 && renderPassengerMarkers()}
         </MapView>
       </View>
@@ -285,9 +306,9 @@ function RideCardDetails({ route }) {
       ) : (
         <View style={styles.noRequestsContainer}>
           {/* <Image
-            style={styles.NoSuggestionImage}
-            source={require("../../assets/noMoreFilter.png")}
-          /> */}
+              style={styles.NoSuggestionImage}
+              source={require("../../assets/noMoreFilter.png")}
+            /> */}
           <Text>It's quiet for now </Text>
         </View>
       )}
@@ -329,6 +350,11 @@ const styles = StyleSheet.create({
   passengerIcon: {
     width: 30,
     height: 30,
+    resizeMode: "contain",
+  },
+  markerImage: {
+    width: 25,
+    height: 25,
     resizeMode: "contain",
   },
   // NoSuggestionImage: {

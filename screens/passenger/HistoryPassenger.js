@@ -49,11 +49,11 @@ function HistoryPassenger() {
         {filteredRidesByDate.length === 0 ? (
           <Text style={styles.noHistoryText}>No history available</Text>
         ) : (
-          filteredRidesByDate.map(item => (
+          filteredRidesByDate.map((item,index) => (
             <RideHistoryCard
               driverFname={item.Ride.driver.firstName}
               driverLname={item.Ride.driver.lastName}
-              key={item.Ride.driver.id}
+              key={index}
               from={item.Ride.from}
               to={item.Ride.to}
               time={item.Ride.startTime}

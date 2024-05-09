@@ -218,7 +218,7 @@ const RideInfo = ({ navigation }) => {
             }}
             icon={"check"}
             duration={2000}
-            style={{ backgroundColor: "green" }} // Set the background color to green
+            style={{ backgroundColor: "green",marginBottom:35 }} // Set the background color to green
           >
             Your ride was created successfully
           </Snackbar>
