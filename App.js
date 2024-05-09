@@ -7,13 +7,13 @@ import OnBoarding from "./screens/OnBoarding";
 import TabNav from "./navigation/TabNav";
 import Home from "./screens/Home";
 import Signup from "./screens/SignUp";
-import Signup2 from "./screens/SignUp-2";
 import Login from "./screens/Login";
 import Preferences from "./screens/Preferences";
 import Car from "./screens/Car";
 import { AuthContextProvider, useAuth } from "./context/AuthContext";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import CarSettings from "./components/CarSettings";
+import 'react-native-reanimated'
+
 function App() {
   const Stack = createStackNavigator();
   const { user } = useAuth();
