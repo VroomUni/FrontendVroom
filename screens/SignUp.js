@@ -42,23 +42,23 @@ const Signup = ({ navigation }) => {
   const [passwordError, setPasswordError] = useState("");
   const [rePasswordError, setRePasswordError] = useState("");
 
-  const validateEmail = (email) => {
+  const validateEmail = email => {
     var re = /^[a-zA-Z0-9._-]+@(medtech\.tn|msb\.tn|smu.tn)$/;
     return re.test(email);
   };
 
-  const handleEmailChange = (text) => {
+  const handleEmailChange = text => {
     setEmail(text);
     const isValid = validateEmail(text);
     setErrorMessage(isValid ? "" : " Invalid Email address.");
   };
 
-  const validatePassword = (password) => {
+  const validatePassword = password => {
     let re = /^(?=.*[A-Z])(?=.*[0-9])/;
     return re.test(password);
   };
 
-  const handlePasswordChange = (text) => {
+  const handlePasswordChange = text => {
     setPassword(text);
     const isValid = validatePassword(text);
     setPasswordError(
@@ -68,17 +68,17 @@ const Signup = ({ navigation }) => {
     );
   };
 
-  const handleRePasswordChange = (text) => {
+  const handleRePasswordChange = text => {
     setRePassword(text);
     setRePasswordError(text === password ? "" : " Passwords do not match!");
   };
 
-  const validatePhone = (phone) => {
+  const validatePhone = phone => {
     let re = /^[\d]{8}$/;
     return re.test(phone);
   };
 
-  const handlePhoneChange = (text) => {
+  const handlePhoneChange = text => {
     setPhone(text);
     const isValid = validatePhone(text);
     setPhoneError(isValid ? "" : " Invalid phone number");
@@ -146,8 +146,7 @@ const Signup = ({ navigation }) => {
   // } = useRideContext();
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [isDateSelected, setDateSelected] = useState(false);
-
+  const [isDateSelected, setDateSelected] = useState(null);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -157,16 +156,14 @@ const Signup = ({ navigation }) => {
     setDatePickerVisibility(false);
   };
 
-  const handleConfirm = (date) => {
-    console.warn("A date has been picked: ", date);
+  const handleConfirm = date => {
     setDateSelected(date);
     hideDatePicker();
-    
   };
 
-  const handleDateTimeChange = (selectedDateOrTime) => {
+  const handleDateTimeChange = selectedDateOrTime => {
     setFromTimePickerVisible(false);
-    
+
     if (isDatePickerVisible) {
       setDatePickerVisibility(false);
       setCustomSelectedDate(selectedDateOrTime);
@@ -179,14 +176,14 @@ const Signup = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <ImageBackground
         source={require("../assets/background-4.png")}
-        resizeMode="cover"
+        resizeMode='cover'
         style={{
           width: "100%",
           height: "100%",
           position: "absolute",
         }}
       />
-      <ScrollView keyboardDismissMode="on-drag">
+      <ScrollView keyboardDismissMode='on-drag'>
         <View style={{ flex: 1, marginHorizontal: 22 }}>
           <View style={{ marginVertical: 22 }}>
             <Text
@@ -195,13 +192,12 @@ const Signup = ({ navigation }) => {
                 fontWeight: "bold",
                 marginVertical: 12,
                 color: COLORS.white,
-              }}
-            >
+              }}>
               Create Account
             </Text>
           </View>
 
-          <View style={{ marginBottom: 12 , marginTop:12 }}>
+          <View style={{ marginBottom: 12, marginTop: 12 }}>
             <Text
               style={{
                 fontSize: 16,
@@ -209,8 +205,7 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}
-            >
+              }}>
               Email address
               {errorMessage && (
                 <Text style={{ color: "red" }}>{errorMessage}</Text>
@@ -228,12 +223,11 @@ const Signup = ({ navigation }) => {
                 justifyContent: "center",
                 paddingLeft: 22,
                 backgroundColor: "white",
-              }}
-            >
+              }}>
               <TextInput
-                placeholder="Enter your email address"
+                placeholder='Enter your email address'
                 placeholderTextColor={COLORS.black}
-                keyboardType="email-address"
+                keyboardType='email-address'
                 style={{
                   width: "100%",
                 }}
@@ -252,8 +246,7 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}
-            >
+              }}>
               First Name
             </Text>
 
@@ -268,12 +261,11 @@ const Signup = ({ navigation }) => {
                 justifyContent: "center",
                 paddingLeft: 22,
                 backgroundColor: "white",
-              }}
-            >
+              }}>
               <TextInput
-                placeholder="Enter your first name"
+                placeholder='Enter your first name'
                 placeholderTextColor={COLORS.black}
-                keyboardType="name-phone-pad"
+                keyboardType='name-phone-pad'
                 style={{
                   width: "100%",
                 }}
@@ -291,8 +283,7 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}
-            >
+              }}>
               Last Name
             </Text>
 
@@ -307,12 +298,11 @@ const Signup = ({ navigation }) => {
                 justifyContent: "center",
                 paddingLeft: 22,
                 backgroundColor: "white",
-              }}
-            >
+              }}>
               <TextInput
-                placeholder="Enter your last name"
+                placeholder='Enter your last name'
                 placeholderTextColor={COLORS.black}
-                keyboardType="name-phone-pad"
+                keyboardType='name-phone-pad'
                 style={{
                   width: "100%",
                 }}
@@ -369,8 +359,7 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}
-            >
+              }}>
               Password {""}
               {passwordError && (
                 <Text style={{ color: "red" }}>{passwordError}</Text>
@@ -388,10 +377,9 @@ const Signup = ({ navigation }) => {
                 justifyContent: "center",
                 paddingLeft: 22,
                 backgroundColor: "white",
-              }}
-            >
+              }}>
               <TextInput
-                placeholder="Enter your password"
+                placeholder='Enter your password'
                 placeholderTextColor={COLORS.black}
                 secureTextEntry={isPasswordShown}
                 style={{
@@ -407,12 +395,11 @@ const Signup = ({ navigation }) => {
                 style={{
                   position: "absolute",
                   right: 12,
-                }}
-              >
+                }}>
                 {isPasswordShown == true ? (
-                  <Ionicons name="eye-off" size={24} color={COLORS.black} />
+                  <Ionicons name='eye-off' size={24} color={COLORS.black} />
                 ) : (
-                  <Ionicons name="eye" size={24} color={COLORS.black} />
+                  <Ionicons name='eye' size={24} color={COLORS.black} />
                 )}
               </TouchableOpacity>
             </View>
@@ -426,8 +413,7 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}
-            >
+              }}>
               Confirm Password {""}
               {rePasswordError && (
                 <Text style={{ color: "red" }}>{rePasswordError}</Text>
@@ -445,10 +431,9 @@ const Signup = ({ navigation }) => {
                 justifyContent: "center",
                 paddingLeft: 22,
                 backgroundColor: "white",
-              }}
-            >
+              }}>
               <TextInput
-                placeholder="Enter your password"
+                placeholder='Enter your password'
                 placeholderTextColor={COLORS.black}
                 secureTextEntry={isPasswordShown}
                 style={{
@@ -464,12 +449,11 @@ const Signup = ({ navigation }) => {
                 style={{
                   position: "absolute",
                   right: 12,
-                }}
-              >
+                }}>
                 {isPasswordShown == true ? (
-                  <Ionicons name="eye-off" size={24} color={COLORS.black} />
+                  <Ionicons name='eye-off' size={24} color={COLORS.black} />
                 ) : (
-                  <Ionicons name="eye" size={24} color={COLORS.black} />
+                  <Ionicons name='eye' size={24} color={COLORS.black} />
                 )}
               </TouchableOpacity>
             </View>
@@ -483,8 +467,7 @@ const Signup = ({ navigation }) => {
                 marginVertical: 8,
                 color: COLORS.blue,
                 fontWeight: "bold",
-              }}
-            >
+              }}>
               Phone Number {""}
               {phoneError && <Text style={{ color: "red" }}>{phoneError}</Text>}
             </Text>
@@ -501,12 +484,11 @@ const Signup = ({ navigation }) => {
                 justifyContent: "space-between",
                 paddingLeft: 22,
                 backgroundColor: "white",
-              }}
-            >
+              }}>
               <TextInput
-                placeholder="+216"
+                placeholder='+216'
                 placeholderTextColor={COLORS.black}
-                keyboardType="numeric"
+                keyboardType='numeric'
                 style={{
                   width: "12%",
                   borderRightWidth: 1,
@@ -516,9 +498,9 @@ const Signup = ({ navigation }) => {
               />
 
               <TextInput
-                placeholder="Enter your phone number"
+                placeholder='Enter your phone number'
                 placeholderTextColor={COLORS.black}
-                keyboardType="numeric"
+                keyboardType='numeric'
                 style={{
                   width: "80%",
                 }}
@@ -528,96 +510,101 @@ const Signup = ({ navigation }) => {
             </View>
           </View>
 
-          <View style={{ flexDirection: "row", 
-                        justifyContent: "space-between" ,
-                        marginBottom: 18,
-                        marginTop: 18
-                        }}>
-
-          <View style={{ marginBottom: 18 }}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: 400,
-                marginVertical: 8,
-                color: COLORS.blue,
-                fontWeight: "bold",
-              }}
-            >
-              Gender
-            </Text>
-
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <RadioButton
-                  value="Male"
-                  status={gender === "Male" ? "checked" : "unchecked"}
-                  onPress={() => setGender("Male")}
-                />
-                <Text style={{ marginRight: 8, color: COLORS.black }}>Male</Text>
-              </View>
-
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <RadioButton
-                  value="Female"
-                  status={gender === "Female" ? "checked" : "unchecked"}
-                  onPress={() => setGender("Female")}
-                />
-                <Text style={{ marginRight: 8, color: COLORS.black }}>
-                  Female
-                </Text>
-              </View>
-            </View>
-          {/* </View> */}
-          
           <View
             style={{
-              width: "100%",
-              height: 48,
-
-              alignItems: "center",
               flexDirection: "row",
               justifyContent: "space-between",
-              paddingLeft: 22,
-              
+              marginBottom: 18,
               marginTop: 18,
-            }}
-          >
-            <Button
-              title="Show Date Picker"
-              onPress={showDatePicker}
-              mode="outlined"
-              textColor="grey"
-              
-            >
-              Birthday
-            </Button>
-            <DateTimePickerModal
-              isVisible={isDatePickerVisible}
-              mode="date"
-              onConfirm={handleConfirm}
-              onCancel={hideDatePicker}
-              // onValueChange={handleDateTimeChange}
-            />
-          </View>
-          </View>
+            }}>
+            <View style={{ marginBottom: 18 }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: 400,
+                  marginVertical: 8,
+                  color: COLORS.blue,
+                  fontWeight: "bold",
+                }}>
+                Gender
+              </Text>
 
-          <View   style={{
-              marginEnd: 20
-            }}> 
-            <ImageUpload
-              profileImage={profileImage}
-              setProfileImage={setProfileImage}
-            />
-          </View>
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <RadioButton
+                    value='Male'
+                    status={gender === "Male" ? "checked" : "unchecked"}
+                    onPress={() => setGender("Male")}
+                  />
+                  <Text style={{ marginRight: 8, color: COLORS.black }}>
+                    Male
+                  </Text>
+                </View>
+
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <RadioButton
+                    value='Female'
+                    status={gender === "Female" ? "checked" : "unchecked"}
+                    onPress={() => setGender("Female")}
+                  />
+                  <Text style={{ marginRight: 8, color: COLORS.black }}>
+                    Female
+                  </Text>
+                </View>
+              </View>
+              {/* </View> */}
+
+              <View
+                style={{
+                  width: "100%",
+                  height: 48,
+
+                  alignItems: "center",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingLeft: 22,
+
+                  marginTop: 18,
+                }}>
+                <Button
+                  title='Show Date Picker'
+                  onPress={showDatePicker}
+                  mode='outlined'
+                  textColor='grey'>
+                  {isDateSelected
+                    ? isDateSelected.toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "2-digit",
+                      })
+                    : "Birthday"}
+                </Button>
+                <DateTimePickerModal
+                  isVisible={isDatePickerVisible}
+                  mode='date'
+                  onConfirm={handleConfirm}
+                  onCancel={hideDatePicker}
+                  // onValueChange={handleDateTimeChange}
+                />
+              </View>
+            </View>
+
+            <View
+              style={{
+                marginEnd: 20,
+              }}>
+              <ImageUpload
+                profileImage={profileImage}
+                setProfileImage={setProfileImage}
+              />
+            </View>
           </View>
 
           <View
             style={{
               flexDirection: "row",
               marginVertical: 6,
-            }}
-          >
+            }}>
             <Checkbox
               style={{ marginRight: 8 }}
               value={termsChecked}
@@ -633,7 +620,7 @@ const Signup = ({ navigation }) => {
             <Text style={{ color: "red", marginBottom: 12 }}>{message}</Text>
           )}
           <Button
-            title="Sign Up"
+            title='Sign Up'
             // filled
             onPress={handleSubmit}
             style={{
@@ -642,11 +629,10 @@ const Signup = ({ navigation }) => {
               width: "50%",
               marginLeft: 75,
             }}
-            mode="contained-tonal"
+            mode='contained-tonal'
             buttonColor={COLORS.b400}
-            textColor="white"
-            fontSize="18"
-          >
+            textColor='white'
+            fontSize='18'>
             Sign Up
           </Button>
 
@@ -655,8 +641,7 @@ const Signup = ({ navigation }) => {
               flexDirection: "row",
               justifyContent: "center",
               marginVertical: 22,
-            }}
-          >
+            }}>
             <Text style={{ fontSize: 16, color: COLORS.black }}>
               Already have an account
             </Text>
@@ -667,8 +652,7 @@ const Signup = ({ navigation }) => {
                   color: COLORS.b100,
                   fontWeight: "bold",
                   marginLeft: 6,
-                }}
-              >
+                }}>
                 Login
               </Text>
             </Pressable>

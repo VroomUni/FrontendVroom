@@ -6,8 +6,11 @@ import GeneralInfo from '../components/GeneralInfo';
 import PreferencesSettings from '../components/PreferencesSettings';
 import CarSettings from '../components/CarSettings';
 import PasswordUpdate from '../components/PasswordUpdate';
+import { useAuth } from '../context/AuthContext';
 
 const CustomDrawer = (props) => {
+
+  const { logOut , user }=useAuth();
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView>
@@ -18,12 +21,14 @@ const CustomDrawer = (props) => {
         icon={({ size, color }) => (
           <MaterialIcons name="logout" size={size} color={color} />
         )}
-        onPress={() => {
+        onPress={async() => {
+
           // This will reset the whole navigation state and replace it with the SignIn screen
           props.navigation.reset({
             index: 0,
             routes: [{ name: 'Login' }],
           });
+          await logOut(user.uid);
         }}
       />
     </View>

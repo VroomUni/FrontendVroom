@@ -1,10 +1,7 @@
 import React, { useState, createContext } from "react";
-import { useContext , useEffect } from "react";
-import {
-  signOut,
-  getAuth,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { useContext, useEffect } from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { deletePushToken } from "../api/UserService";
 
 const Authentication = createContext();
 export const useAuth = () => {
@@ -21,9 +18,10 @@ export const AuthContextProvider = ({ children }) => {
     return () => unsubscribe(); // Unsubscribe from auth state changes when component unmounts
   }, []);
 
-  const logout = async () => {
+  const logOut = async userId => {
     try {
-      await signOut();
+      // await signOut();
+      await deletePushToken(userId);
       setUser(null);
     } catch (error) {
       console.error("Logout failed:", error);
@@ -35,8 +33,8 @@ export const AuthContextProvider = ({ children }) => {
       value={{
         user,
         isPassenger,
-        logout,
-        setIsPassenger
+        logOut,
+        setIsPassenger,
       }}>
       {children}
     </Authentication.Provider>

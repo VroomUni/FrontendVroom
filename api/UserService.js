@@ -237,6 +237,15 @@ const updateUserCar = async (carId, carData) => {
   }
 };
 
+const deletePushToken = async userId => { 
+  const url = `${apiConfig.baseURL}/user/token?userId=${userId}`;
+  try {
+    await axios.delete(url);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 module.exports = {
   signIn,
   createUser,
@@ -250,4 +259,5 @@ module.exports = {
   updateUserInfo,
   updateUserPreferences,
   updateUserCar,
+  deletePushToken,
 };

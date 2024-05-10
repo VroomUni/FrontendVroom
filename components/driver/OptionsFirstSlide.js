@@ -45,8 +45,8 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       setDatePickerVisibility(false);
       setCustomSelectedDate(selectedDateOrTime);
 
-      if (!customSelectedFromTime) setFromTimePickerVisible(true);
-      return;
+      // if (!customSelectedFromTime) setFromTimePickerVisible(true);
+      // return;
     }
     //MUST FIX ONE HOUR DIFFERENCE IN DATETIMEPICKER
     if (isFromTimePickrVisible) {
@@ -60,7 +60,7 @@ const OptionsFirstSlide = ({ goToSlide }) => {
       }
 
       setCustomSelectedTime(selectedDateOrTime);
-      isPassenger && setToTimePickerVisible(true);
+      // isPassenger && setToTimePickerVisible(true);
       goToSlide &&
         setTimeout(() => {
           goToSlide(1);
