@@ -13,16 +13,26 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.iss.vroom"
     },
     "android": {
       "package": "com.iss.vroom",
       "versionCode": 1,
-      "googleServicesFile":"config/vroom-412215-firebase-adminsdk-6mwxs-7ef5080081.json" ,
-
+      "googleServicesFile": "config/vroom-412215-firebase-adminsdk-6mwxs-7ef5080081.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "build": {
+        "development": {
+          "developmentClient": true,
+          "distribution": "internal"
+        },
+        "preview": {
+          "distribution": "internal"
+        },
+        "production": {}
       },
       "softwareKeyboardLayoutMode": "pan",
       "permissions": [

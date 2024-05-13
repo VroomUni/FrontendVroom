@@ -1,37 +1,30 @@
 import { View, StyleSheet, Alert } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Calendar from "../../components/Calendar";
 import RideCardListPassenger from "../../components/Passenger/RideCardListPassenger";
-
-// Mock data
-const rides = [
-  {
-    id: '1',
-    driverName: 'John Doe',
-    carModel: 'Toyota Camry',
-    driverPhone: '123-456-7890',
-    status: 'Pending',
-  },
-  {
-    id: '2',
-    driverName: 'Jane Smith',
-    carModel: 'Honda Accord',
-    driverPhone: '234-567-8901',
-    status: 'Accepted',
-  },
-  {
-    id: '3',
-    driverName: 'Bob Johnson',
-    carModel: 'Ford Focus',
-    driverPhone: '345-678-9012',
-    status: 'Declined',
-  },
-  // Add the rest of your ride objects here
-];
+import { useAuth } from "../../context/AuthContext";
+import { getPassengerRequestedRides } from "../../api/RideService";
+import { useFocusEffect } from "@react-navigation/native";
 
 function PassengerRides({ navigation }) {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
+  );
+  const [ridesData, setRidesData] = useState([]);
+  const { user } = useAuth();
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchPassengerRidesHistory = async () => {
+        try {
+          const rides = await getPassengerRequestedRides(user.uid);
+          setRidesData(rides);
+        } catch (error) {
+          Alert.alert("Error fetching scheduled rides ");
+        }
+      };
+      fetchPassengerRidesHistory();
+    }, [user]) // Add 'user' to the dependency array
   );
   const handleDateSelection = selectedDate => {
     if (
@@ -52,8 +45,9 @@ function PassengerRides({ navigation }) {
     }
     setSelectedDate(selectedDate.format("YYYY-MM-DD"));
   };
-
   const today = new Date();
+  const rides = ridesData.filter(item => item.occurenceDate === selectedDate);
+  console.log(JSON.stringify(rides));
 
   return (
     <View style={styles.container}>

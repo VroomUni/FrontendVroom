@@ -13,13 +13,13 @@ import Preferences from "./screens/Preferences";
 import Car from "./screens/Car";
 import { AuthContextProvider, useAuth } from "./context/AuthContext";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import 'react-native-reanimated'
+import "react-native-reanimated";
 
 function App() {
   const Stack = createStackNavigator();
   const { user } = useAuth();
   console.log("user ", user?.email);
-
+  console.disableYellowBox = true;
   return (
     // <PassengerSearchRides />
     <NavigationContainer>

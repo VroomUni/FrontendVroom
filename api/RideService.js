@@ -122,6 +122,16 @@ const getUserRideHistory = async (id, isPassenger) => {
     throw err;
   }
 };
+const getPassengerRequestedRides = async passengerId => {
+  const finalUrl = `${url}/passenger?passengerId=${passengerId}`;
+  try {
+    const response = await axios.get(finalUrl);
+    return response.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
 module.exports = {
   postRide,
   searchForRides,
@@ -130,4 +140,5 @@ module.exports = {
   fetchDriverActiveRides,
   cancelRide,
   getUserRideHistory,
+  getPassengerRequestedRides
 };
