@@ -74,6 +74,7 @@ const getUserPreferences = async userId => {
   }
 };
 
+
 const signIn = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
