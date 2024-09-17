@@ -9,7 +9,7 @@ const SplashScreen = ({navigation}) => {
     <View style={styles.container}>
 
       <Text style={styles.header}>Vroom</Text>
-      <Text style={styles.subheader}>Your ride, Your choice</Text>
+      <Text style={styles.subheader}>Your ride, Your choice</Text >
       <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
         <Text style={styles.buttonText}>Let's Get Started</Text>
       </TouchableOpacity>

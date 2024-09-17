@@ -7,7 +7,6 @@ const COLORS = {
     blue : "#30AADD", 
     greenish:"#00f0dc",
     green:"#007260",
-
     tabBlue: "#162447",
 
 

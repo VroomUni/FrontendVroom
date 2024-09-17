@@ -109,7 +109,7 @@ const Login = ({ navigation }) => {
             </View> */}
 
             <View>
-              <Pressable onPress={() => Alert.alert("Forget Password!")}>
+              <Pressable onPress={() => navigation.navigate("ForgotPassword")}>
                 <Text style={styles.forgetText}>Forgot Password?</Text>
               </Pressable>
             </View>

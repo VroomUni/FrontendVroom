@@ -10,13 +10,19 @@ import {
 import { Button } from "react-native-paper";
 import { useState } from "react";
 import COLORS from "../constants/colors";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 
 const Verification = ({ navigation }) => {
-  const [email, setEmail] = useState("");
+
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleRefresh = () => {
+    
+    setRefreshKey((prevKey) => prevKey + 1);
+  };
 
   return (
-    <View style={styles.Container}>
+    <View style={styles.Container} key={refreshKey}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.innerContainer}>
 
@@ -36,11 +42,12 @@ const Verification = ({ navigation }) => {
           Afterward, refresh the screen to continue.
           </Text>
           <View style={{ flexDirection: "row" }}>
+
           <Button
             title="Refresh"
             // filled
             style={styles.Button}
-            // onPress={handleContinue}
+            onPress={handleRefresh}
             mode="contained-tonal"
             buttonColor={COLORS.b400}
             textColor="white"
@@ -50,10 +57,10 @@ const Verification = ({ navigation }) => {
           </Button>
 
           <Button
-            title="Refresh"
+            title="Resend"
             // filled
             style={styles.Button}
-            // onPress={handleContinue}
+            onPress={navigation.navigate("ForgotPassword")}
             mode="contained-tonal"
             buttonColor={COLORS.b400}
             textColor="white"

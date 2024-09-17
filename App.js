@@ -7,10 +7,7 @@ import LoadingScreen from "./screens/LoadingScreen";
 import TabNav from "./navigation/TabNav";
 import Home from "./screens/Home";
 import Signup from "./screens/SignUp";
-import Verification from "./screens/Veification";
 import ForgotPassword from "./screens/ForgotPassword";
-import ResetPassword from "./screens/ResetPassword";
-// import Signup2 from "./screens/SignUp-2";
 import Login from "./screens/Login";
 import Preferences from "./screens/Preferences";
 import Car from "./screens/Car";
@@ -38,8 +35,6 @@ function App() {
         <Stack.Screen name='SplashScreen' component={SplashScreen} />
         <Stack.Screen name='Signup' component={Signup} />
         <Stack.Screen name='Login' component={Login} />
-        <Stack.Screen name='ResetPassword' component={ResetPassword} />
-        <Stack.Screen name='Verification' component={Verification} />
         <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
       </Stack.Navigator>
     </NavigationContainer>

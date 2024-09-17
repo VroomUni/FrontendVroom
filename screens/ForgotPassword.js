@@ -12,10 +12,27 @@ import { Button } from "react-native-paper";
 import { useState } from "react";
 import COLORS from "../constants/colors";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 const ForgotPassword = ({ navigation }) => {
-  const [email, setEmail] = useState("");
 
+  const [email, setEmail] = useState("");
+  const auth = getAuth();
+
+  const sendEmail = () =>{
+    sendPasswordResetEmail(auth,email)
+    .then(() => {
+      alert("Password reset email sent")
+    })
+    .then(() => {
+      navigation.navigate("Login")
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error(errorCode,errorMessage);
+    });
+  }
 
   return (
     <View style={styles.Container}>
@@ -33,8 +50,8 @@ const ForgotPassword = ({ navigation }) => {
           />
           
           <Text style={styles.Text}>
-          <MaterialCommunityIcons name="information-outline" size={24} color="black" />
-            Enter your email for the verification process, we will send you a
+          <MaterialCommunityIcons name="information-outline" size={18} color="black" />
+            {" "}Enter your email for the verification process, we will send you a
             confirmation code.
           </Text>
 
@@ -53,10 +70,10 @@ const ForgotPassword = ({ navigation }) => {
           </View>
           
           <Button
-            title="Login"
+            title="Continue"
             // filled
             style={styles.Button}
-            // onPress={handleContinue}
+            onPress={sendEmail}
             mode="contained-tonal"
             buttonColor={COLORS.b400}
             textColor="white"
@@ -88,7 +105,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingVertical: 40,
     color: COLORS.black,
-    fontFamily: "Helvetica",
   },
   innerContainer: {
     paddingHorizontal: 20,
@@ -97,7 +113,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   Text : {
-    fontSize : 14,
+    fontSize : 16,
     color : COLORS.g300,
     // alignSelf:"flex-end",
     marginBottom: 10, 

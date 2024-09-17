@@ -145,8 +145,13 @@ const Signup = ({ navigation }) => {
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDateSelected, setDateSelected] = useState(false);
+  const [date,setDate] = useState(new Date());
 
+  const onDateChange =(e,selectedDate) => {
+    setDate(selectedDate);
+    // setDateSelected(false);
 
+  };
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -155,23 +160,23 @@ const Signup = ({ navigation }) => {
     setDatePickerVisibility(false);
   };
 
-  const handleConfirm = (date) => {
+  const handleConfirm = date => {
     console.warn("A date has been picked: ", date);
-    setDateSelected(date);
-    hideDatePicker();
-    
-  };
-
-  const handleDateTimeChange = (selectedDateOrTime) => {
+    // hideDatePicker();
+    // setDateSelected(date);
     setFromTimePickerVisible(false);
-    
+
     if (isDatePickerVisible) {
       setDatePickerVisibility(false);
-      setCustomSelectedDate(selectedDateOrTime);
+      setDate(selectedDateOrTime);
 
+      if (!date) setFromTimePickerVisible(true);
       return;
     }
+    
   };
+
+
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -590,13 +595,14 @@ const Signup = ({ navigation }) => {
             >
               Birthday
             </Button>
+            {isDatePickerVisible && (
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
               mode="date"
               onConfirm={handleConfirm}
               onCancel={hideDatePicker}
-              // onValueChange={handleDateTimeChange}
             />
+            )}
           </View>
           </View>
 
